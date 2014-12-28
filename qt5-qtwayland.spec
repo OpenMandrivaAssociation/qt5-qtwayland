@@ -1,0 +1,196 @@
+%define api 5
+%define major %api
+
+%define qtminor 4
+%define qtsubminor 0
+%define major 5
+%define qtversion %{api}.%{qtminor}.%{qtsubminor}
+
+%define qtwaylandclient %mklibname qt%{api}waylandclient %{major}
+%define qtwaylandclientd %mklibname qt%{api}waylandclient -d
+%define qtwaylandclient_p_d %mklibname qt%{api}waylandclient-private -d
+
+%define qtwaylandcompositor %mklibname qt%{api}waylandcompositor %{major}
+%define qtwaylandcompositord %mklibname qt%{api}compositor -d
+%define qtwaylandcompositor_p_d %mklibname qt%{api}compositor-private -d
+
+%define qttarballdir qtwayland-opensource-src-%{qtversion}
+%define _qt5_prefix %{_libdir}/qt%{api}
+
+Name:		qt5-qtwayland
+Version:	%{qtversion}
+Release:	1
+Summary:	Qt5 - Wayland platform support and QtCompositor module
+Group:		Development/KDE and Qt
+License:	LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
+URL:		http://www.qt-project.org
+Source0:	http://download.qt-project.org/official_releases/qt/%{api}.%{qtminor}/%{version}/submodules/%{qttarballdir}.tar.xz
+BuildRequires:	qt5-qtbase-devel >= %version
+BuildRequires:	pkgconfig(Qt5Quick) >= %version
+BuildRequires:	pkgconfig(Qt5Core) >= %version
+BuildRequires:	pkgconfig(Qt5Gui)
+BuildRequires:  pkgconfig(Qt5PlatformSupport)
+BuildRequires:  pkgconfig(Qt5DBus)
+BuildRequires:  pkgconfig(Qt5Widgets)
+BuildRequires:  pkgconfig(Qt5OpenGL)
+BuildRequires:  qt5-qtquick-private-devel
+
+BuildRequires:  pkgconfig(xkbcommon)
+BuildRequires:  pkgconfig(wayland-scanner)
+BuildRequires:  pkgconfig(wayland-server)
+BuildRequires:  pkgconfig(wayland-client)
+BuildRequires:  pkgconfig(wayland-cursor)
+BuildRequires:  pkgconfig(wayland-egl)
+BuildRequires:  pkgconfig(egl)
+BuildRequires:  pkgconfig(gl)
+BuildRequires:  pkgconfig(glesv2)
+BuildRequires:  pkgconfig(xcomposite)
+BuildRequires:  pkgconfig(xrender)
+BuildRequires:  pkgconfig(libudev)
+BuildRequires:  pkgconfig(freetype2)
+BuildRequires:  pkgconfig(fontconfig)
+
+BuildRequires: re2c
+
+BuildRequires: pkgconfig(xtst)
+BuildRequires: pkgconfig(libpci)
+BuildRequires: pkgconfig(nss)
+
+%description
+Qt5 - Wayland platform support and QtCompositor module
+
+%files
+%{_qt5_bindir}/qtwaylandscanner
+%{_qt5_plugindir}/platforms/*.so
+%{_qt5_plugindir}/wayland-decoration-client
+%{_qt5_plugindir}/wayland-graphics-integration-client
+
+#------------------------------------------------------------------------------
+
+%package -n %{qtwaylandclient}
+Summary: Qt%{api} Component Library
+Group: System/Libraries
+
+%description -n %{qtwaylandclient}
+Qt%{api} Component Library.
+
+%files -n %{qtwaylandclient}
+%{_qt5_libdir}/libQt5WaylandClient.so.%{major}*
+
+#------------------------------------------------------------------------------
+
+%package -n %{qtwaylandclientd}
+Summary: Devel files needed to build apps based on %name
+Group:    Development/KDE and Qt
+Requires: %{qtwaylandclient} = %version
+
+%description -n %{qtwaylandclientd}
+Devel files needed to build apps based on %name
+
+%files -n %{qtwaylandclientd}
+%{_qt5_libdir}/libQt5WaylandClient.so
+%{_qt5_libdir}/libQt5WaylandClient.prl
+%{_qt5_libdir}/pkgconfig/Qt5WaylandClient.pc
+%{_qt5_includedir}/QtWaylandClient
+%exclude %{_qt5_includedir}/QtWaylandClient/%qtversion
+%{_qt5_prefix}/mkspecs/modules/qt_lib_waylandclient.pri
+%{_qt5_libdir}/cmake/Qt5WaylandClient
+%{_qt5_libdir}/cmake/Qt5Gui/*
+
+#------------------------------------------------------------------------------
+
+%package -n %{qtwaylandclient_p_d}
+Summary: Devel files needed to build apps based on %name
+Group:    Development/KDE and Qt
+
+Requires: %{qtwaylandclientd} = %version
+Provides: qt5-qtwayland-private-devel = %version
+
+%description -n %{qtwaylandclient_p_d}
+Devel files needed to build apps based on %name
+
+%files -n %{qtwaylandclient_p_d}
+%{_qt5_includedir}/QtWaylandClient/%qtversion
+%{_qt5_prefix}/mkspecs/modules/qt_lib_waylandclient_private.pri
+
+#----------------------------------------------------------------------------
+
+%package -n	%{qtwaylandcompositor}
+Summary:	Wayland platform QtCompositor module
+Group:		System/Libraries
+
+%description -n %{qtwaylandcompositor}
+Qt Wayland QtCompositor module
+
+%files -n %{qtwaylandcompositor}
+%{_qt5_libdir}/libQt%{api}Compositor.so.%{major}*
+%{_qt5_plugindir}/wayland-graphics-integration-server/libdrm-egl-server.so
+%{_qt5_plugindir}/wayland-graphics-integration-server/libwayland-egl.so
+%{_qt5_plugindir}/wayland-graphics-integration-server/libxcomposite-egl.so
+%{_qt5_plugindir}/wayland-graphics-integration-server/libxcomposite-glx.so
+
+#----------------------------------------------------------------------------
+
+%package -n %{qtwaylandcompositord}
+Summary:	Development files for the Qt WebKit web browsing library
+Group:		Development/KDE and Qt
+Requires:	%{qtwaylandcompositor} = %{EVRD}
+Requires:	%{qtwaylandclient} = %{EVRD}
+Requires:	%{qtwaylandclient} = %{EVRD}
+Requires:	%{qtwaylandclientd} = %{EVRD}
+
+%description -n %{qtwaylandcompositord}
+Development files for the Qt Wayland QtCompositor module
+
+%files -n %{qtwaylandcompositord}
+%{_qt5_includedir}/QtCompositor
+%{_qt5_libdir}/libQt%{api}Compositor.so
+%exclude %{_qt5_includedir}/QtCompositor/%qtversion
+%{_qt5_libdir}/libQt%{api}Compositor.prl
+%{_qt5_libdir}/cmake/Qt%{api}Compositor
+%{_qt5_libdir}/pkgconfig/Qt%{api}Compositor.pc
+%{_qt5_prefix}/mkspecs/modules/qt_lib_compositor.pri
+%{_qt5_exampledir}/wayland
+
+#------------------------------------------------------------------------------
+%package -n %{qtwaylandcompositor_p_d}
+Summary:	Development files for the Qt WebKit web browsing library
+Group:		Development/KDE and Qt
+
+%description -n %{qtwaylandcompositor_p_d}
+Development files for the Qt Wayland QtCompositor module
+
+%files -n %{qtwaylandcompositor_p_d}
+%{_qt5_includedir}/QtCompositor/%qtversion
+%{_qt5_prefix}/mkspecs/modules/qt_lib_compositor_private.pri
+
+
+%prep
+%setup -q -n %qttarballdir
+%apply_patches
+
+%build
+%qmake_qt5 CONFIG+=wayland-compositor
+%make
+
+#------------------------------------------------------------------------------
+
+%install
+%makeinstall_std INSTALL_ROOT=%{buildroot}
+
+# install private headers... needed by hawaii shell
+install -pm644 \
+  include/QtCompositor/%{version}/QtCompositor/private/{wayland-wayland-server-protocol.h,qwayland-server-wayland.h} \
+  %{buildroot}%{_includedir}/qt5/QtCompositor/%{version}/QtCompositor/private/
+
+## .prl/.la file love
+# nuke .prl reference(s) to %%buildroot, excessive (.la-like) libs
+pushd %{buildroot}%{_libdir}
+for prl_file in libQt5*.prl ; do
+  sed -i -e "/^QMAKE_PRL_BUILD_DIR/d" ${prl_file}
+  if [ -f "$(basename ${prl_file} .prl).so" ]; then
+    rm -fv "$(basename ${prl_file} .prl).la"
+    sed -i -e "/^QMAKE_PRL_LIBS/d" ${prl_file}
+  fi
+done
+popd
