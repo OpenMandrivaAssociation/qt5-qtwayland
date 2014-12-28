@@ -157,6 +157,8 @@ Development files for the Qt Wayland QtCompositor module
 %package -n %{qtwaylandcompositor_p_d}
 Summary:	Development files for the Qt WebKit web browsing library
 Group:		Development/KDE and Qt
+Requires:	%{qtwaylandcompositord} = %version
+Provides:	qt5-qtcompositor-private-devel = %version
 
 %description -n %{qtwaylandcompositor_p_d}
 Development files for the Qt Wayland QtCompositor module
