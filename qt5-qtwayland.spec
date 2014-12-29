@@ -19,7 +19,7 @@
 
 Name:		qt5-qtwayland
 Version:	%{qtversion}
-Release:	2
+Release:	3
 Summary:	Qt5 - Wayland platform support and QtCompositor module
 Group:		Development/KDE and Qt
 License:	LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
@@ -138,8 +138,8 @@ Qt Wayland QtCompositor module
 %package -n %{qtwaylandcompositord}
 Summary:	Development files for the Qt Wayland QtCompositor library
 Group:		Development/KDE and Qt
+Requires:	%{name} = %{EVRD}
 Requires:	%{qtwaylandcompositor} = %{EVRD}
-Requires:	%{qtwaylandclient} = %{EVRD}
 Requires:	%{qtwaylandclient} = %{EVRD}
 Requires:	%{qtwaylandclientd} = %{EVRD}
 
