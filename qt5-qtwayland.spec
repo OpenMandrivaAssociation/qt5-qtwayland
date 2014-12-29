@@ -19,7 +19,7 @@
 
 Name:		qt5-qtwayland
 Version:	%{qtversion}
-Release:	1
+Release:	2
 Summary:	Qt5 - Wayland platform support and QtCompositor module
 Group:		Development/KDE and Qt
 License:	LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
@@ -56,6 +56,9 @@ BuildRequires: re2c
 BuildRequires: pkgconfig(xtst)
 BuildRequires: pkgconfig(libpci)
 BuildRequires: pkgconfig(nss)
+
+Requires:	%{qtwaylandcompositor} = %{EVRD}
+Requires:	%{qtwaylandclient} = %{EVRD}
 
 %description
 Qt5 - Wayland platform support and QtCompositor module
@@ -133,7 +136,7 @@ Qt Wayland QtCompositor module
 #----------------------------------------------------------------------------
 
 %package -n %{qtwaylandcompositord}
-Summary:	Development files for the Qt WebKit web browsing library
+Summary:	Development files for the Qt Wayland QtCompositor library
 Group:		Development/KDE and Qt
 Requires:	%{qtwaylandcompositor} = %{EVRD}
 Requires:	%{qtwaylandclient} = %{EVRD}
@@ -155,7 +158,7 @@ Development files for the Qt Wayland QtCompositor module
 
 #------------------------------------------------------------------------------
 %package -n %{qtwaylandcompositor_p_d}
-Summary:	Development files for the Qt WebKit web browsing library
+Summary:	Development files for the Qt Wayland QtCompositor library
 Group:		Development/KDE and Qt
 Requires:	%{qtwaylandcompositord} = %version
 Provides:	qt5-qtcompositor-private-devel = %version
