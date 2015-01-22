@@ -25,37 +25,38 @@ Group:		Development/KDE and Qt
 License:	LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
 URL:		http://www.qt-project.org
 Source0:	http://download.qt-project.org/official_releases/qt/%{api}.%{qtminor}/%{version}/submodules/%{qttarballdir}.tar.xz
-BuildRequires:	qt5-qtbase-devel >= %version
-BuildRequires:	pkgconfig(Qt5Quick) >= %version
-BuildRequires:	pkgconfig(Qt5Core) >= %version
+BuildRequires:	qt5-qtbase-devel >= %{version}
+BuildRequires:	pkgconfig(Qt5Quick) >= %{version}
+BuildRequires:	pkgconfig(Qt5Core) >= %{version}
 BuildRequires:	pkgconfig(Qt5Gui)
-BuildRequires:  pkgconfig(Qt5PlatformSupport)
-BuildRequires:  pkgconfig(Qt5DBus)
-BuildRequires:  pkgconfig(Qt5Widgets)
-BuildRequires:  pkgconfig(Qt5OpenGL)
-BuildRequires:  qt5-qtquick-private-devel
+BuildRequires:	pkgconfig(Qt5PlatformSupport)
+BuildRequires:	pkgconfig(Qt5DBus)
+BuildRequires:	pkgconfig(Qt5Widgets)
+BuildRequires:	pkgconfig(Qt5OpenGL)
+BuildRequires:	qt5-qtquick-private-devel
 
-BuildRequires:  pkgconfig(xkbcommon)
-BuildRequires:  pkgconfig(wayland-scanner)
-BuildRequires:  pkgconfig(wayland-server)
-BuildRequires:  pkgconfig(wayland-client)
-BuildRequires:  pkgconfig(wayland-cursor)
-BuildRequires:  pkgconfig(wayland-egl)
-BuildRequires:  pkgconfig(egl)
-BuildRequires:  pkgconfig(gl)
-BuildRequires:  pkgconfig(glesv2)
-BuildRequires:  pkgconfig(xcomposite)
-BuildRequires:  pkgconfig(xrender)
-BuildRequires:  pkgconfig(libudev)
-BuildRequires:  pkgconfig(freetype2)
-BuildRequires:  pkgconfig(fontconfig)
-BuildRequires:  pkgconfig(mtdev)
+BuildRequires:	pkgconfig(xkbcommon)
+BuildRequires:	pkgconfig(wayland-scanner)
+BuildRequires:	pkgconfig(wayland-server)
+BuildRequires:	pkgconfig(wayland-client)
+BuildRequires:	pkgconfig(wayland-cursor)
+BuildRequires:	pkgconfig(wayland-egl)
+BuildRequires:	pkgconfig(egl)
+BuildRequires:	pkgconfig(gl)
+BuildRequires:	pkgconfig(glesv2)
+BuildRequires:	pkgconfig(xcomposite)
+BuildRequires:	pkgconfig(xrender)
+BuildRequires:	pkgconfig(libudev)
+BuildRequires:	pkgconfig(freetype2)
+BuildRequires:	pkgconfig(fontconfig)
+BuildRequires:	pkgconfig(mtdev)
 
-BuildRequires: re2c
+BuildRequires:	re2c
 
-BuildRequires: pkgconfig(xtst)
-BuildRequires: pkgconfig(libpci)
-BuildRequires: pkgconfig(nss)
+BuildRequires:	pkgconfig(xtst)
+BuildRequires:	pkgconfig(libpci)
+BuildRequires:	pkgconfig(nss)
+BuildRequires:	qt5-qtwayland-private-devel
 
 Requires:	%{qtwaylandcompositor} = %{EVRD}
 Requires:	%{qtwaylandclient} = %{EVRD}
