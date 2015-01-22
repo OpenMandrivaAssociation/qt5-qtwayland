@@ -56,13 +56,12 @@ BuildRequires:	re2c
 BuildRequires:	pkgconfig(xtst)
 BuildRequires:	pkgconfig(libpci)
 BuildRequires:	pkgconfig(nss)
-BuildRequires:	qt5-qtwayland-private-devel
 
 Requires:	%{qtwaylandcompositor} = %{EVRD}
 Requires:	%{qtwaylandclient} = %{EVRD}
 
 %description
-Qt5 - Wayland platform support and QtCompositor module
+Qt5 - Wayland platform support and QtCompositor module.
 
 %files
 %{_qt5_bindir}/qtwaylandscanner
