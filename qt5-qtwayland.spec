@@ -19,7 +19,7 @@
 
 Name:		qt5-qtwayland
 Version:	%{qtversion}
-Release:	3
+Release:	4
 Summary:	Qt5 - Wayland platform support and QtCompositor module
 Group:		Development/KDE and Qt
 License:	LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
@@ -176,12 +176,20 @@ Development files for the Qt Wayland QtCompositor module
 %apply_patches
 
 %build
+# build non-egl support
+mkdir nogl
+pushd nogl
+%qmake_qt5 QT_WAYLAND_GL_CONFIG=nogl ..
+popd
+%make -C nogl
+
 %qmake_qt5 CONFIG+=wayland-compositor
 %make
 
 #------------------------------------------------------------------------------
 
 %install
+%makeinstall_std INSTALL_ROOT=%{buildroot} -C nogl/
 %makeinstall_std INSTALL_ROOT=%{buildroot}
 
 # install private headers... needed by hawaii shell
