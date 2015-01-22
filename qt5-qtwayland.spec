@@ -183,6 +183,7 @@ Development files for the Qt Wayland QtCompositor module
 mkdir .git
 
 %build
+%global optflags %{optflags} -fPIC
 # build non-egl support
 mkdir nogl
 pushd nogl
