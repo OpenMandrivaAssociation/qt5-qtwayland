@@ -176,6 +176,13 @@ Development files for the Qt Wayland QtCompositor module
 %setup -q -n %qttarballdir
 %apply_patches
 
+# Presence of .git/ qmake into invoking syncqt for us with
+# correct arguments at make time.
+# else, out-of-src-tree builds fail with stuff like:
+# qwaylanddisplay_p.h:52:54: fatal error: QtWaylandClient/private/qwayland-wayland.h: No such file or directory
+# #include <QtWaylandClient/private/qwayland-wayland.h>
+mkdir .git
+
 %build
 # build non-egl support
 mkdir nogl
