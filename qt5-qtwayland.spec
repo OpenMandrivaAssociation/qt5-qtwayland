@@ -194,7 +194,7 @@ mkdir .git
 %make -C nogl
 %endif
 
-%qmake_qt5 CONFIG+=wayland-compositor CONFIG-=config_xcomposite
+%qmake_qt5 CONFIG+=wayland-compositor
 %make
 
 #------------------------------------------------------------------------------
