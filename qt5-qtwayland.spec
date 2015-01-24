@@ -16,15 +16,17 @@
 
 %define qttarballdir qtwayland-opensource-src-%{qtversion}
 %define _qt5_prefix %{_libdir}/qt%{api}
+%bcond_with	nonegl
 
 Name:		qt5-qtwayland
 Version:	%{qtversion}
-Release:	4
+Release:	5
 Summary:	Qt5 - Wayland platform support and QtCompositor module
 Group:		Development/KDE and Qt
 License:	LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
 URL:		http://www.qt-project.org
 Source0:	http://download.qt-project.org/official_releases/qt/%{api}.%{qtminor}/%{version}/submodules/%{qttarballdir}.tar.xz
+Patch0:		0001-Add-fix-to-get-QtWayland-Compositor-running-on-iMX6.patch
 BuildRequires:	qt5-qtbase-devel >= %{version}
 BuildRequires:	pkgconfig(Qt5Quick) >= %{version}
 BuildRequires:	pkgconfig(Qt5Core) >= %{version}
@@ -184,12 +186,14 @@ mkdir .git
 
 %build
 %global optflags %{optflags} -fPIC
+%if %{with nonegl}
 # build non-egl support
 mkdir nogl
 pushd nogl
 %qmake_qt5 QT_WAYLAND_GL_CONFIG=nogl ..
 popd
 %make -C nogl
+%endif
 
 %qmake_qt5 CONFIG+=wayland-compositor
 %make
@@ -197,7 +201,9 @@ popd
 #------------------------------------------------------------------------------
 
 %install
+%if %{with nonegl}
 %makeinstall_std INSTALL_ROOT=%{buildroot} -C nogl/
+%endif
 %makeinstall_std INSTALL_ROOT=%{buildroot}
 
 # install private headers... needed by hawaii shell
