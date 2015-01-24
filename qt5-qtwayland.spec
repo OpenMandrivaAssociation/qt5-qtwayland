@@ -190,14 +190,11 @@ mkdir .git
 %global optflags %{optflags} -fPIC
 %if %{with nonegl}
 # build non-egl support
-mkdir nogl
-pushd nogl
-%qmake_qt5 QT_WAYLAND_GL_CONFIG=nogl ..
-popd
+%qmake_qt5 -o nogl/Makefile QT_WAYLAND_GL_CONFIG=nogl
 %make -C nogl
 %endif
 
-%qmake_qt5 CONFIG+=wayland-compositor
+%qmake_qt5 CONFIG+=wayland-compositor CONFIG-=config_xcomposite
 %make
 
 #------------------------------------------------------------------------------
