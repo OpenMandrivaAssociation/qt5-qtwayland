@@ -16,11 +16,11 @@
 
 %define qttarballdir qtwayland-opensource-src-%{qtversion}
 %define _qt5_prefix %{_libdir}/qt%{api}
-%bcond_with	nonegl
+%bcond_without	nonegl
 
 Name:		qt5-qtwayland
 Version:	%{qtversion}
-Release:	5
+Release:	6
 Summary:	Qt5 - Wayland platform support and QtCompositor module
 Group:		Development/KDE and Qt
 License:	LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
