@@ -2,8 +2,8 @@
 %define major %api
 
 %define qtminor 4
-%define qtsubminor 0
-%define major 5
+%define qtsubminor 1
+
 %define qtversion %{api}.%{qtminor}.%{qtsubminor}
 
 %define qtwaylandclient %mklibname qt%{api}waylandclient %{major}
@@ -20,7 +20,7 @@
 
 Name:		qt5-qtwayland
 Version:	%{qtversion}
-Release:	6
+Release:	1
 Summary:	Qt5 - Wayland platform support and QtCompositor module
 Group:		Development/KDE and Qt
 License:	LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
