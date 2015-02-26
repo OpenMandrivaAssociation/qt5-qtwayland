@@ -16,7 +16,7 @@
 
 %define qttarballdir qtwayland-opensource-src-%{qtversion}
 %define _qt5_prefix %{_libdir}/qt%{api}
-%bcond_without	nonegl
+%bcond_with nonegl
 
 Name:		qt5-qtwayland
 Version:	%{qtversion}
