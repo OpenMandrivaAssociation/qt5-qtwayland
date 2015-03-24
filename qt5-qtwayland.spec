@@ -1,10 +1,6 @@
-%define api 5
+%define api %(echo %{version} |cut -d. -f1)
 %define major %api
-
-%define qtminor 4
-%define qtsubminor 1
-
-%define qtversion %{api}.%{qtminor}.%{qtsubminor}
+%define beta alpha
 
 %define qtwaylandclient %mklibname qt%{api}waylandclient %{major}
 %define qtwaylandclientd %mklibname qt%{api}waylandclient -d
@@ -14,18 +10,23 @@
 %define qtwaylandcompositord %mklibname qt%{api}compositor -d
 %define qtwaylandcompositor_p_d %mklibname qt%{api}compositor-private -d
 
-%define qttarballdir qtwayland-opensource-src-%{qtversion}
+%define qttarballdir qtwayland-opensource-src-%{version}%{?beta:-%{beta}}
 %define _qt5_prefix %{_libdir}/qt%{api}
 %bcond_with nonegl
 
 Name:		qt5-qtwayland
-Version:	%{qtversion}
-Release:	2
+Version:	5.5.0
+%if "%{beta}" != ""
+Release:	0.%{beta}.1
+Source0:	http://download.qt-project.org/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
+%else
+Release:	1
+Source0:	http://download.qt-project.org/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}/submodules/%{qttarballdir}.tar.xz
+%endif
 Summary:	Qt5 - Wayland platform support and QtCompositor module
 Group:		Development/KDE and Qt
 License:	LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
 URL:		http://www.qt-project.org
-Source0:	http://download.qt-project.org/official_releases/qt/%{api}.%{qtminor}/%{version}/submodules/%{qttarballdir}.tar.xz
 BuildRequires:	qt5-qtbase-devel >= %{version}
 BuildRequires:	pkgconfig(Qt5Quick) >= %{version}
 BuildRequires:	pkgconfig(Qt5Core) >= %{version}
@@ -97,7 +98,7 @@ Devel files needed to build apps based on %name
 %{_qt5_libdir}/libQt5WaylandClient.prl
 %{_qt5_libdir}/pkgconfig/Qt5WaylandClient.pc
 %{_qt5_includedir}/QtWaylandClient
-%exclude %{_qt5_includedir}/QtWaylandClient/%qtversion
+%exclude %{_qt5_includedir}/QtWaylandClient/%version
 %{_qt5_prefix}/mkspecs/modules/qt_lib_waylandclient.pri
 %{_qt5_libdir}/cmake/Qt5WaylandClient
 %{_qt5_libdir}/cmake/Qt5Gui/*
@@ -115,7 +116,7 @@ Provides: qt5-qtwayland-private-devel = %version
 Devel files needed to build apps based on %name
 
 %files -n %{qtwaylandclient_p_d}
-%{_qt5_includedir}/QtWaylandClient/%qtversion
+%{_qt5_includedir}/QtWaylandClient/%version
 %{_qt5_prefix}/mkspecs/modules/qt_lib_waylandclient_private.pri
 
 #----------------------------------------------------------------------------
@@ -152,7 +153,7 @@ Development files for the Qt Wayland QtCompositor module
 %files -n %{qtwaylandcompositord}
 %{_qt5_includedir}/QtCompositor
 %{_qt5_libdir}/libQt%{api}Compositor.so
-%exclude %{_qt5_includedir}/QtCompositor/%qtversion
+%exclude %{_qt5_includedir}/QtCompositor/%version
 %{_qt5_libdir}/libQt%{api}Compositor.prl
 %{_qt5_libdir}/cmake/Qt%{api}Compositor
 %{_qt5_libdir}/pkgconfig/Qt%{api}Compositor.pc
@@ -170,7 +171,7 @@ Provides:	qt5-qtcompositor-private-devel = %version
 Development files for the Qt Wayland QtCompositor module
 
 %files -n %{qtwaylandcompositor_p_d}
-%{_qt5_includedir}/QtCompositor/%qtversion
+%{_qt5_includedir}/QtCompositor/%version
 %{_qt5_prefix}/mkspecs/modules/qt_lib_compositor_private.pri
 
 
