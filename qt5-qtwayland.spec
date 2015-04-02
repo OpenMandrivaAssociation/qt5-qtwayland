@@ -12,12 +12,12 @@
 
 %define qttarballdir qtwayland-opensource-src-%{version}%{?beta:-%{beta}}
 %define _qt5_prefix %{_libdir}/qt%{api}
-%bcond_with nonegl
+%bcond_without nonegl
 
 Name:		qt5-qtwayland
 Version:	5.5.0
 %if "%{beta}" != ""
-Release:	0.%{beta}.1
+Release:	0.%{beta}.2
 Source0:	http://download.qt-project.org/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 %else
 Release:	1
@@ -176,39 +176,48 @@ Development files for the Qt Wayland QtCompositor module
 
 
 %prep
-%setup -q -n %qttarballdir
+%setup -q -c -n %qttarballdir
 %apply_patches
-
 # Presence of .git/ qmake into invoking syncqt for us with
 # correct arguments at make time.
 # else, out-of-src-tree builds fail with stuff like:
 # qwaylanddisplay_p.h:52:54: fatal error: QtWaylandClient/private/qwayland-wayland.h: No such file or directory
 # #include <QtWaylandClient/private/qwayland-wayland.h>
 mkdir .git
+mv %qttarballdir %qttarballdir-nogl
+cp -r %qttarballdir-nogl %qttarballdir-gl
 
 %build
 %global optflags %{optflags} -fPIC
 %if %{with nonegl}
+pushd %qttarballdir-nogl
 # build non-egl support
-%qmake_qt5 -o nogl/Makefile QT_WAYLAND_GL_CONFIG=nogl
-%make -C nogl
+%qmake_qt5 QT_WAYLAND_GL_CONFIG=nogl
+%make
+popd
 %endif
 
+pushd %qttarballdir-gl
 %qmake_qt5 CONFIG+=wayland-compositor
 %make
+popd
 
 #------------------------------------------------------------------------------
 
 %install
 %if %{with nonegl}
-%makeinstall_std INSTALL_ROOT=%{buildroot} -C nogl/
+pushd %qttarballdir-nogl
+%makeinstall_std INSTALL_ROOT=%{buildroot}
+popd
 %endif
+pushd %qttarballdir-gl
 %makeinstall_std INSTALL_ROOT=%{buildroot}
 
 # install private headers... needed by hawaii shell
 install -pm644 \
   include/QtCompositor/%{version}/QtCompositor/private/{wayland-wayland-server-protocol.h,qwayland-server-wayland.h} \
   %{buildroot}%{_includedir}/qt5/QtCompositor/%{version}/QtCompositor/private/
+popd
 
 ## .prl/.la file love
 # nuke .prl reference(s) to %%buildroot, excessive (.la-like) libs
