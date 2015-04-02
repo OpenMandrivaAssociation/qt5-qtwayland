@@ -17,7 +17,7 @@
 Name:		qt5-qtwayland
 Version:	5.5.0
 %if "%{beta}" != ""
-Release:	0.%{beta}.3
+Release:	0.%{beta}.4
 Source0:	http://download.qt-project.org/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 %else
 Release:	1
