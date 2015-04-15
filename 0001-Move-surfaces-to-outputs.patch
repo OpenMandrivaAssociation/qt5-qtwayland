@@ -1,4 +1,4 @@
-From 6116dba7ae78cc28f44311cbf9803d4b5a67d54c Mon Sep 17 00:00:00 2001
+From 78e2db1ead004698a2db146786e8e4b8ce57e663 Mon Sep 17 00:00:00 2001
 From: Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
 Date: Wed, 31 Dec 2014 11:35:53 +0100
 Subject: [PATCH] Move surfaces to outputs
@@ -12,28 +12,44 @@ Surfaces can be viewed on a different output anyway.
 Change-Id: I9ef76300f85190d84b83431374e76e581786e4e7
 Done-with: Jørgen Lind <jorgen.lind@theqtcompany.com>
 ---
- .../compositor_api/qwaylandcompositor.cpp          | 75 ++++++++++++++--------
- src/compositor/compositor_api/qwaylandcompositor.h |  8 ++-
- src/compositor/compositor_api/qwaylandoutput.cpp   | 20 ++++++
- src/compositor/compositor_api/qwaylandoutput.h     |  8 +++
- .../compositor_api/qwaylandquickcompositor.cpp     |  5 +-
- .../compositor_api/qwaylandquicksurface.cpp        | 26 ++++++--
+ .../compositor_api/qwaylandcompositor.cpp          | 63 +++++++--------
+ src/compositor/compositor_api/qwaylandcompositor.h |  7 +-
+ src/compositor/compositor_api/qwaylandoutput.cpp   | 11 +++
+ src/compositor/compositor_api/qwaylandoutput.h     |  4 +
+ .../compositor_api/qwaylandquickcompositor.cpp     | 13 +---
+ .../compositor_api/qwaylandquicksurface.cpp        | 44 +++++++++--
  .../compositor_api/qwaylandquicksurface.h          |  3 +
- src/compositor/compositor_api/qwaylandsurface.cpp  | 35 ++++++++++
- src/compositor/compositor_api/qwaylandsurface.h    | 20 ++++++
- src/compositor/wayland_wrapper/qwlcompositor.cpp   | 24 +------
- src/compositor/wayland_wrapper/qwlcompositor_p.h   |  5 --
- src/compositor/wayland_wrapper/qwloutput.cpp       | 45 +++++++++++++
- src/compositor/wayland_wrapper/qwloutput_p.h       | 10 +++
- src/compositor/wayland_wrapper/qwlsurface.cpp      | 47 +++++++++++++-
- src/compositor/wayland_wrapper/qwlsurface_p.h      |  2 +
- 15 files changed, 270 insertions(+), 63 deletions(-)
+ src/compositor/compositor_api/qwaylandsurface.cpp  | 90 ++++++++++++++++++++--
+ src/compositor/compositor_api/qwaylandsurface.h    | 40 +++++++++-
+ .../compositor_api/qwaylandsurfaceitem.cpp         |  2 +-
+ src/compositor/wayland_wrapper/qwlcompositor.cpp   | 13 +---
+ src/compositor/wayland_wrapper/qwlcompositor_p.h   |  7 +-
+ src/compositor/wayland_wrapper/qwloutput.cpp       |  3 +
+ src/compositor/wayland_wrapper/qwloutput_p.h       |  1 +
+ src/compositor/wayland_wrapper/qwlsurface.cpp      | 63 ++++++++++++++-
+ src/compositor/wayland_wrapper/qwlsurface_p.h      | 11 ++-
+ 16 files changed, 297 insertions(+), 78 deletions(-)
 
 diff --git a/src/compositor/compositor_api/qwaylandcompositor.cpp b/src/compositor/compositor_api/qwaylandcompositor.cpp
-index 1839832..93a9cc6 100644
+index 041f3e9..d29cf56 100644
 --- a/src/compositor/compositor_api/qwaylandcompositor.cpp
 +++ b/src/compositor/compositor_api/qwaylandcompositor.cpp
-@@ -98,17 +98,6 @@ struct wl_display *QWaylandCompositor::waylandDisplay() const
+@@ -1,5 +1,6 @@
+ /****************************************************************************
+ **
++** Copyright (C) 2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ ** Copyright (C) 2015 The Qt Company Ltd.
+ ** Contact: http://www.qt.io/licensing/
+ **
+@@ -40,6 +41,7 @@
+ 
+ #include "qwaylandcompositor.h"
+ 
++#include "qwaylandclient.h"
+ #include "qwaylandinput.h"
+ #include "qwaylandoutput.h"
+ #include "qwaylandglobalinterface.h"
+@@ -98,17 +100,6 @@ struct wl_display *QWaylandCompositor::waylandDisplay() const
      return m_compositor->wl_display();
  }
  
@@ -51,73 +67,55 @@ index 1839832..93a9cc6 100644
  void QWaylandCompositor::destroyClientForSurface(QWaylandSurface *surface)
  {
      destroyClient(surface->client());
-@@ -119,29 +108,54 @@ void QWaylandCompositor::destroyClient(QWaylandClient *client)
+@@ -119,28 +110,33 @@ void QWaylandCompositor::destroyClient(QWaylandClient *client)
      m_compositor->destroyClient(client);
  }
  
 -QList<QWaylandSurface *> QWaylandCompositor::surfacesForClient(QWaylandClient* client) const
-+#if QT_DEPRECATED_SINCE(5, 5)
 +void QWaylandCompositor::frameStarted()
  {
 -    QList<QtWayland::Surface *> surfaces = m_compositor->surfaces();
-+    Q_FOREACH (QWaylandOutput *output, outputs())
-+        output->frameStarted();
++    Q_FOREACH (QtWayland::Surface *surface, m_compositor->surfaces())
++        surface->frameStarted();
 +}
  
 -    QList<QWaylandSurface *> result;
-+typedef QList<QWaylandSurface *> QWaylandSurfaceList;
-+typedef std::pair<QWaylandOutput *, QWaylandSurfaceList> QWaylandOutputSurfaceListPair;
++void QWaylandCompositor::sendFrameCallbacks(QList<QWaylandSurface *> visibleSurfaces)
++{
++    m_compositor->sendFrameCallbacks(visibleSurfaces);
++}
  
 -    for (int i = 0; i < surfaces.count(); ++i) {
 -        if (surfaces.at(i)->waylandSurface()->client() == client) {
 -            result.append(surfaces.at(i)->waylandSurface());
 -        }
-+static QList<QWaylandSurface *> &getSurfaceListForOutput(QList<QWaylandOutputSurfaceListPair> &list, QWaylandOutput *output)
-+{
-+    for (int i = 0; i < list.size(); i++) {
-+        if (list.at(i).first == output)
-+            return list[i].second;
-     }
- 
--    return result;
-+    list.append(std::make_pair(output, QList<QWaylandSurface *>()));
-+    return list.last().second;
-+}
-+
-+void QWaylandCompositor::sendFrameCallbacks(QList<QWaylandSurface *> visibleSurfaces)
-+{
-+    QList<QWaylandOutputSurfaceListPair> visibleOutputSurfaces;
-+    Q_FOREACH (QWaylandSurface *surface, visibleSurfaces) {
-+        getSurfaceListForOutput(visibleOutputSurfaces, surface->output()).append(surface);
-+    }
-+
-+    for (int i = 0; i < visibleOutputSurfaces.size(); i++)
-+        visibleOutputSurfaces.at(i).first->sendFrameCallbacks(visibleOutputSurfaces.at(i).second);
-+}
-+
-+QList<QWaylandSurface *> QWaylandCompositor::surfacesForClient(QWaylandClient* client) const
++QList<QWaylandSurface *> QWaylandCompositor::surfacesForClient(QWaylandClient *client) const
 +{
 +    QList<QWaylandSurface *> surfaces;
-+    Q_FOREACH (QWaylandOutput *output, outputs())
-+        surfaces.append(output->surfacesForClient(client));
++    Q_FOREACH (QtWayland::Surface *surface, m_compositor->surfaces()) {
++        if (surface->resource()->client() == client->client())
++            surfaces.append(surface->waylandSurface());
+     }
+-
+-    return result;
 +    return surfaces;
  }
  
  QList<QWaylandSurface *> QWaylandCompositor::surfaces() const
  {
 -    QList<QtWayland::Surface *> surfaces = m_compositor->surfaces();
-     QList<QWaylandSurface *> surfs;
+-    QList<QWaylandSurface *> surfs;
 -    foreach (QtWayland::Surface *s, surfaces)
 -        surfs << s->waylandSurface();
-+    Q_FOREACH (QWaylandOutput *output, outputs())
-+        surfs.append(output->surfaces());
-     return surfs;
+-    return surfs;
++    QList<QWaylandSurface *> surfaces;
++    Q_FOREACH (QtWayland::Surface *surface, m_compositor->surfaces())
++        surfaces.append(surface->waylandSurface());
++    return surfaces;
  }
-+#endif
  
  QList<QWaylandOutput *> QWaylandCompositor::outputs() const
- {
-@@ -175,13 +189,20 @@ void QWaylandCompositor::surfaceAboutToBeDestroyed(QWaylandSurface *surface)
+@@ -175,13 +171,20 @@ void QWaylandCompositor::surfaceAboutToBeDestroyed(QWaylandSurface *surface)
  
  QWaylandSurfaceView *QWaylandCompositor::pickView(const QPointF &globalPosition) const
  {
@@ -144,10 +142,17 @@ index 1839832..93a9cc6 100644
  
  QPointF QWaylandCompositor::mapToView(QWaylandSurfaceView *surface, const QPointF &globalPosition) const
 diff --git a/src/compositor/compositor_api/qwaylandcompositor.h b/src/compositor/compositor_api/qwaylandcompositor.h
-index c1c7855..b54ea7a 100644
+index fe48db0..c83b3c0 100644
 --- a/src/compositor/compositor_api/qwaylandcompositor.h
 +++ b/src/compositor/compositor_api/qwaylandcompositor.h
-@@ -94,12 +94,14 @@ public:
+@@ -1,5 +1,6 @@
+ /****************************************************************************
+ **
++** Copyright (C) 2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ ** Copyright (C) 2015 The Qt Company Ltd.
+ ** Contact: http://www.qt.io/licensing/
+ **
+@@ -94,12 +95,12 @@ public:
      void addDefaultShell();
      ::wl_display *waylandDisplay() const;
  
@@ -157,44 +162,40 @@ index c1c7855..b54ea7a 100644
      void destroyClientForSurface(QWaylandSurface *surface);
      void destroyClient(QWaylandClient *client);
  
-+#if QT_DEPRECATED_SINCE(5, 5)
-+    QT_DEPRECATED void frameStarted();
-+    QT_DEPRECATED void sendFrameCallbacks(QList<QWaylandSurface *> visibleSurfaces);
-+#endif
++    void frameStarted();
++    void sendFrameCallbacks(QList<QWaylandSurface *> visibleSurfaces);
 +
      QList<QWaylandSurface *> surfacesForClient(QWaylandClient* client) const;
      QList<QWaylandSurface *> surfaces() const;
  
 diff --git a/src/compositor/compositor_api/qwaylandoutput.cpp b/src/compositor/compositor_api/qwaylandoutput.cpp
-index ab2ee52..3a6fe26 100644
+index 8f6c5e2..ba9f398 100644
 --- a/src/compositor/compositor_api/qwaylandoutput.cpp
 +++ b/src/compositor/compositor_api/qwaylandoutput.cpp
-@@ -244,3 +244,23 @@ QtWayland::Output *QWaylandOutput::handle()
+@@ -49,6 +49,7 @@
+ #include "wayland_wrapper/qwloutput_p.h"
+ #include "qwaylandcompositor.h"
+ #include "qwaylandoutput.h"
++#include "qwaylandsurface.h"
+ 
+ QWaylandOutput::QWaylandOutput(QWaylandCompositor *compositor, QWindow *window,
+                                const QString &manufacturer, const QString &model)
+@@ -244,3 +245,13 @@ QtWayland::Output *QWaylandOutput::handle()
  {
      return d_ptr;
  }
 +
-+void QWaylandOutput::frameStarted()
-+{
-+    d_ptr->frameStarted();
-+}
-+
-+void QWaylandOutput::sendFrameCallbacks(QList<QWaylandSurface *> visibleSurfaces)
-+{
-+    d_ptr->sendFrameCallbacks(visibleSurfaces);
-+}
-+
 +QList<QWaylandSurface *> QWaylandOutput::surfaces() const
 +{
-+    return d_ptr->surfaces();
-+}
-+
-+QList<QWaylandSurface *> QWaylandOutput::surfacesForClient(QWaylandClient *client) const
-+{
-+    return d_ptr->surfacesForClient(client);
++    QList<QWaylandSurface *> list;
++    Q_FOREACH (QWaylandSurface *surface, d_ptr->compositor()->waylandCompositor()->surfaces()) {
++        if (surface->outputs().contains(const_cast<QWaylandOutput *>(this)))
++            list.append(surface);
++    }
++    return list;
 +}
 diff --git a/src/compositor/compositor_api/qwaylandoutput.h b/src/compositor/compositor_api/qwaylandoutput.h
-index 5c31be9..a6efcf6 100644
+index 9efbd95..9c9dc37 100644
 --- a/src/compositor/compositor_api/qwaylandoutput.h
 +++ b/src/compositor/compositor_api/qwaylandoutput.h
 @@ -54,6 +54,8 @@ struct wl_resource;
@@ -206,24 +207,27 @@ index 5c31be9..a6efcf6 100644
  
  namespace QtWayland {
      class Output;
-@@ -143,6 +145,12 @@ public:
+@@ -143,6 +145,8 @@ public:
  
      QtWayland::Output *handle();
  
-+    void frameStarted();
-+    void sendFrameCallbacks(QList<QWaylandSurface *> visibleSurfaces);
-+
 +    QList<QWaylandSurface *> surfaces() const;
-+    QList<QWaylandSurface *> surfacesForClient(QWaylandClient *client) const;
 +
  Q_SIGNALS:
      void positionChanged();
      void geometryChanged();
 diff --git a/src/compositor/compositor_api/qwaylandquickcompositor.cpp b/src/compositor/compositor_api/qwaylandquickcompositor.cpp
-index bd053a9..5de4e66 100644
+index 36ee8e7..3a3c0ec 100644
 --- a/src/compositor/compositor_api/qwaylandquickcompositor.cpp
 +++ b/src/compositor/compositor_api/qwaylandquickcompositor.cpp
-@@ -40,6 +40,7 @@
+@@ -1,5 +1,6 @@
+ /****************************************************************************
+ **
++** Copyright (C) 2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ ** Copyright (C) 2014 Jolla Ltd, author: <giulio.camuffo@jollamobile.com>
+ ** Contact: http://www.qt.io/licensing/
+ **
+@@ -32,6 +33,7 @@
  ****************************************************************************/
  
  #include <QtCompositor/private/qwlcompositor_p.h>
@@ -231,30 +235,59 @@ index bd053a9..5de4e66 100644
  
  #include "qwaylandclient.h"
  #include "qwaylandquickcompositor.h"
-@@ -61,7 +62,7 @@ public:
+@@ -46,26 +48,17 @@ class QWaylandQuickCompositorPrivate : public QtWayland::Compositor
+ public:
+     QWaylandQuickCompositorPrivate(QWaylandQuickCompositor *compositor, QWaylandCompositor::ExtensionFlags extensions)
+         : QtWayland::Compositor(compositor, extensions)
+-        , updateScheduled(false)
+     {
+     }
+ 
      void compositor_create_surface(Resource *resource, uint32_t id) Q_DECL_OVERRIDE
      {
          QWaylandQuickSurface *surface = new QWaylandQuickSurface(resource->client(), id, wl_resource_get_version(resource->handle), static_cast<QWaylandQuickCompositor *>(m_qt_compositor));
--        m_surfaces << surface->handle();
-+        primaryOutput()->handle()->addSurface(surface);
++        surface->handle()->addToOutput(primaryOutput()->handle());
+         m_surfaces << surface->handle();
          //BUG: This may not be an on-screen window surface though
          m_qt_compositor->surfaceCreated(surface);
      }
-@@ -69,7 +70,9 @@ public:
-     void updateStarted()
-     {
-         updateScheduled = false;
-+#if !QT_DEPRECATED_SINCE(5, 5)
-         m_qt_compositor->frameStarted();
-+#endif
-         m_qt_compositor->cleanupGraphicsResources();
-     }
+-
+-    void updateStarted()
+-    {
+-        updateScheduled = false;
+-        m_qt_compositor->frameStarted();
+-        m_qt_compositor->cleanupGraphicsResources();
+-    }
+-
+-    bool updateScheduled;
+ };
+ 
  
 diff --git a/src/compositor/compositor_api/qwaylandquicksurface.cpp b/src/compositor/compositor_api/qwaylandquicksurface.cpp
-index 83b37da..ea4e0d3 100644
+index 91237b8..44e0edf 100644
 --- a/src/compositor/compositor_api/qwaylandquicksurface.cpp
 +++ b/src/compositor/compositor_api/qwaylandquicksurface.cpp
-@@ -167,12 +167,8 @@ QWaylandQuickSurface::QWaylandQuickSurface(wl_client *client, quint32 id, int ve
+@@ -77,7 +77,8 @@ public:
+             bufferRef.destroyTexture();
+         bufferRef = nextBuffer;
+ 
+-        QQuickWindow *window = static_cast<QQuickWindow *>(surface->output()->window());
++        QQuickWindow *window = static_cast<QQuickWindow *>(surface->mainOutput()->window());
++
+         // If the next buffer is NULL do not delete the current texture. If the client called
+         // attach(0) the surface is going to be unmapped anyway, if instead the client attached
+         // a valid buffer but died before we got here we want to keep the old buffer around
+@@ -142,7 +143,8 @@ public:
+         }
+         QWaylandSurfacePrivate::surface_commit(resource);
+ 
+-        output()->waylandOutput()->update();
++        Q_FOREACH (QtWayland::Output *output, outputs())
++            output->waylandOutput()->update();
+     }
+ 
+     BufferAttacher *buffer;
+@@ -159,12 +161,8 @@ QWaylandQuickSurface::QWaylandQuickSurface(wl_client *client, quint32 id, int ve
      d->buffer->surface = this;
      setBufferAttacher(d->buffer);
  
@@ -267,25 +300,37 @@ index 83b37da..ea4e0d3 100644
  }
  
  QWaylandQuickSurface::~QWaylandQuickSurface()
-@@ -208,6 +204,28 @@ QObject *QWaylandQuickSurface::windowPropertyMap() const
+@@ -200,6 +198,40 @@ QObject *QWaylandQuickSurface::windowPropertyMap() const
      return d->windowPropertyMap;
  }
  
 +bool QWaylandQuickSurface::event(QEvent *e)
 +{
-+    if (e->type() == static_cast<QEvent::Type>(QWaylandOutputChangedEvent::WaylandOutputChanged)) {
-+        QWaylandOutputChangedEvent *event = static_cast<QWaylandOutputChangedEvent *>(e);
++    if (e->type() == static_cast<QEvent::Type>(QWaylandSurfaceLeaveEvent::WaylandSurfaceLeave)) {
++        QWaylandSurfaceLeaveEvent *event = static_cast<QWaylandSurfaceLeaveEvent *>(e);
 +
-+        if (event->oldOutput()) {
-+            QQuickWindow *oldWindow = static_cast<QQuickWindow *>(event->oldOutput()->window());
-+            disconnect(oldWindow, &QQuickWindow::beforeSynchronizing, this, &QWaylandQuickSurface::updateTexture);
-+            disconnect(oldWindow, &QQuickWindow::sceneGraphInvalidated, this, &QWaylandQuickSurface::invalidateTexture);
++        if (event->output()) {
++            QQuickWindow *oldWindow = static_cast<QQuickWindow *>(event->output()->window());
++            disconnect(oldWindow, &QQuickWindow::beforeSynchronizing,
++                       this, &QWaylandQuickSurface::updateTexture);
++            disconnect(oldWindow, &QQuickWindow::sceneGraphInvalidated,
++                       this, &QWaylandQuickSurface::invalidateTexture);
 +        }
 +
-+        if (event->newOutput()) {
-+            QQuickWindow *window = static_cast<QQuickWindow *>(event->newOutput()->window());
-+            connect(window, &QQuickWindow::beforeSynchronizing, this, &QWaylandQuickSurface::updateTexture, Qt::DirectConnection);
-+            connect(window, &QQuickWindow::sceneGraphInvalidated, this, &QWaylandQuickSurface::invalidateTexture, Qt::DirectConnection);
++        return true;
++    }
++
++    if (e->type() == static_cast<QEvent::Type>(QWaylandSurfaceEnterEvent::WaylandSurfaceEnter)) {
++        QWaylandSurfaceEnterEvent *event = static_cast<QWaylandSurfaceEnterEvent *>(e);
++
++        if (event->output()) {
++            QQuickWindow *window = static_cast<QQuickWindow *>(event->output()->window());
++            connect(window, &QQuickWindow::beforeSynchronizing,
++                    this, &QWaylandQuickSurface::updateTexture,
++                    Qt::DirectConnection);
++            connect(window, &QQuickWindow::sceneGraphInvalidated,
++                    this, &QWaylandQuickSurface::invalidateTexture,
++                    Qt::DirectConnection);
 +        }
 +
 +        return true;
@@ -297,10 +342,10 @@ index 83b37da..ea4e0d3 100644
  void QWaylandQuickSurface::updateTexture()
  {
 diff --git a/src/compositor/compositor_api/qwaylandquicksurface.h b/src/compositor/compositor_api/qwaylandquicksurface.h
-index d65a982..d9555da 100644
+index 1c7eea6..4c37e66 100644
 --- a/src/compositor/compositor_api/qwaylandquicksurface.h
 +++ b/src/compositor/compositor_api/qwaylandquicksurface.h
-@@ -75,6 +75,9 @@ public:
+@@ -67,6 +67,9 @@ public:
  
      QObject *windowPropertyMap() const;
  
@@ -311,82 +356,192 @@ index d65a982..d9555da 100644
      void useTextureAlphaChanged();
      void clientRenderingEnabledChanged();
 diff --git a/src/compositor/compositor_api/qwaylandsurface.cpp b/src/compositor/compositor_api/qwaylandsurface.cpp
-index b504d2f..768bffd 100644
+index cbfe920..e5ecb15 100644
 --- a/src/compositor/compositor_api/qwaylandsurface.cpp
 +++ b/src/compositor/compositor_api/qwaylandsurface.cpp
-@@ -72,6 +72,41 @@ QWaylandSurfacePrivate::QWaylandSurfacePrivate(wl_client *wlClient, quint32 id,
+@@ -1,6 +1,6 @@
+ /****************************************************************************
+ **
+-** Copyright (C) 2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
++** Copyright (C) 2014-2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ ** Copyright (C) 2015 The Qt Company Ltd.
+ ** Contact: http://www.qt.io/licensing/
+ **
+@@ -63,6 +63,9 @@
+ 
+ QT_BEGIN_NAMESPACE
+ 
++const QEvent::Type QWaylandSurfaceEnterEvent::WaylandSurfaceEnter = (QEvent::Type)QEvent::registerEventType();
++const QEvent::Type QWaylandSurfaceLeaveEvent::WaylandSurfaceLeave = (QEvent::Type)QEvent::registerEventType();
++
+ QWaylandSurfacePrivate::QWaylandSurfacePrivate(wl_client *wlClient, quint32 id, int version, QWaylandCompositor *compositor, QWaylandSurface *surface)
+     : QtWayland::Surface(wlClient, id, version, compositor, surface)
+     , closing(false)
+@@ -72,6 +75,63 @@ QWaylandSurfacePrivate::QWaylandSurfacePrivate(wl_client *wlClient, quint32 id,
  {}
  
  
-+class QWaylandOutputChangedEventPrivate
++class QWaylandSurfaceEnterEventPrivate
 +{
 +public:
-+    QWaylandOutputChangedEventPrivate(QWaylandOutput *oldOutput, QWaylandOutput *newOutput)
-+        : oldOutput(oldOutput)
-+        , newOutput(newOutput)
++    QWaylandSurfaceEnterEventPrivate(QWaylandOutput *_output)
++        : output(_output)
 +    {
 +    }
 +
-+    QWaylandOutput *oldOutput;
-+    QWaylandOutput *newOutput;
++    QWaylandOutput *output;
 +};
 +
 +
-+QWaylandOutputChangedEvent::QWaylandOutputChangedEvent(QWaylandOutput *oldOutput, QWaylandOutput *newOutput)
-+    : QEvent(static_cast<QEvent::Type>(QWaylandOutputChangedEvent::WaylandOutputChanged))
-+    , d(new QWaylandOutputChangedEventPrivate(oldOutput, newOutput))
++QWaylandSurfaceEnterEvent::QWaylandSurfaceEnterEvent(QWaylandOutput *output)
++    : QEvent(WaylandSurfaceEnter)
++    , d(new QWaylandSurfaceEnterEventPrivate(output))
 +{
 +}
 +
-+QWaylandOutputChangedEvent::~QWaylandOutputChangedEvent()
++QWaylandSurfaceEnterEvent::~QWaylandSurfaceEnterEvent()
 +{
 +    delete d;
 +}
 +
-+QWaylandOutput *QWaylandOutputChangedEvent::oldOutput() const
++QWaylandOutput *QWaylandSurfaceEnterEvent::output() const
 +{
-+    return d->oldOutput;
++    return d->output;
 +}
 +
-+QWaylandOutput *QWaylandOutputChangedEvent::newOutput() const
++
++class QWaylandSurfaceLeaveEventPrivate
 +{
-+    return d->newOutput;
++public:
++    QWaylandSurfaceLeaveEventPrivate(QWaylandOutput *_output)
++        : output(_output)
++    {
++    }
++
++    QWaylandOutput *output;
++};
++
++
++QWaylandSurfaceLeaveEvent::QWaylandSurfaceLeaveEvent(QWaylandOutput *output)
++    : QEvent(WaylandSurfaceLeave)
++    , d(new QWaylandSurfaceLeaveEventPrivate(output))
++{
++}
++
++QWaylandSurfaceLeaveEvent::~QWaylandSurfaceLeaveEvent()
++{
++    delete d;
++}
++
++QWaylandOutput *QWaylandSurfaceLeaveEvent::output() const
++{
++    return d->output;
 +}
 +
  
  QWaylandSurface::QWaylandSurface(wl_client *client, quint32 id, int version, QWaylandCompositor *compositor)
      : QObject(*new QWaylandSurfacePrivate(client, id, version, compositor, this))
+@@ -239,12 +299,32 @@ QWaylandCompositor *QWaylandSurface::compositor() const
+     return d->compositor()->waylandCompositor();
+ }
+ 
+-QWaylandOutput *QWaylandSurface::output() const
++QWaylandOutput *QWaylandSurface::mainOutput() const
+ {
+     Q_D(const QWaylandSurface);
+-    if (!d->output())
+-        return Q_NULLPTR;
+-    return d->output()->waylandOutput();
++
++    // Returns the output that contains the most if not all
++    // the surface (window managers will take care of setting
++    // this, defaults to the first output)
++    return d->mainOutput()->waylandOutput();
++}
++
++void QWaylandSurface::setMainOutput(QWaylandOutput *mainOutput)
++{
++    Q_D(QWaylandSurface);
++
++    if (mainOutput)
++        d->setMainOutput(mainOutput->handle());
++}
++
++QList<QWaylandOutput *> QWaylandSurface::outputs() const
++{
++    Q_D(const QWaylandSurface);
++
++    QList<QWaylandOutput *> list;
++    Q_FOREACH (QtWayland::Output *output, d->outputs())
++        list.append(output->waylandOutput());
++    return list;
+ }
+ 
+ QWindow::Visibility QWaylandSurface::visibility() const
 diff --git a/src/compositor/compositor_api/qwaylandsurface.h b/src/compositor/compositor_api/qwaylandsurface.h
-index 1294d4f..858a537 100644
+index e16bdb4..bc47e67 100644
 --- a/src/compositor/compositor_api/qwaylandsurface.h
 +++ b/src/compositor/compositor_api/qwaylandsurface.h
-@@ -81,6 +81,25 @@ protected:
+@@ -1,6 +1,6 @@
+ /****************************************************************************
+ **
+-** Copyright (C) 2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
++** Copyright (C) 2014-2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ ** Copyright (C) 2015 The Qt Company Ltd.
+ ** Contact: http://www.qt.io/licensing/
+ **
+@@ -81,6 +81,38 @@ protected:
      friend class QtWayland::Surface;
  };
  
-+class QWaylandOutputChangedEventPrivate;
++class QWaylandSurfaceEnterEventPrivate;
 +
-+class Q_COMPOSITOR_EXPORT QWaylandOutputChangedEvent : public QEvent
++class Q_COMPOSITOR_EXPORT QWaylandSurfaceEnterEvent : public QEvent
 +{
 +public:
-+    enum Type {
-+        WaylandOutputChanged = QEvent::User
-+    };
++    QWaylandSurfaceEnterEvent(QWaylandOutput *output);
++    ~QWaylandSurfaceEnterEvent();
 +
-+    QWaylandOutputChangedEvent(QWaylandOutput *oldOutput, QWaylandOutput *newOutput);
-+    ~QWaylandOutputChangedEvent();
++    QWaylandOutput *output() const;
 +
-+    QWaylandOutput *oldOutput() const;
-+    QWaylandOutput *newOutput() const;
++    static const QEvent::Type WaylandSurfaceEnter;
 +
 +private:
-+    QWaylandOutputChangedEventPrivate *d;
++    QWaylandSurfaceEnterEventPrivate *d;
++};
++
++class QWaylandSurfaceLeaveEventPrivate;
++
++class Q_COMPOSITOR_EXPORT QWaylandSurfaceLeaveEvent : public QEvent
++{
++public:
++    QWaylandSurfaceLeaveEvent(QWaylandOutput *output);
++    ~QWaylandSurfaceLeaveEvent();
++
++    QWaylandOutput *output() const;
++
++    static const QEvent::Type WaylandSurfaceLeave;
++
++private:
++    QWaylandSurfaceLeaveEventPrivate *d;
 +};
 +
  class Q_COMPOSITOR_EXPORT QWaylandSurface : public QObject
  {
      Q_OBJECT
-@@ -223,6 +242,7 @@ Q_SIGNALS:
+@@ -163,7 +195,10 @@ public:
+ 
+     QWaylandCompositor *compositor() const;
+ 
+-    QWaylandOutput *output() const;
++    QWaylandOutput *mainOutput() const;
++    void setMainOutput(QWaylandOutput *mainOutput);
++
++    QList<QWaylandOutput *> outputs() const;
+ 
+     QString className() const;
+ 
+@@ -223,6 +258,7 @@ Q_SIGNALS:
  
      friend class QWaylandSurfaceView;
      friend class QWaylandSurfaceInterface;
@@ -394,44 +549,32 @@ index 1294d4f..858a537 100644
  };
  
  QT_END_NAMESPACE
+diff --git a/src/compositor/compositor_api/qwaylandsurfaceitem.cpp b/src/compositor/compositor_api/qwaylandsurfaceitem.cpp
+index c395190..90a68c4 100644
+--- a/src/compositor/compositor_api/qwaylandsurfaceitem.cpp
++++ b/src/compositor/compositor_api/qwaylandsurfaceitem.cpp
+@@ -372,7 +372,7 @@ QSGNode *QWaylandSurfaceItem::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeD
+ {
+     bool mapped = surface() && surface()->isMapped();
+ 
+-    if (!mapped || !m_provider->t || !m_paintEnabled) {
++    if (!mapped || !m_provider || !m_provider->t || !m_paintEnabled) {
+         delete oldNode;
+         return 0;
+     }
 diff --git a/src/compositor/wayland_wrapper/qwlcompositor.cpp b/src/compositor/wayland_wrapper/qwlcompositor.cpp
-index aa772d9..d2fa468 100644
+index 43c9475..2fd91f3 100644
 --- a/src/compositor/wayland_wrapper/qwlcompositor.cpp
 +++ b/src/compositor/wayland_wrapper/qwlcompositor.cpp
-@@ -198,14 +198,6 @@ Compositor::~Compositor()
-     delete m_display;
- }
- 
--void Compositor::sendFrameCallbacks(QList<QWaylandSurface *> visibleSurfaces)
--{
--    foreach (QWaylandSurface *surface, visibleSurfaces) {
--        surface->handle()->sendFrameCallback();
--    }
--    wl_display_flush_clients(m_display->handle());
--}
--
- uint Compositor::currentTimeMsecs() const
- {
-     return m_timer.elapsed();
-@@ -272,7 +264,7 @@ void Compositor::processWaylandEvents()
- 
- void Compositor::destroySurface(Surface *surface)
- {
--    m_surfaces.removeOne(surface);
-+    surface->removeFromOutput();
- 
-     waylandCompositor()->surfaceAboutToBeDestroyed(surface->waylandSurface());
- 
-@@ -299,7 +291,7 @@ void Compositor::cleanupGraphicsResources()
- void Compositor::compositor_create_surface(Resource *resource, uint32_t id)
+@@ -300,6 +300,7 @@ void Compositor::compositor_create_surface(Resource *resource, uint32_t id)
  {
      QWaylandSurface *surface = new QWaylandSurface(resource->client(), id, resource->version(), m_qt_compositor);
--    m_surfaces << surface->handle();
-+    primaryOutput()->handle()->addSurface(surface);
+     m_surfaces << surface->handle();
++    surface->handle()->addToOutput(primaryOutput()->handle());
      //BUG: This may not be an on-screen window surface though
      m_qt_compositor->surfaceCreated(surface);
  }
-@@ -405,18 +397,6 @@ InputDevice* Compositor::defaultInputDevice()
+@@ -405,18 +406,6 @@ InputDevice* Compositor::defaultInputDevice()
      return m_inputDevices.last()->handle();
  }
  
@@ -451,37 +594,38 @@ index aa772d9..d2fa468 100644
  {
      if (m_touchExtension)
 diff --git a/src/compositor/wayland_wrapper/qwlcompositor_p.h b/src/compositor/wayland_wrapper/qwlcompositor_p.h
-index 85f020d..f67d39b 100644
+index 2a55ae4..1efbd2e 100644
 --- a/src/compositor/wayland_wrapper/qwlcompositor_p.h
 +++ b/src/compositor/wayland_wrapper/qwlcompositor_p.h
-@@ -94,8 +94,6 @@ public:
-     ~Compositor();
+@@ -1,6 +1,6 @@
+ /****************************************************************************
+ **
+-** Copyright (C) 2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
++** Copyright (C) 2014-2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ ** Copyright (C) 2015 The Qt Company Ltd.
+ ** Contact: http://www.qt.io/licensing/
+ **
+@@ -95,7 +95,6 @@ public:
  
      void init();
--    void sendFrameCallbacks(QList<QWaylandSurface *> visibleSurfaces);
+     void sendFrameCallbacks(QList<QWaylandSurface *> visibleSurfaces);
 -    void frameFinished(Surface *surface = 0);
  
      InputDevice *defaultInputDevice();
  
-@@ -126,8 +124,6 @@ public:
+@@ -126,8 +125,8 @@ public:
      void initializeDefaultInputDevice();
      void initializeWindowManagerProtocol();
  
 -    QList<Surface*> surfaces() const { return m_surfaces; }
 -    QList<Surface*> surfacesForClient(wl_client* client);
++    QList<Surface *> surfaces() const { return m_surfaces; }
++
      QWaylandCompositor *waylandCompositor() const { return m_qt_compositor; }
  
      struct wl_display *wl_display() const { return m_display->handle(); }
-@@ -193,7 +189,6 @@ protected:
-     DataDeviceManager *m_data_device_manager;
- 
-     QElapsedTimer m_timer;
--    QList<Surface *> m_surfaces;
-     QSet<QWaylandSurface *> m_destroyed_surfaces;
- 
-     /* Render state */
 diff --git a/src/compositor/wayland_wrapper/qwloutput.cpp b/src/compositor/wayland_wrapper/qwloutput.cpp
-index 1659a63..da7e0a9 100644
+index b01ffa5..ba9338d 100644
 --- a/src/compositor/wayland_wrapper/qwloutput.cpp
 +++ b/src/compositor/wayland_wrapper/qwloutput.cpp
 @@ -43,9 +43,12 @@
@@ -497,76 +641,11 @@ index 1659a63..da7e0a9 100644
  
  QT_BEGIN_NAMESPACE
  
-@@ -246,6 +249,48 @@ OutputResource *Output::outputForClient(wl_client *client) const
-     return static_cast<OutputResource *>(resourceMap().value(client));
- }
- 
-+void Output::frameStarted()
-+{
-+    Q_FOREACH (QWaylandSurface *surface, m_surfaces)
-+        surface->handle()->frameStarted();
-+}
-+
-+void Output::sendFrameCallbacks(QList<QWaylandSurface *> visibleSurfaces)
-+{
-+    Q_FOREACH (QWaylandSurface *surface, visibleSurfaces)
-+        surface->handle()->sendFrameCallback();
-+    wl_display_flush_clients(m_compositor->wl_display());
-+}
-+
-+QList<QWaylandSurface *> Output::surfacesForClient(QWaylandClient *client) const
-+{
-+    QList<QWaylandSurface *> result;
-+
-+    Q_FOREACH (QWaylandSurface *surface, m_surfaces) {
-+        if (surface->client() == client)
-+            result.append(result);
-+    }
-+
-+    return result;
-+}
-+
-+void Output::addSurface(QWaylandSurface *surface)
-+{
-+    if (surface->output() == waylandOutput())
-+        return;
-+    if (surface->output())
-+        surface->output()->handle()->removeSurface(surface);
-+
-+    surface->handle()->setOutput(this);
-+    m_surfaces.append(surface);
-+}
-+
-+void Output::removeSurface(QWaylandSurface *surface)
-+{
-+    m_surfaces.removeOne(surface);
-+    surface->handle()->setOutput(Q_NULLPTR);
-+}
-+
- void Output::sendGeometryInfo()
- {
-     Q_FOREACH (Resource *resource, resourceMap().values()) {
 diff --git a/src/compositor/wayland_wrapper/qwloutput_p.h b/src/compositor/wayland_wrapper/qwloutput_p.h
-index 027cc55..9247b47 100644
+index 06ff02e..1bf6e01 100644
 --- a/src/compositor/wayland_wrapper/qwloutput_p.h
 +++ b/src/compositor/wayland_wrapper/qwloutput_p.h
-@@ -110,6 +110,15 @@ public:
- 
-     QWaylandOutput *waylandOutput() const { return m_output; }
- 
-+    void frameStarted();
-+    void sendFrameCallbacks(QList<QWaylandSurface *> visibleSurfaces);
-+
-+    QList<QWaylandSurface *> surfaces() const { return m_surfaces; }
-+    QList<QWaylandSurface *> surfacesForClient(QWaylandClient *client) const;
-+
-+    void addSurface(QWaylandSurface *surface);
-+    void removeSurface(QWaylandSurface *surface);
-+
-     void output_bind_resource(Resource *resource) Q_DECL_OVERRIDE;
-     Resource *output_allocate() Q_DECL_OVERRIDE { return new OutputResource; }
- 
-@@ -128,6 +137,7 @@ private:
+@@ -128,6 +128,7 @@ private:
      QWaylandOutput::Subpixel m_subpixel;
      QWaylandOutput::Transform m_transform;
      int m_scaleFactor;
@@ -575,7 +654,7 @@ index 027cc55..9247b47 100644
      void sendGeometryInfo();
  };
 diff --git a/src/compositor/wayland_wrapper/qwlsurface.cpp b/src/compositor/wayland_wrapper/qwlsurface.cpp
-index a24aa7e..a90d101 100644
+index e26eec8..4cadbb5 100644
 --- a/src/compositor/wayland_wrapper/qwlsurface.cpp
 +++ b/src/compositor/wayland_wrapper/qwlsurface.cpp
 @@ -114,7 +114,7 @@ Surface::Surface(struct wl_client *client, uint32_t id, int version, QWaylandCom
@@ -583,75 +662,108 @@ index a24aa7e..a90d101 100644
      , m_compositor(compositor->handle())
      , m_waylandSurface(surface)
 -    , m_output(m_compositor->primaryOutput()->handle())
-+    , m_output(0)
++    , m_mainOutput(0)
      , m_buffer(0)
      , m_surfaceMapped(false)
      , m_attacher(0)
-@@ -283,6 +283,51 @@ Output *Surface::output() const
-     return m_output;
+@@ -278,9 +278,66 @@ Compositor *Surface::compositor() const
+     return m_compositor;
  }
  
-+void Surface::setOutput(Output *output)
+-Output *Surface::output() const
++Output *Surface::mainOutput() const
+ {
+-    return m_output;
++    if (!m_mainOutput)
++        return m_compositor->primaryOutput()->handle();
++    return m_mainOutput;
++}
++
++void Surface::setMainOutput(Output *output)
 +{
-+    if (m_output == output)
++    m_mainOutput = output;
++}
++
++QList<Output *> Surface::outputs() const
++{
++    return m_outputs;
++}
++
++void Surface::addToOutput(Output *output)
++{
++    if (!output)
 +        return;
 +
-+    QWaylandOutput *oldOutput = m_output ? m_output->waylandOutput() : Q_NULLPTR;
-+    m_output = output;
++    if (!m_mainOutput)
++        m_mainOutput = output;
 +
-+    QWaylandOutputChangedEvent event(oldOutput, m_output ? m_output->waylandOutput() : Q_NULLPTR);
++    if (m_outputs.contains(output))
++        return;
++
++    m_outputs.append(output);
++
++    QWaylandSurfaceEnterEvent event(output->waylandOutput());
 +    QCoreApplication::sendEvent(waylandSurface(), &event);
 +
-+    // Send surface enter/leave events
++    // Send surface enter event
 +    Q_FOREACH (Resource *resource, resourceMap().values()) {
-+        QList<Output::Resource *> outputs;
-+
-+        if (oldOutput) {
-+            outputs = oldOutput->handle()->resourceMap().values();
-+            for (int i = 0; i < outputs.size(); i++)
-+                send_leave(resource->handle, outputs.at(i)->handle);
-+        }
-+
-+        if (m_output) {
-+            outputs = m_output->resourceMap().values();
-+            for (int i = 0; i < outputs.size(); i++)
-+                send_enter(resource->handle, outputs.at(i)->handle);
-+        }
++        QList<Output::Resource *> outputs = output->resourceMap().values();
++        for (int i = 0; i < outputs.size(); i++)
++            send_enter(resource->handle, outputs.at(i)->handle);
 +    }
 +}
 +
-+void Surface::removeFromOutput()
++void Surface::removeFromOutput(Output *output)
 +{
-+    if (!m_output)
++    if (!output)
 +        return;
 +
-+    // Remove surface
-+    m_output->removeSurface(this->waylandSurface());
++    m_outputs.removeOne(output);
++
++    if (m_outputs.size() == 0)
++        m_mainOutput = m_compositor->primaryOutput()->handle();
++
++    QWaylandSurfaceLeaveEvent event(output->waylandOutput());
++    QCoreApplication::sendEvent(waylandSurface(), &event);
 +
 +    // Send surface leave event
 +    Q_FOREACH (Resource *resource, resourceMap().values()) {
-+        QList<Output::Resource *> outputs = m_output->resourceMap().values();
++        QList<Output::Resource *> outputs = output->resourceMap().values();
 +        for (int i = 0; i < outputs.size(); i++)
 +            send_leave(resource->handle, outputs.at(i)->handle);
 +    }
-+}
-+
+ }
+ 
  /*!
-  * Sets the backbuffer for this surface. The back buffer is not yet on
-  * screen and will become live during the next swapBuffers().
 diff --git a/src/compositor/wayland_wrapper/qwlsurface_p.h b/src/compositor/wayland_wrapper/qwlsurface_p.h
-index 07eb358..880114f 100644
+index 0633a93..103b599 100644
 --- a/src/compositor/wayland_wrapper/qwlsurface_p.h
 +++ b/src/compositor/wayland_wrapper/qwlsurface_p.h
-@@ -114,6 +114,8 @@ public:
+@@ -113,7 +113,13 @@ public:
+ 
      Compositor *compositor() const;
  
-     Output *output() const;
-+    void setOutput(Output *output);
-+    void removeFromOutput();
+-    Output *output() const;
++    Output *mainOutput() const;
++    void setMainOutput(Output *output);
++
++    QList<Output *> outputs() const;
++
++    void addToOutput(Output *output);
++    void removeFromOutput(Output *output);
  
      QString className() const { return m_className; }
      void setClassName(const QString &className);
+@@ -162,7 +168,8 @@ protected:
+ 
+     Compositor *m_compositor;
+     QWaylandSurface *m_waylandSurface;
+-    Output *m_output;
++    Output *m_mainOutput;
++    QList<Output *> m_outputs;
+ 
+     QRegion m_damage;
+     SurfaceBuffer *m_buffer;
 -- 
 1.9.0
 
