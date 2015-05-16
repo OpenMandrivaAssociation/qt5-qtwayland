@@ -23,8 +23,6 @@ Source0:	http://download.qt-project.org/development_releases/qt/%(echo %{version
 Release:	1
 Source0:	http://download.qt-project.org/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}/submodules/%{qttarballdir}.tar.xz
 %endif
-# (tpg) https://codereview.qt-project.org/#/c/102816/
-Patch0:		0001-Move-surfaces-to-outputs.patch
 Summary:	Qt5 - Wayland platform support and QtCompositor module
 Group:		Development/KDE and Qt
 License:	LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
