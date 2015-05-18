@@ -30,6 +30,7 @@ URL:		http://www.qt-project.org
 # (tpg) add these patches
 # https://codereview.qt-project.org/#/c/112353/
 # https://codereview.qt-project.org/#/c/111803/
+# https://codereview.qt-project.org/#/c/104222/
 BuildRequires:	qt5-qtbase-devel >= %{version}
 BuildRequires:	pkgconfig(Qt5Quick) >= %{version}
 BuildRequires:	pkgconfig(Qt5Core) >= %{version}
