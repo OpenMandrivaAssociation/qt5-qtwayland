@@ -1,0 +1,1288 @@
+From b7c60b0082454e768f4917217a427e9ac4993139 Mon Sep 17 00:00:00 2001
+From: Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+Date: Fri, 10 Apr 2015 17:52:49 +0200
+Subject: [PATCH] Add mode support to QWaylandOutput
+
+Outputs usually have more than one mode, add an API to support them.
+
+When a compositor creates a QWaylandOutput it has to create a
+QWaylandOutputMode for each mode and set the modes list.
+
+The current and preferred modes can be set after listing all the modes.
+By default the preferred and current mode both are the highest one.
+
+QWaylandOutputMode has read only properties so it can be used from QML
+through QWaylandQuickOutput.
+
+This commit also contains a unit test.
+
+Change-Id: Ie3f930df6f567f31ed7325236658affa4f60e19e
+---
+ .gitignore                                         |   1 +
+ examples/wayland/qml-compositor/main.cpp           |  11 +-
+ .../qwindow-compositor/qwindowcompositor.cpp       |   8 +-
+ examples/wayland/server-buffer/compositor/main.cpp |  12 +-
+ src/compositor/compositor_api/compositor_api.pri   |   3 +
+ .../compositor_api/qwaylandcompositor.cpp          |   5 +-
+ src/compositor/compositor_api/qwaylandcompositor.h |   4 +-
+ src/compositor/compositor_api/qwaylandoutput.cpp   |  68 ++++++----
+ src/compositor/compositor_api/qwaylandoutput.h     |  32 ++---
+ .../compositor_api/qwaylandoutputmode.cpp          | 120 ++++++++++++++++++
+ src/compositor/compositor_api/qwaylandoutputmode.h |  87 +++++++++++++
+ .../compositor_api/qwaylandquickcompositor.cpp     |   5 +-
+ .../compositor_api/qwaylandquickcompositor.h       |   3 +-
+ .../compositor_api/qwaylandquickoutput.cpp         |  45 ++++++-
+ .../compositor_api/qwaylandquickoutput.h           |  10 +-
+ .../compositor_api/qwaylandquickoutput_p.h         |  61 +++++++++
+ src/compositor/wayland_wrapper/qwloutput.cpp       |  94 +++++++++-----
+ src/compositor/wayland_wrapper/qwloutput_p.h       |  19 ++-
+ tests/auto/auto.pro                                |   1 +
+ tests/auto/compositor/testcompositor.cpp           |  11 +-
+ tests/auto/compositor/testcompositor.h             |   2 +-
+ tests/auto/compositor/tst_compositor.cpp           |   6 +-
+ tests/auto/output/output.pro                       |  16 +++
+ tests/auto/output/tst_output.cpp                   | 140 +++++++++++++++++++++
+ 24 files changed, 664 insertions(+), 100 deletions(-)
+ create mode 100644 src/compositor/compositor_api/qwaylandoutputmode.cpp
+ create mode 100644 src/compositor/compositor_api/qwaylandoutputmode.h
+ create mode 100644 src/compositor/compositor_api/qwaylandquickoutput_p.h
+ create mode 100644 tests/auto/output/output.pro
+ create mode 100644 tests/auto/output/tst_output.cpp
+
+diff --git a/.gitignore b/.gitignore
+index b33ca90..2c807bd 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -63,4 +63,5 @@ src/plugins/hardwareintegration/*/*/*-client-protocol.h
+ src/plugins/hardwareintegration/*/*/*-protocol.c
+ tests/auto/client/tst_client
+ tests/auto/compositor/tst_compositor
++tests/auto/output/tst_output
+ *~
+diff --git a/examples/wayland/qml-compositor/main.cpp b/examples/wayland/qml-compositor/main.cpp
+index 667b1af..06dfcd6 100644
+--- a/examples/wayland/qml-compositor/main.cpp
++++ b/examples/wayland/qml-compositor/main.cpp
+@@ -43,7 +43,7 @@
+ #include "qwaylandquicksurface.h"
+ 
+ #include <QtCompositor/qwaylandsurfaceitem.h>
+-#include <QtCompositor/qwaylandoutput.h>
++#include <QtCompositor/qwaylandquickoutput.h>
+ 
+ #include <QGuiApplication>
+ #include <QTimer>
+@@ -70,7 +70,13 @@ public:
+         setColor(Qt::black);
+         winId();
+         addDefaultShell();
+-        createOutput(this, "", "");
++
++        QWaylandOutputMode *mode = new QWaylandOutputMode("defaultmode",
++                                                          QSize(1024, 768), 60000);
++        new QWaylandQuickOutput(this, this,
++                                QStringLiteral("QmlCompositor"),
++                                QStringLiteral("QmlCompositor"),
++                                QWaylandOutputModeList() << mode);
+ 
+         connect(this, SIGNAL(afterRendering()), this, SLOT(sendCallbacks()));
+     }
+@@ -148,7 +154,6 @@ int main(int argc, char *argv[])
+ 
+     QmlCompositor compositor;
+     compositor.setTitle(QLatin1String("QML Compositor"));
+-    compositor.setGeometry(0, 0, 1024, 768);
+     compositor.show();
+ 
+     compositor.rootContext()->setContextProperty("compositor", &compositor);
+diff --git a/examples/wayland/qwindow-compositor/qwindowcompositor.cpp b/examples/wayland/qwindow-compositor/qwindowcompositor.cpp
+index 0b39f11..3469755 100644
+--- a/examples/wayland/qwindow-compositor/qwindowcompositor.cpp
++++ b/examples/wayland/qwindow-compositor/qwindowcompositor.cpp
+@@ -137,7 +137,13 @@ QWindowCompositor::QWindowCompositor(CompositorWindow *window)
+ 
+     setRetainedSelectionEnabled(true);
+ 
+-    createOutput(window, "", "");
++    QWaylandOutputMode *mode = new QWaylandOutputMode("defaultmode",
++                                                      window->size(), 60000);
++    new QWaylandOutput(this, window,
++                       QStringLiteral("QWindowCompositor"),
++                       QStringLiteral("QWindowCompositor"),
++                       QWaylandOutputModeList() << mode);
++
+     addDefaultShell();
+ }
+ 
+diff --git a/examples/wayland/server-buffer/compositor/main.cpp b/examples/wayland/server-buffer/compositor/main.cpp
+index b16dc78..ca4ba3d 100644
+--- a/examples/wayland/server-buffer/compositor/main.cpp
++++ b/examples/wayland/server-buffer/compositor/main.cpp
+@@ -55,7 +55,7 @@
+ #include <QQuickView>
+ 
+ #include "qwayland-server-share-buffer.h"
+-#include <QtCompositor/qwaylandoutput.h>
++#include <QtCompositor/qwaylandquickoutput.h>
+ #include <QtCompositor/private/qwlcompositor_p.h>
+ #include <QtCompositor/private/qwlserverbufferintegration_p.h>
+ 
+@@ -84,7 +84,14 @@ public:
+         setColor(Qt::black);
+         create();
+         grabWindow();
+-        createOutput(this, "", "");
++
++        QWaylandOutputMode *mode = new QWaylandOutputMode("defaultmode",
++                                                          QSize(1024, 768), 60000);
++        new QWaylandQuickOutput(this, this,
++                                QStringLiteral("QmlCompositor"),
++                                QStringLiteral("QmlCompositor"),
++                                QWaylandOutputModeList() << mode);
++
+         addDefaultShell();
+ 
+         connect(this, SIGNAL(afterRendering()), this, SLOT(sendCallbacks()));
+@@ -242,7 +249,6 @@ int main(int argc, char *argv[])
+ 
+     QmlCompositor compositor;
+     compositor.setTitle(QLatin1String("QML Compositor"));
+-    compositor.setGeometry(0, 0, 1024, 768);
+     compositor.show();
+ 
+     compositor.rootContext()->setContextProperty("compositor", &compositor);
+diff --git a/src/compositor/compositor_api/compositor_api.pri b/src/compositor/compositor_api/compositor_api.pri
+index ac356b8..48a8260 100644
+--- a/src/compositor/compositor_api/compositor_api.pri
++++ b/src/compositor/compositor_api/compositor_api.pri
+@@ -8,6 +8,7 @@ HEADERS += \
+     compositor_api/qwaylandinput.h \
+     compositor_api/qwaylandinputpanel.h \
+     compositor_api/qwaylandoutput.h \
++    compositor_api/qwaylandoutputmode.h \
+     compositor_api/qwaylanddrag.h \
+     compositor_api/qwaylandbufferref.h \
+     compositor_api/qwaylandsurfaceview.h \
+@@ -21,6 +22,7 @@ SOURCES += \
+     compositor_api/qwaylandinput.cpp \
+     compositor_api/qwaylandinputpanel.cpp \
+     compositor_api/qwaylandoutput.cpp \
++    compositor_api/qwaylandoutputmode.cpp \
+     compositor_api/qwaylanddrag.cpp \
+     compositor_api/qwaylandbufferref.cpp \
+     compositor_api/qwaylandsurfaceview.cpp \
+@@ -40,6 +42,7 @@ qtHaveModule(quick) {
+         compositor_api/qwaylandquickcompositor.h \
+         compositor_api/qwaylandquicksurface.h \
+         compositor_api/qwaylandquickoutput.h \
++        compositor_api/qwaylandquickoutput_p.h \
+         compositor_api/qwaylandsurfaceitem.h
+ 
+     QT += qml quick
+diff --git a/src/compositor/compositor_api/qwaylandcompositor.cpp b/src/compositor/compositor_api/qwaylandcompositor.cpp
+index 96684e4..70e476c 100644
+--- a/src/compositor/compositor_api/qwaylandcompositor.cpp
++++ b/src/compositor/compositor_api/qwaylandcompositor.cpp
+@@ -300,9 +300,10 @@ QWaylandInputDevice *QWaylandCompositor::inputDeviceFor(QInputEvent *inputEvent)
+ 
+ QWaylandOutput *QWaylandCompositor::createOutput(QWindow *window,
+                                                  const QString &manufacturer,
+-                                                 const QString &model)
++                                                 const QString &model,
++                                                 const QWaylandOutputModeList &modes)
+ {
+-    return new QWaylandOutput(this, window, manufacturer, model);
++    return new QWaylandOutput(this, window, manufacturer, model, modes);
+ }
+ 
+ QT_END_NAMESPACE
+diff --git a/src/compositor/compositor_api/qwaylandcompositor.h b/src/compositor/compositor_api/qwaylandcompositor.h
+index 3f6938b..bd9b33b 100644
+--- a/src/compositor/compositor_api/qwaylandcompositor.h
++++ b/src/compositor/compositor_api/qwaylandcompositor.h
+@@ -42,6 +42,7 @@
+ #define QWAYLANDCOMPOSITOR_H
+ 
+ #include <QtCompositor/qwaylandexport.h>
++#include <QtCompositor/QWaylandOutputMode>
+ 
+ #include <QObject>
+ #include <QImage>
+@@ -156,7 +157,8 @@ protected:
+ 
+     virtual QWaylandOutput *createOutput(QWindow *window,
+                                          const QString &manufacturer,
+-                                         const QString &model);
++                                         const QString &model,
++                                         const QWaylandOutputModeList &modes);
+ 
+     friend class QtWayland::Compositor;
+     QtWayland::Compositor *m_compositor;
+diff --git a/src/compositor/compositor_api/qwaylandoutput.cpp b/src/compositor/compositor_api/qwaylandoutput.cpp
+index ba9f398..af9b3b0 100644
+--- a/src/compositor/compositor_api/qwaylandoutput.cpp
++++ b/src/compositor/compositor_api/qwaylandoutput.cpp
+@@ -52,14 +52,23 @@
+ #include "qwaylandsurface.h"
+ 
+ QWaylandOutput::QWaylandOutput(QWaylandCompositor *compositor, QWindow *window,
+-                               const QString &manufacturer, const QString &model)
++                               const QString &manufacturer, const QString &model,
++                               const QWaylandOutputModeList &list)
+     : QObject()
+     , d_ptr(new QtWayland::Output(compositor->handle(), window))
+ {
+     d_ptr->m_output = this;
+     d_ptr->setManufacturer(manufacturer);
+     d_ptr->setModel(model);
++    d_ptr->setModes(list);
+     d_ptr->compositor()->addOutput(this);
++
++    if (window && currentMode()) {
++        const QSize size = currentMode()->size();
++        window->resize(size);
++        window->setMinimumSize(size);
++        window->setMaximumSize(size);
++    }
+ }
+ 
+ QWaylandOutput::~QWaylandOutput()
+@@ -120,52 +129,65 @@ void QWaylandOutput::setPosition(const QPoint &pt)
+     Q_EMIT geometryChanged();
+ }
+ 
+-QWaylandOutput::Mode QWaylandOutput::mode() const
++QWaylandOutputModeList QWaylandOutput::modes() const
++{
++    return d_ptr->modes();
++}
++
++QWaylandOutputMode *QWaylandOutput::mode(const QString &id) const
+ {
+-    return d_ptr->mode();
++    return d_ptr->mode(id);
+ }
+ 
+-void QWaylandOutput::setMode(const Mode &mode)
++QWaylandOutputMode *QWaylandOutput::currentMode() const
+ {
+-    if (d_ptr->mode().size == mode.size && d_ptr->mode().refreshRate == mode.refreshRate)
++    return d_ptr->currentMode();
++}
++
++void QWaylandOutput::setCurrentMode(QWaylandOutputMode *mode)
++{
++    if (d_ptr->currentMode() == mode)
++        return;
++    if (d_ptr->mode(mode->id()) != mode)
+         return;
+ 
+-    d_ptr->setMode(mode);
+-    Q_EMIT modeChanged();
++    d_ptr->setCurrentMode(mode);
++    Q_EMIT currentModeChanged();
+     Q_EMIT geometryChanged();
+ 
+     if (window()) {
+-        window()->resize(mode.size);
+-        window()->setMinimumSize(mode.size);
+-        window()->setMaximumSize(mode.size);
++        const QSize size = mode->size();
++        window()->resize(size);
++        window()->setMinimumSize(size);
++        window()->setMaximumSize(size);
+     }
+ }
+ 
+-QRect QWaylandOutput::geometry() const
++QWaylandOutputMode *QWaylandOutput::preferredMode() const
+ {
+-    return d_ptr->geometry();
++    return d_ptr->preferredMode();
+ }
+ 
+-void QWaylandOutput::setGeometry(const QRect &geometry)
++void QWaylandOutput::setPreferredMode(QWaylandOutputMode *mode)
+ {
+-    if (d_ptr->geometry() == geometry)
++    if (d_ptr->preferredMode() == mode)
++        return;
++    if (d_ptr->mode(mode->id()) != mode)
+         return;
+ 
+-    d_ptr->setGeometry(geometry);
+-    Q_EMIT positionChanged();
+-    Q_EMIT modeChanged();
++    d_ptr->setPreferredMode(mode);
++    Q_EMIT preferredModeChanged();
++}
+ 
+-    if (window()) {
+-        window()->resize(geometry.size());
+-        window()->setMinimumSize(geometry.size());
+-        window()->setMaximumSize(geometry.size());
+-    }
++QRect QWaylandOutput::geometry() const
++{
++    return d_ptr->geometry();
+ }
+ 
+ QRect QWaylandOutput::availableGeometry() const
+ {
+     if (!d_ptr->availableGeometry().isValid())
+-        return QRect(d_ptr->position(), d_ptr->mode().size);
++        return d_ptr->geometry();
+ 
+     return d_ptr->availableGeometry();
+ }
+diff --git a/src/compositor/compositor_api/qwaylandoutput.h b/src/compositor/compositor_api/qwaylandoutput.h
+index 9c9dc37..98164e8 100644
+--- a/src/compositor/compositor_api/qwaylandoutput.h
++++ b/src/compositor/compositor_api/qwaylandoutput.h
+@@ -43,10 +43,9 @@
+ #define QWAYLANDOUTPUT_H
+ 
+ #include <QtCompositor/qwaylandexport.h>
++#include <QtCompositor/QWaylandOutputMode>
+ 
+ #include <QObject>
+-#include <QRect>
+-#include <QSize>
+ 
+ QT_BEGIN_NAMESPACE
+ 
+@@ -67,7 +66,8 @@ class Q_COMPOSITOR_EXPORT QWaylandOutput : public QObject
+     Q_PROPERTY(QString manufacturer READ manufacturer CONSTANT)
+     Q_PROPERTY(QString model READ model CONSTANT)
+     Q_PROPERTY(QPoint position READ position WRITE setPosition NOTIFY positionChanged)
+-    Q_PROPERTY(QWaylandOutput::Mode mode READ mode WRITE setMode NOTIFY modeChanged)
++    Q_PROPERTY(QWaylandOutputMode *currentMode READ currentMode WRITE setCurrentMode NOTIFY currentModeChanged)
++    Q_PROPERTY(QWaylandOutputMode *preferredMode READ preferredMode WRITE setPreferredMode NOTIFY preferredModeChanged)
+     Q_PROPERTY(QRect geometry READ geometry NOTIFY geometryChanged)
+     Q_PROPERTY(QRect availableGeometry READ availableGeometry WRITE setAvailableGeometry NOTIFY availableGeometryChanged)
+     Q_PROPERTY(QSize physicalSize READ physicalSize WRITE setPhysicalSize NOTIFY physicalSizeChanged)
+@@ -97,14 +97,9 @@ public:
+         TransformFlipped270
+     };
+ 
+-    struct Mode
+-    {
+-        QSize size;
+-        int refreshRate;
+-    };
+-
+     QWaylandOutput(QWaylandCompositor *compositor, QWindow *window,
+-                   const QString &manufacturer, const QString &model);
++                   const QString &manufacturer, const QString &model,
++                   const QWaylandOutputModeList &list);
+     ~QWaylandOutput();
+ 
+     static QWaylandOutput *fromResource(wl_resource *resource);
+@@ -120,11 +115,17 @@ public:
+     QPoint position() const;
+     void setPosition(const QPoint &pt);
+ 
+-    Mode mode() const;
+-    void setMode(const Mode &mode);
++    QWaylandOutputModeList modes() const;
++
++    QWaylandOutputMode *mode(const QString &id) const;
++
++    QWaylandOutputMode *currentMode() const;
++    void setCurrentMode(QWaylandOutputMode *mode);
++
++    QWaylandOutputMode *preferredMode() const;
++    void setPreferredMode(QWaylandOutputMode *mode);
+ 
+     QRect geometry() const;
+-    void setGeometry(const QRect &geometry);
+ 
+     QRect availableGeometry() const;
+     void setAvailableGeometry(const QRect &availableGeometry);
+@@ -150,7 +151,8 @@ public:
+ Q_SIGNALS:
+     void positionChanged();
+     void geometryChanged();
+-    void modeChanged();
++    void currentModeChanged();
++    void preferredModeChanged();
+     void availableGeometryChanged();
+     void physicalSizeChanged();
+     void scaleFactorChanged();
+@@ -161,8 +163,6 @@ private:
+     QtWayland::Output *const d_ptr;
+ };
+ 
+-Q_DECLARE_METATYPE(QWaylandOutput::Mode)
+-
+ QT_END_NAMESPACE
+ 
+ #endif // QWAYLANDOUTPUT_H
+diff --git a/src/compositor/compositor_api/qwaylandoutputmode.cpp b/src/compositor/compositor_api/qwaylandoutputmode.cpp
+new file mode 100644
+index 0000000..396418d
+--- /dev/null
++++ b/src/compositor/compositor_api/qwaylandoutputmode.cpp
+@@ -0,0 +1,120 @@
++/****************************************************************************
++**
++** Copyright (C) 2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
++** Contact: http://www.qt.io/licensing/
++**
++** This file is part of the Qt Compositor.
++**
++** $QT_BEGIN_LICENSE:BSD$
++** You may use this file under the terms of the BSD license as follows:
++**
++** "Redistribution and use in source and binary forms, with or without
++** modification, are permitted provided that the following conditions are
++** met:
++**   * Redistributions of source code must retain the above copyright
++**     notice, this list of conditions and the following disclaimer.
++**   * Redistributions in binary form must reproduce the above copyright
++**     notice, this list of conditions and the following disclaimer in
++**     the documentation and/or other materials provided with the
++**     distribution.
++**   * Neither the name of The Qt Company Ltd nor the names of its
++**     contributors may be used to endorse or promote products derived
++**     from this software without specific prior written permission.
++**
++**
++** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++** "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++** LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++** A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++** OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++** SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++** LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
++**
++** $QT_END_LICENSE$
++**
++****************************************************************************/
++
++#include <QtCore/QCoreApplication>
++
++#include "wayland_wrapper/qwlcompositor_p.h"
++#include "wayland_wrapper/qwloutput_p.h"
++#include "qwaylandcompositor.h"
++#include "qwaylandoutput.h"
++
++class QWaylandOutputModePrivate
++{
++public:
++    QWaylandOutputModePrivate() {}
++
++    QString id;
++    QString name;
++    QSize size;
++    int refreshRate;
++};
++
++/*!
++    \class QWaylandOutputMode
++    \inmodule QtCompositor
++    \brief The QWaylandOutputMode class provides an output mode.
++
++    This class is used by Wayland compositors to provide mode information
++    to outputs.
++*/
++QWaylandOutputMode::QWaylandOutputMode(const QString &id, const QSize &size,
++                                       int refreshRate)
++    : d_ptr(new QWaylandOutputModePrivate)
++{
++    Q_D(QWaylandOutputMode);
++    d->id = id;
++    d->size = size;
++    d->refreshRate = refreshRate;
++    d->name = QStringLiteral("%1x%2@%3")
++               .arg(size.width())
++               .arg(size.height())
++               .arg(refreshRate);
++}
++
++QWaylandOutputMode::~QWaylandOutputMode()
++{
++    delete d_ptr;
++}
++
++QString QWaylandOutputMode::id() const
++{
++    Q_D(const QWaylandOutputMode);
++    return d->id;
++}
++
++QString QWaylandOutputMode::name() const
++{
++    Q_D(const QWaylandOutputMode);
++    return d->name;
++}
++
++QSize QWaylandOutputMode::size() const
++{
++    Q_D(const QWaylandOutputMode);
++    return d->size;
++}
++
++int QWaylandOutputMode::refreshRate() const
++{
++    Q_D(const QWaylandOutputMode);
++    return d->refreshRate;
++}
++
++bool QWaylandOutputMode::operator==(QWaylandOutputMode &other)
++{
++    return (size() == other.size() &&
++            refreshRate() == other.refreshRate());
++}
++
++bool QWaylandOutputMode::operator!=(QWaylandOutputMode &other)
++{
++    return (size() != other.size() ||
++            refreshRate() != other.refreshRate());
++}
+diff --git a/src/compositor/compositor_api/qwaylandoutputmode.h b/src/compositor/compositor_api/qwaylandoutputmode.h
+new file mode 100644
+index 0000000..087f6ef
+--- /dev/null
++++ b/src/compositor/compositor_api/qwaylandoutputmode.h
+@@ -0,0 +1,87 @@
++/****************************************************************************
++**
++** Copyright (C) 2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
++** Contact: http://www.qt.io/licensing/
++**
++** This file is part of the Qt Compositor.
++**
++** $QT_BEGIN_LICENSE:BSD$
++** You may use this file under the terms of the BSD license as follows:
++**
++** "Redistribution and use in source and binary forms, with or without
++** modification, are permitted provided that the following conditions are
++** met:
++**   * Redistributions of source code must retain the above copyright
++**     notice, this list of conditions and the following disclaimer.
++**   * Redistributions in binary form must reproduce the above copyright
++**     notice, this list of conditions and the following disclaimer in
++**     the documentation and/or other materials provided with the
++**     distribution.
++**   * Neither the name of The Qt Company Ltd nor the names of its
++**     contributors may be used to endorse or promote products derived
++**     from this software without specific prior written permission.
++**
++**
++** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++** "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++** LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++** A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++** OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++** SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++** LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
++**
++** $QT_END_LICENSE$
++**
++****************************************************************************/
++
++#ifndef QWAYLANDOUTPUTMODE_H
++#define QWAYLANDOUTPUTMODE_H
++
++#include <QtCore/QObject>
++#include <QtCore/QMap>
++#include <QtCore/QRect>
++#include <QtCore/QSize>
++
++#include <QtCompositor/qwaylandexport.h>
++
++QT_BEGIN_NAMESPACE
++
++class QWaylandOutputModePrivate;
++
++class Q_COMPOSITOR_EXPORT QWaylandOutputMode
++{
++    Q_GADGET
++    Q_DECLARE_PRIVATE(QWaylandOutputMode)
++    Q_PROPERTY(QString id READ id CONSTANT)
++    Q_PROPERTY(QString name READ name CONSTANT)
++    Q_PROPERTY(QSize size READ size CONSTANT)
++    Q_PROPERTY(int refreshRate READ refreshRate CONSTANT)
++public:
++    QWaylandOutputMode(const QString &id, const QSize &size, int refreshRate);
++    ~QWaylandOutputMode();
++
++    QString id() const;
++    QString name() const;
++    QSize size() const;
++    int refreshRate() const;
++
++    bool operator==(QWaylandOutputMode &other);
++    bool operator!=(QWaylandOutputMode &other);
++
++private:
++    QWaylandOutputModePrivate *const d_ptr;
++};
++
++typedef QList<QWaylandOutputMode *> QWaylandOutputModeList;
++typedef QMap<QString, QWaylandOutputMode *> QWaylandOutputModeMap;
++
++Q_DECLARE_METATYPE(QWaylandOutputModeList)
++Q_DECLARE_METATYPE(QWaylandOutputModeMap)
++
++QT_END_NAMESPACE
++
++#endif // QWAYLANDOUTPUTMODE_H
+diff --git a/src/compositor/compositor_api/qwaylandquickcompositor.cpp b/src/compositor/compositor_api/qwaylandquickcompositor.cpp
+index 3a3c0ec..b3c1303 100644
+--- a/src/compositor/compositor_api/qwaylandquickcompositor.cpp
++++ b/src/compositor/compositor_api/qwaylandquickcompositor.cpp
+@@ -78,13 +78,14 @@ QWaylandSurfaceView *QWaylandQuickCompositor::createView(QWaylandSurface *surf)
+ 
+ QWaylandOutput *QWaylandQuickCompositor::createOutput(QWindow *window,
+                                                       const QString &manufacturer,
+-                                                      const QString &model)
++                                                      const QString &model,
++                                                      const QWaylandOutputModeList &modes)
+ {
+     QQuickWindow *quickWindow = qobject_cast<QQuickWindow *>(window);
+     if (!quickWindow)
+         qFatal("%s: couldn't cast QWindow to QQuickWindow. All output windows must "
+                "be QQuickWindow derivates when using QWaylandQuickCompositor", Q_FUNC_INFO);
+-    return new QWaylandQuickOutput(this, quickWindow, manufacturer, model);
++    return new QWaylandQuickOutput(this, quickWindow, manufacturer, model, modes);
+ }
+ 
+ QT_END_NAMESPACE
+diff --git a/src/compositor/compositor_api/qwaylandquickcompositor.h b/src/compositor/compositor_api/qwaylandquickcompositor.h
+index e540189..630f157 100644
+--- a/src/compositor/compositor_api/qwaylandquickcompositor.h
++++ b/src/compositor/compositor_api/qwaylandquickcompositor.h
+@@ -51,7 +51,8 @@ public:
+     QWaylandSurfaceView *createView(QWaylandSurface *surf) Q_DECL_OVERRIDE;
+     QWaylandOutput *createOutput(QWindow *window,
+                                  const QString &manufacturer,
+-                                 const QString &model) Q_DECL_OVERRIDE;
++                                 const QString &model,
++                                 const QWaylandOutputModeList &modes) Q_DECL_OVERRIDE;
+ };
+ 
+ QT_END_NAMESPACE
+diff --git a/src/compositor/compositor_api/qwaylandquickoutput.cpp b/src/compositor/compositor_api/qwaylandquickoutput.cpp
+index 9199ff8..0505a62 100644
+--- a/src/compositor/compositor_api/qwaylandquickoutput.cpp
++++ b/src/compositor/compositor_api/qwaylandquickoutput.cpp
+@@ -33,14 +33,36 @@
+ ****************************************************************************/
+ 
+ #include "qwaylandquickoutput.h"
++#include "qwaylandquickoutput_p.h"
+ #include "qwaylandquickcompositor.h"
+ 
+ QT_BEGIN_NAMESPACE
+ 
++QWaylandQuickOutputPrivate::QWaylandQuickOutputPrivate(QWaylandQuickOutput *q)
++    : updateScheduled(false)
++    , q(q)
++{
++}
++
++int QWaylandQuickOutputPrivate::modesCount(QQmlListProperty<QWaylandOutputMode> *prop)
++{
++    QWaylandQuickOutput *parent = static_cast<QWaylandQuickOutput *>(prop->object);
++    return parent->modes().count();
++}
++
++QWaylandOutputMode *QWaylandQuickOutputPrivate::modesAt(QQmlListProperty<QWaylandOutputMode> *prop,
++                                   int index)
++{
++    QWaylandQuickOutput *parent = static_cast<QWaylandQuickOutput *>(prop->object);
++    return parent->modes().at(index);
++}
++
++
+ QWaylandQuickOutput::QWaylandQuickOutput(QWaylandCompositor *compositor, QQuickWindow *window,
+-                                         const QString &manufacturer, const QString &model)
+-    : QWaylandOutput(compositor, window, manufacturer, model)
+-    , m_updateScheduled(false)
++                                         const QString &manufacturer, const QString &model,
++                                         const QWaylandOutputModeList &list)
++    : QWaylandOutput(compositor, window, manufacturer, model, list)
++    , d_ptr(new QWaylandQuickOutputPrivate(this))
+ {
+     connect(window, &QQuickWindow::beforeSynchronizing,
+             this, &QWaylandQuickOutput::updateStarted,
+@@ -52,17 +74,28 @@ QQuickWindow *QWaylandQuickOutput::quickWindow() const
+     return static_cast<QQuickWindow *>(window());
+ }
+ 
++QQmlListProperty<QWaylandOutputMode> QWaylandQuickOutput::availableModes()
++{
++    return QQmlListProperty<QWaylandOutputMode>(this, Q_NULLPTR,
++                                                QWaylandQuickOutputPrivate::modesCount,
++                                                QWaylandQuickOutputPrivate::modesAt);
++}
++
+ void QWaylandQuickOutput::update()
+ {
+-    if (!m_updateScheduled) {
++    Q_D(QWaylandQuickOutput);
++
++    if (!d->updateScheduled) {
+         quickWindow()->update();
+-        m_updateScheduled = true;
++        d->updateScheduled = true;
+     }
+ }
+ 
+ void QWaylandQuickOutput::updateStarted()
+ {
+-    m_updateScheduled = false;
++    Q_D(QWaylandQuickOutput);
++
++    d->updateScheduled = false;
+     compositor()->frameStarted();
+     compositor()->cleanupGraphicsResources();
+ }
+diff --git a/src/compositor/compositor_api/qwaylandquickoutput.h b/src/compositor/compositor_api/qwaylandquickoutput.h
+index 7028671..38725cd 100644
+--- a/src/compositor/compositor_api/qwaylandquickoutput.h
++++ b/src/compositor/compositor_api/qwaylandquickoutput.h
+@@ -41,24 +41,30 @@
+ QT_BEGIN_NAMESPACE
+ 
+ class QWaylandQuickCompositor;
++class QWaylandQuickOutputPrivate;
+ class QQuickWindow;
+ 
+ class Q_COMPOSITOR_EXPORT QWaylandQuickOutput : public QWaylandOutput
+ {
+     Q_OBJECT
++    Q_PROPERTY(QQmlListProperty<QWaylandOutputMode> availableModes READ availableModes CONSTANT)
+ public:
+     QWaylandQuickOutput(QWaylandCompositor *compositor, QQuickWindow *window,
+-                        const QString &manufacturer, const QString &model);
++                        const QString &manufacturer, const QString &model,
++                        const QWaylandOutputModeList &list);
+ 
+     QQuickWindow *quickWindow() const;
+ 
++    QQmlListProperty<QWaylandOutputMode> availableModes();
++
+     void update() Q_DECL_OVERRIDE;
+ 
+ public Q_SLOTS:
+     void updateStarted();
+ 
+ private:
+-    bool m_updateScheduled;
++    Q_DECLARE_PRIVATE(QWaylandQuickOutput)
++    QWaylandQuickOutputPrivate *const d_ptr;
+ };
+ 
+ QT_END_NAMESPACE
+diff --git a/src/compositor/compositor_api/qwaylandquickoutput_p.h b/src/compositor/compositor_api/qwaylandquickoutput_p.h
+new file mode 100644
+index 0000000..5f9540b
+--- /dev/null
++++ b/src/compositor/compositor_api/qwaylandquickoutput_p.h
+@@ -0,0 +1,61 @@
++/****************************************************************************
++**
++** Copyright (C) 2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
++** Contact: http://www.qt.io/licensing/
++**
++** This file is part of the plugins of the Qt Toolkit.
++**
++** $QT_BEGIN_LICENSE:LGPL21$
++** Commercial License Usage
++** Licensees holding valid commercial Qt licenses may use this file in
++** accordance with the commercial license agreement provided with the
++** Software or, alternatively, in accordance with the terms contained in
++** a written agreement between you and The Qt Company. For licensing terms
++** and conditions see http://www.qt.io/terms-conditions. For further
++** information use the contact form at http://www.qt.io/contact-us.
++**
++** GNU Lesser General Public License Usage
++** Alternatively, this file may be used under the terms of the GNU Lesser
++** General Public License version 2.1 or version 3 as published by the Free
++** Software Foundation and appearing in the file LICENSE.LGPLv21 and
++** LICENSE.LGPLv3 included in the packaging of this file. Please review the
++** following information to ensure the GNU Lesser General Public License
++** requirements will be met: https://www.gnu.org/licenses/lgpl.html and
++** http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
++**
++** As a special exception, The Qt Company gives you certain additional
++** rights. These rights are described in The Qt Company LGPL Exception
++** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
++**
++** $QT_END_LICENSE$
++**
++****************************************************************************/
++
++#ifndef QWAYLANDQUICKOUTPUT_P_H
++#define QWAYLANDQUICKOUTPUT_P_H
++
++#include <QtQml/QQmlListProperty>
++#include <QtCompositor/qwaylandoutputmode.h>
++
++QT_BEGIN_NAMESPACE
++
++class QWaylandQuickOutput;
++
++class QWaylandQuickOutputPrivate
++{
++public:
++    QWaylandQuickOutputPrivate(QWaylandQuickOutput *q);
++
++    static int modesCount(QQmlListProperty<QWaylandOutputMode> *prop);
++    static QWaylandOutputMode *modesAt(QQmlListProperty<QWaylandOutputMode> *prop,
++                                       int index);
++
++    bool updateScheduled;
++
++protected:
++    QWaylandQuickOutput *q;
++};
++
++QT_END_NAMESPACE
++
++#endif // QWAYLANDQUICKOUTPUT_P_H
+diff --git a/src/compositor/wayland_wrapper/qwloutput.cpp b/src/compositor/wayland_wrapper/qwloutput.cpp
+index ba9338d..85bc0ba 100644
+--- a/src/compositor/wayland_wrapper/qwloutput.cpp
++++ b/src/compositor/wayland_wrapper/qwloutput.cpp
+@@ -1,6 +1,6 @@
+ /****************************************************************************
+ **
+-** Copyright (C) 2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
++** Copyright (C) 2014-2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ ** Copyright (C) 2015 The Qt Company Ltd.
+ ** Contact: http://www.qt.io/licensing/
+ **
+@@ -106,16 +106,14 @@ Output::Output(Compositor *compositor, QWindow *window)
+     , m_window(window)
+     , m_output(Q_NULLPTR)
+     , m_position(QPoint())
++    , m_currentMode(Q_NULLPTR)
++    , m_preferredMode(Q_NULLPTR)
+     , m_availableGeometry(QRect())
+     , m_physicalSize(QSize())
+     , m_subpixel(QWaylandOutput::SubpixelUnknown)
+     , m_transform(QWaylandOutput::TransformNormal)
+     , m_scaleFactor(1)
+ {
+-    m_mode.size = window ? window->size() : QSize();
+-    m_mode.refreshRate = 60;
+-
+-    qRegisterMetaType<QWaylandOutput::Mode>("WaylandOutput::Mode");
+ }
+ 
+ void Output::output_bind_resource(Resource *resource)
+@@ -126,9 +124,18 @@ void Output::output_bind_resource(Resource *resource)
+                   toWlSubpixel(m_subpixel), m_manufacturer, m_model,
+                   toWlTransform(m_transform));
+ 
+-    send_mode(resource->handle, mode_current | mode_preferred,
+-              m_mode.size.width(), m_mode.size.height(),
+-              m_mode.refreshRate);
++    Q_FOREACH (QWaylandOutputMode *mode, m_modes.values()) {
++        int flags = 0;
++
++        if (mode == m_currentMode)
++            flags |= QtWaylandServer::wl_output::mode_current;
++        if (mode == m_preferredMode)
++            flags |= QtWaylandServer::wl_output::mode_preferred;
++
++        send_mode(resource->handle, flags,
++                  mode->size().width(), mode->size().height(),
++                  mode->refreshRate());
++    }
+ 
+     if (resource->version() >= 2) {
+         send_scale(resource->handle, m_scaleFactor);
+@@ -156,44 +163,71 @@ void Output::setPosition(const QPoint &position)
+     sendGeometryInfo();
+ }
+ 
+-void Output::setMode(const QWaylandOutput::Mode &mode)
++QRect Output::geometry() const
++{
++    return QRect(m_position, m_currentMode->size());
++}
++
++QWaylandOutputModeList Output::modes() const
+ {
+-    if (m_mode.size == mode.size && m_mode.refreshRate == mode.refreshRate)
++    return m_modes.values();
++}
++
++void Output::setModes(const QWaylandOutputModeList &list)
++{
++    m_modes.clear();
++
++    QSize highestSize;
++    Q_FOREACH (QWaylandOutputMode *mode, list) {
++        // Save the mode
++        m_modes.insert(mode->id(), mode);
++
++        // Preferred mode is the mode with the highest size
++        if (mode->size().width() > highestSize.width() &&
++                mode->size().height() > highestSize.height()) {
++            highestSize = mode->size();
++            m_preferredMode = mode;
++        }
++    }
++
++    // Set current mode to preferred mode by default
++    m_currentMode = m_preferredMode;
++}
++
++QWaylandOutputMode *Output::mode(const QString &id) const
++{
++    if (m_modes.contains(id))
++        return m_modes[id];
++    return Q_NULLPTR;
++}
++
++void Output::setCurrentMode(QWaylandOutputMode *mode)
++{
++    if (m_currentMode == mode)
+         return;
+ 
+-    m_mode = mode;
++    m_currentMode = mode;
+ 
+     Q_FOREACH (Resource *resource, resourceMap().values()) {
+         send_mode(resource->handle, mode_current,
+-                  m_mode.size.width(), m_mode.size.height(),
+-                  m_mode.refreshRate * 1000);
++                  mode->size().width(), mode->size().height(),
++                  mode->refreshRate());
+         if (resource->version() >= 2)
+             send_done(resource->handle);
+     }
+ }
+ 
+-QRect Output::geometry() const
+-{
+-    return QRect(m_position, m_mode.size);
+-}
+-
+-void Output::setGeometry(const QRect &geometry)
++void Output::setPreferredMode(QWaylandOutputMode *mode)
+ {
+-    if (m_position == geometry.topLeft() && m_mode.size == geometry.size())
++    if (m_preferredMode == mode)
+         return;
+ 
+-    m_position = geometry.topLeft();
+-    m_mode.size = geometry.size();
++    m_preferredMode = mode;
+ 
+     Q_FOREACH (Resource *resource, resourceMap().values()) {
+-        send_geometry(resource->handle,
+-                      m_position.x(), m_position.y(),
+-                      m_physicalSize.width(), m_physicalSize.height(),
+-                      toWlSubpixel(m_subpixel), m_manufacturer, m_model,
+-                      toWlTransform(m_transform));
+-        send_mode(resource->handle, mode_current,
+-                  m_mode.size.width(), m_mode.size.height(),
+-                  m_mode.refreshRate * 1000);
++        send_mode(resource->handle, mode_preferred,
++                  mode->size().width(), mode->size().height(),
++                  mode->refreshRate());
+         if (resource->version() >= 2)
+             send_done(resource->handle);
+     }
+diff --git a/src/compositor/wayland_wrapper/qwloutput_p.h b/src/compositor/wayland_wrapper/qwloutput_p.h
+index 1bf6e01..cc28610 100644
+--- a/src/compositor/wayland_wrapper/qwloutput_p.h
++++ b/src/compositor/wayland_wrapper/qwloutput_p.h
+@@ -1,6 +1,6 @@
+ /****************************************************************************
+ **
+-** Copyright (C) 2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
++** Copyright (C) 2014-2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ ** Copyright (C) 2015 The Qt Company Ltd.
+ ** Contact: http://www.qt.io/licensing/
+ **
+@@ -84,10 +84,17 @@ public:
+     void setPosition(const QPoint &position);
+ 
+     QRect geometry() const;
+-    void setGeometry(const QRect &geometry);
+ 
+-    QWaylandOutput::Mode mode() const { return m_mode; }
+-    void setMode(const QWaylandOutput::Mode &mode);
++    QWaylandOutputModeList modes() const;
++    void setModes(const QWaylandOutputModeList &list);
++
++    QWaylandOutputMode *mode(const QString &id) const;
++
++    QWaylandOutputMode *currentMode() const { return m_currentMode; }
++    void setCurrentMode(QWaylandOutputMode *mode);
++
++    QWaylandOutputMode *preferredMode() const { return m_preferredMode; }
++    void setPreferredMode(QWaylandOutputMode *mode);
+ 
+     QRect availableGeometry() const { return m_availableGeometry; }
+     void setAvailableGeometry(const QRect &availableGeometry);
+@@ -122,7 +129,9 @@ private:
+     QString m_manufacturer;
+     QString m_model;
+     QPoint m_position;
+-    QWaylandOutput::Mode m_mode;
++    QWaylandOutputModeMap m_modes;
++    QWaylandOutputMode *m_currentMode;
++    QWaylandOutputMode *m_preferredMode;
+     QRect m_availableGeometry;
+     QSize m_physicalSize;
+     QWaylandOutput::Subpixel m_subpixel;
+diff --git a/tests/auto/auto.pro b/tests/auto/auto.pro
+index 822fdeb..f2793d6 100644
+--- a/tests/auto/auto.pro
++++ b/tests/auto/auto.pro
+@@ -6,4 +6,5 @@ contains(CONFIG, wayland-compositor) {
+     SUBDIRS += compositor
+     SUBDIRS += client
+     SUBDIRS += cmake
++    SUBDIRS += output
+ }
+diff --git a/tests/auto/compositor/testcompositor.cpp b/tests/auto/compositor/testcompositor.cpp
+index 95dd87e..db404b5 100644
+--- a/tests/auto/compositor/testcompositor.cpp
++++ b/tests/auto/compositor/testcompositor.cpp
+@@ -31,11 +31,18 @@
+ **
+ ****************************************************************************/
+ 
++#include "qwaylandoutput.h"
++
+ #include "testcompositor.h"
+ 
+-TestCompositor::TestCompositor(QWaylandCompositor::ExtensionFlag flags) : QWaylandCompositor(0, flags)
++TestCompositor::TestCompositor(bool doCreateOutput, QWaylandCompositor::ExtensionFlag flags)
++    : QWaylandCompositor(0, flags)
+ {
+-    createOutput(0, "", "");
++    if (doCreateOutput) {
++        QWaylandOutputModeList modes;
++        modes << new QWaylandOutputMode("defaultMode", QSize(1024, 768), 60000);
++        createOutput(0, "", "", modes);
++    }
+     addDefaultShell();
+ }
+ 
+diff --git a/tests/auto/compositor/testcompositor.h b/tests/auto/compositor/testcompositor.h
+index c7d571d..1162f03 100644
+--- a/tests/auto/compositor/testcompositor.h
++++ b/tests/auto/compositor/testcompositor.h
+@@ -37,7 +37,7 @@
+ class TestCompositor : public QWaylandCompositor
+ {
+ public:
+-    TestCompositor(QWaylandCompositor::ExtensionFlag flags = QWaylandCompositor::DefaultExtensions);
++    TestCompositor(bool doCreateOutput = true, QWaylandCompositor::ExtensionFlag flags = QWaylandCompositor::DefaultExtensions);
+ 
+     void surfaceCreated(QWaylandSurface *surface);
+     void surfaceAboutToBeDestroyed(QWaylandSurface *surface);
+diff --git a/tests/auto/compositor/tst_compositor.cpp b/tests/auto/compositor/tst_compositor.cpp
+index 171d74c..29ada0f 100644
+--- a/tests/auto/compositor/tst_compositor.cpp
++++ b/tests/auto/compositor/tst_compositor.cpp
+@@ -36,6 +36,7 @@
+ #include "testkeyboardgrabber.h"
+ 
+ #include "QtCompositor/qwaylandoutput.h"
++#include "QtCompositor/qwaylandoutputmode.h"
+ #include "QtCompositor/private/qwlkeyboard_p.h"
+ #include "QtCompositor/private/qwlinputdevice_p.h"
+ #include "QtCompositor/private/qwlcompositor_p.h"
+@@ -190,8 +191,9 @@ void tst_WaylandCompositor::geometry()
+ 
+     QRect geometry(0, 0, 4096, 3072);
+ 
+-    QWaylandOutput *output = new QWaylandOutput(&compositor, Q_NULLPTR, "", "");
+-    output->setGeometry(geometry);
++    QWaylandOutputModeList modes;
++    modes << new QWaylandOutputMode("defaultMode", geometry.size(), 60000);
++    new QWaylandOutput(&compositor, Q_NULLPTR, "", "", modes);
+ 
+     MockClient client;
+ 
+diff --git a/tests/auto/output/output.pro b/tests/auto/output/output.pro
+new file mode 100644
+index 0000000..b5d0681
+--- /dev/null
++++ b/tests/auto/output/output.pro
+@@ -0,0 +1,16 @@
++CONFIG += testcase link_pkgconfig
++TARGET = tst_output
++
++QT += testlib
++QT += core-private gui-private compositor compositor-private
++
++INCLUDEPATH += ../compositor
++
++!contains(QT_CONFIG, no-pkg-config) {
++    PKGCONFIG += wayland-client wayland-server
++} else {
++    LIBS += -lwayland-client -lwayland-server
++}
++
++SOURCES += tst_output.cpp \
++           ../compositor/testcompositor.cpp
+diff --git a/tests/auto/output/tst_output.cpp b/tests/auto/output/tst_output.cpp
+new file mode 100644
+index 0000000..12e4320
+--- /dev/null
++++ b/tests/auto/output/tst_output.cpp
+@@ -0,0 +1,140 @@
++/****************************************************************************
++**
++** Copyright (C) 2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
++** Contact: http://www.qt.io/licensing/
++**
++** This file is part of the test suite of the Qt Toolkit.
++**
++** $QT_BEGIN_LICENSE:LGPL21$
++** Commercial License Usage
++** Licensees holding valid commercial Qt licenses may use this file in
++** accordance with the commercial license agreement provided with the
++** Software or, alternatively, in accordance with the terms contained in
++** a written agreement between you and The Qt Company. For licensing terms
++** and conditions see http://www.qt.io/terms-conditions. For further
++** information use the contact form at http://www.qt.io/contact-us.
++**
++** GNU Lesser General Public License Usage
++** Alternatively, this file may be used under the terms of the GNU Lesser
++** General Public License version 2.1 or version 3 as published by the Free
++** Software Foundation and appearing in the file LICENSE.LGPLv21 and
++** LICENSE.LGPLv3 included in the packaging of this file. Please review the
++** following information to ensure the GNU Lesser General Public License
++** requirements will be met: https://www.gnu.org/licenses/lgpl.html and
++** http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
++**
++** As a special exception, The Qt Company gives you certain additional
++** rights. These rights are described in The Qt Company LGPL Exception
++** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
++**
++** $QT_END_LICENSE$
++**
++****************************************************************************/
++
++#include "testcompositor.h"
++
++#include "QtCompositor/qwaylandoutput.h"
++
++#include <QtTest/QtTest>
++
++class tst_Output : public QObject
++{
++    Q_OBJECT
++public:
++    tst_Output()
++    {
++        setenv("XDG_RUNTIME_DIR", ".", 1);
++
++        QWaylandOutputMode *mode = new QWaylandOutputMode("defaultmode",
++                                                          QSize(1024, 768), 60000);
++        m_modes.append(mode);
++    }
++
++private:
++    QWaylandOutputModeList m_modes;
++
++private Q_SLOTS:
++    void outputsCount();
++    void defaultMode();
++    void modes();
++};
++
++void tst_Output::outputsCount()
++{
++    TestCompositor compositor(false);
++
++    QCOMPARE(compositor.outputs().count(), 0);
++
++    QWaylandOutput *output1 = new QWaylandOutput(&compositor, Q_NULLPTR, "", "", m_modes);
++    QCOMPARE(compositor.outputs().count(), 1);
++
++    QVERIFY(compositor.primaryOutput() == output1);
++
++    QWaylandOutput *output2 = new QWaylandOutput(&compositor, Q_NULLPTR, "", "", m_modes);
++    QCOMPARE(compositor.outputs().count(), 2);
++
++    compositor.setPrimaryOutput(output2);
++    QVERIFY(compositor.primaryOutput() == output2);
++
++    delete output2;
++    QCOMPARE(compositor.outputs().count(), 1);
++
++    delete output1;
++    QCOMPARE(compositor.outputs().count(), 0);
++}
++
++void tst_Output::defaultMode()
++{
++    TestCompositor compositor(false);
++
++    QWaylandOutput *output = new QWaylandOutput(&compositor, Q_NULLPTR, "", "", m_modes);
++
++    QCOMPARE(output->modes().count(), 1);
++    QCOMPARE(output->currentMode()->id(), QStringLiteral("defaultmode"));
++    QCOMPARE(output->currentMode()->size(), QSize(1024, 768));
++    QCOMPARE(output->currentMode()->refreshRate(), 60000);
++
++    delete output;
++}
++
++void tst_Output::modes()
++{
++    TestCompositor compositor(false);
++
++    QWaylandOutputModeList list;
++    list << new QWaylandOutputMode("mode1", QSize(1024, 768), 100000);
++    list << new QWaylandOutputMode("mode2", QSize(1366, 768), 60000);
++    list << new QWaylandOutputMode("mode3", QSize(1920, 1080), 59000);
++
++    QWaylandOutput *output = new QWaylandOutput(&compositor, Q_NULLPTR, "", "", list);
++    QSignalSpy currentModeChangedSpy(output, SIGNAL(currentModeChanged()));
++    QSignalSpy preferredModeChangedSpy(output, SIGNAL(preferredModeChanged()));
++
++    QCOMPARE(output->modes().count(), 3);
++    QVERIFY(output->currentMode() == output->preferredMode());
++    QCOMPARE(output->currentMode()->id(), output->preferredMode()->id());
++    QVERIFY(output->currentMode() == list.at(2));
++
++    QCOMPARE(output->preferredMode()->id(), QStringLiteral("mode3"));
++    QCOMPARE(output->preferredMode()->size(), QSize(1920, 1080));
++    QCOMPARE(output->preferredMode()->refreshRate(), 59000);
++
++    QCOMPARE(output->currentMode()->id(), QStringLiteral("mode3"));
++    QCOMPARE(output->currentMode()->size(), QSize(1920, 1080));
++    QCOMPARE(output->currentMode()->refreshRate(), 59000);
++
++    output->setCurrentMode(list.at(1));
++    QVERIFY(output->currentMode() == list.at(1));
++    QTRY_COMPARE(currentModeChangedSpy.count(), 1);
++    QTRY_COMPARE(preferredModeChangedSpy.count(), 0);
++
++    QCOMPARE(output->currentMode()->id(), QStringLiteral("mode2"));
++    QCOMPARE(output->currentMode()->size(), QSize(1366, 768));
++    QCOMPARE(output->currentMode()->refreshRate(), 60000);
++
++    QCOMPARE(output->preferredMode()->name(), QStringLiteral("1920x1080@59000"));
++    QCOMPARE(output->currentMode()->name(), QStringLiteral("1366x768@60000"));
++}
++
++#include <tst_output.moc>
++QTEST_MAIN(tst_Output);
+-- 
+1.9.0
+
