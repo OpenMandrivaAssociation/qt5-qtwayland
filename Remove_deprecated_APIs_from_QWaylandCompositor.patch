@@ -1,4 +1,4 @@
-From 93dc522bab27cc56cd1404c63f02444fe45ed65e Mon Sep 17 00:00:00 2001
+From c511f01cbb9700cb0c835762920dea76dafc0e87 Mon Sep 17 00:00:00 2001
 From: Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
 Date: Thu, 14 May 2015 21:23:28 +0200
 Subject: [PATCH] Remove deprecated APIs from QWaylandCompositor
@@ -40,10 +40,10 @@ index 312cff2..b16dc78 100644
  
      void surfaceCreated(QWaylandSurface *surface) {
 diff --git a/src/compositor/compositor_api/qwaylandcompositor.cpp b/src/compositor/compositor_api/qwaylandcompositor.cpp
-index 28e8f9d..96684e4 100644
+index 0d5d84e..40e54c5 100644
 --- a/src/compositor/compositor_api/qwaylandcompositor.cpp
 +++ b/src/compositor/compositor_api/qwaylandcompositor.cpp
-@@ -245,67 +245,6 @@ const char *QWaylandCompositor::socketName() const
+@@ -236,67 +236,6 @@ const char *QWaylandCompositor::socketName() const
      return m_compositor->m_socket_name.constData();
  }
  
@@ -112,10 +112,10 @@ index 28e8f9d..96684e4 100644
  {
      return m_compositor->defaultInputDevice()->handle();
 diff --git a/src/compositor/compositor_api/qwaylandcompositor.h b/src/compositor/compositor_api/qwaylandcompositor.h
-index fe48db0..3f6938b 100644
+index 1817fa0..8a0f626 100644
 --- a/src/compositor/compositor_api/qwaylandcompositor.h
 +++ b/src/compositor/compositor_api/qwaylandcompositor.h
-@@ -127,16 +127,6 @@ public:
+@@ -126,16 +126,6 @@ public:
  
      const char *socketName() const;
  

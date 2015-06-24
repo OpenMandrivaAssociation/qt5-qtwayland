@@ -49,6 +49,16 @@ Change-Id: Ie3f930df6f567f31ed7325236658affa4f60e19e
  create mode 100644 tests/auto/output/output.pro
  create mode 100644 tests/auto/output/tst_output.cpp
 
+diff --git a/.gitignore b/.gitignore
+index b33ca90..2c807bd 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -63,4 +63,5 @@ src/plugins/hardwareintegration/*/*/*-client-protocol.h
+ src/plugins/hardwareintegration/*/*/*-protocol.c
+ tests/auto/client/tst_client
+ tests/auto/compositor/tst_compositor
++tests/auto/output/tst_output
+ *~
 diff --git a/examples/wayland/qml-compositor/main.cpp b/examples/wayland/qml-compositor/main.cpp
 index 667b1af..06dfcd6 100644
 --- a/examples/wayland/qml-compositor/main.cpp
