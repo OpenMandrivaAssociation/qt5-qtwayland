@@ -34,6 +34,7 @@ Patch0:		Remove_deprecated_APIs_from_QWaylandCompositor.patch
 Patch1:		Add_mode_support_to_QWaylandOutput.patch
 # https://codereview.qt-project.org/#/c/104222/
 Patch2:		Update_wayland.xml_to_1.6.patch
+# this needs to be updated https://codereview.qt-project.org/#/c/104222/
 BuildRequires:	qt5-qtbase-devel >= %{version}
 BuildRequires:	pkgconfig(Qt5Quick) >= %{version}
 BuildRequires:	pkgconfig(Qt5Core) >= %{version}
