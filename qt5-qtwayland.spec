@@ -29,9 +29,9 @@ License:	LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
 URL:		http://www.qt-project.org
 # (tpg) add these patches for 5.5.0 beta
 # https://codereview.qt-project.org/#/c/112353/
-Patch0:		Remove_deprecated_APIs_from_QWaylandCompositor.patch
+#Patch0:		Remove_deprecated_APIs_from_QWaylandCompositor.patch
 # https://codereview.qt-project.org/#/c/111803/
-Patch1:		Add_mode_support_to_QWaylandOutput.patch
+#Patch1:		Add_mode_support_to_QWaylandOutput.patch
 # https://codereview.qt-project.org/#/c/104222/
 Patch2:		Update_wayland.xml_to_1.6.patch
 BuildRequires:	qt5-qtbase-devel >= %{version}
