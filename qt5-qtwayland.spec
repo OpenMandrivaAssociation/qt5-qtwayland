@@ -60,6 +60,7 @@ BuildRequires:	pkgconfig(libudev)
 BuildRequires:	pkgconfig(freetype2)
 BuildRequires:	pkgconfig(fontconfig)
 BuildRequires:	pkgconfig(mtdev)
+BuildRequires:	pkgconfig(libinput)
 
 BuildRequires:	re2c
 
