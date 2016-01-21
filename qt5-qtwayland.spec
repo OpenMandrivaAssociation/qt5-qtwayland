@@ -20,7 +20,7 @@ Release:	1.%{beta}.1
 %define qttarballdir qtwayland-opensource-src-%{version}-%{beta}
 Source0:	http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 %else
-Release:	2
+Release:	3
 %define qttarballdir qtwayland-opensource-src-%{version}
 Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}/submodules/%{qttarballdir}.tar.xz
 %endif
@@ -61,9 +61,7 @@ BuildRequires:	pkgconfig(freetype2)
 BuildRequires:	pkgconfig(fontconfig)
 BuildRequires:	pkgconfig(mtdev)
 BuildRequires:	pkgconfig(libinput)
-
 BuildRequires:	re2c
-
 BuildRequires:	pkgconfig(xtst)
 BuildRequires:	pkgconfig(libpci)
 BuildRequires:	pkgconfig(nss)
@@ -95,19 +93,19 @@ Qt%{api} Component Library.
 #------------------------------------------------------------------------------
 
 %package -n %{qtwaylandclientd}
-Summary: Devel files needed to build apps based on %name
+Summary: Devel files needed to build apps based on %{name}
 Group:    Development/KDE and Qt
-Requires: %{qtwaylandclient} = %version
+Requires: %{qtwaylandclient} = %{EVRD}
 
 %description -n %{qtwaylandclientd}
-Devel files needed to build apps based on %name
+Devel files needed to build apps based on %{name}
 
 %files -n %{qtwaylandclientd}
 %{_qt5_libdir}/libQt5WaylandClient.so
 %{_qt5_libdir}/libQt5WaylandClient.prl
 %{_qt5_libdir}/pkgconfig/Qt5WaylandClient.pc
 %{_qt5_includedir}/QtWaylandClient
-%exclude %{_qt5_includedir}/QtWaylandClient/%version
+%exclude %{_qt5_includedir}/QtWaylandClient/%{version}
 %{_qt5_prefix}/mkspecs/modules/qt_lib_waylandclient.pri
 %{_qt5_libdir}/cmake/Qt5WaylandClient
 %{_qt5_libdir}/cmake/Qt5Gui/*
@@ -115,17 +113,17 @@ Devel files needed to build apps based on %name
 #------------------------------------------------------------------------------
 
 %package -n %{qtwaylandclient_p_d}
-Summary: Devel files needed to build apps based on %name
+Summary: Devel files needed to build apps based on %{name}
 Group:    Development/KDE and Qt
 
-Requires: %{qtwaylandclientd} = %version
-Provides: qt5-qtwayland-private-devel = %version
+Requires: %{qtwaylandclientd} = %{EVRD}
+Provides: qt5-qtwayland-private-devel = %{EVRD}
 
 %description -n %{qtwaylandclient_p_d}
-Devel files needed to build apps based on %name
+Devel files needed to build apps based on %{name}
 
 %files -n %{qtwaylandclient_p_d}
-%{_qt5_includedir}/QtWaylandClient/%version
+%{_qt5_includedir}/QtWaylandClient/%{version}
 %{_qt5_prefix}/mkspecs/modules/qt_lib_waylandclient_private.pri
 
 #----------------------------------------------------------------------------
@@ -162,7 +160,7 @@ Development files for the Qt Wayland QtCompositor module
 %files -n %{qtwaylandcompositord}
 %{_qt5_includedir}/QtCompositor
 %{_qt5_libdir}/libQt%{api}Compositor.so
-%exclude %{_qt5_includedir}/QtCompositor/%version
+%exclude %{_qt5_includedir}/QtCompositor/%{version}
 %{_qt5_libdir}/libQt%{api}Compositor.prl
 %{_qt5_libdir}/cmake/Qt%{api}Compositor
 %{_qt5_libdir}/pkgconfig/Qt%{api}Compositor.pc
@@ -173,14 +171,14 @@ Development files for the Qt Wayland QtCompositor module
 %package -n %{qtwaylandcompositor_p_d}
 Summary:	Development files for the Qt Wayland QtCompositor library
 Group:		Development/KDE and Qt
-Requires:	%{qtwaylandcompositord} = %version
-Provides:	qt5-qtcompositor-private-devel = %version
+Requires:	%{qtwaylandcompositord} = %{EVRD}
+Provides:	qt5-qtcompositor-private-devel = %{EVRD}
 
 %description -n %{qtwaylandcompositor_p_d}
 Development files for the Qt Wayland QtCompositor module
 
 %files -n %{qtwaylandcompositor_p_d}
-%{_qt5_includedir}/QtCompositor/%version
+%{_qt5_includedir}/QtCompositor/%{version}
 %{_qt5_prefix}/mkspecs/modules/qt_lib_compositor_private.pri
 
 
