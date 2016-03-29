@@ -139,9 +139,7 @@ Qt Wayland QtCompositor module
 %{_qt5_plugindir}/wayland-graphics-integration-server/libdrm-egl-server.so
 %{_qt5_plugindir}/wayland-graphics-integration-server/libwayland-egl.so
 %{_qt5_plugindir}/wayland-graphics-integration-server/libxcomposite-egl.so
-%ifnarch %arm
 %{_qt5_plugindir}/wayland-graphics-integration-server/libxcomposite-glx.so
-%endif
 
 #----------------------------------------------------------------------------
 
