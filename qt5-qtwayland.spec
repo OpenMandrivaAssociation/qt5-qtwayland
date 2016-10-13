@@ -14,7 +14,7 @@
 %bcond_without nonegl
 
 Name:		qt5-qtwayland
-Version:	5.6.1
+Version:	5.6.2
 %if "%{beta}" != ""
 Release:	1.%{beta}.1
 %define qttarballdir qtwayland-opensource-src-%{version}-%{beta}
