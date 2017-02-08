@@ -1,6 +1,6 @@
 %define api %(echo %{version} |cut -d. -f1)
 %define major %api
-%define beta %nil
+%define beta %{nil}
 
 %define qtwaylandclient %mklibname qt%{api}waylandclient %{major}
 %define qtwaylandclientd %mklibname qt%{api}waylandclient -d
@@ -11,12 +11,12 @@
 %define qtwaylandcompositor_p_d %mklibname qt%{api}compositor-private -d
 
 %define _qt5_prefix %{_libdir}/qt%{api}
-%bcond_without nonegl
+%bcond_with nonegl
 
 Name:		qt5-qtwayland
-Version:	5.6.2
+Version:	5.8.0
 %if "%{beta}" != ""
-Release:	1.%{beta}.1
+Release:	0.%{beta}.1
 %define qttarballdir qtwayland-opensource-src-%{version}-%{beta}
 Source0:	http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 %else
@@ -34,7 +34,6 @@ URL:		http://www.qt.io
 # https://codereview.qt-project.org/#/c/111803/
 #Patch1:		Add_mode_support_to_QWaylandOutput.patch
 # https://codereview.qt-project.org/#/c/104222/
-Patch2:		Update_wayland.xml_to_1.6.patch
 BuildRequires:	qt5-qtbase-devel >= %{version}
 BuildRequires:	pkgconfig(Qt5Quick) >= %{version}
 BuildRequires:	pkgconfig(Qt5Core) >= %{version}
@@ -76,6 +75,8 @@ Qt5 - Wayland platform support and QtCompositor module.
 %{_qt5_plugindir}/platforms/*.so
 %{_qt5_plugindir}/wayland-decoration-client
 %{_qt5_plugindir}/wayland-graphics-integration-client
+%{_qt5_plugindir}/wayland-shell-integration
+%{_libdir}/qt5/qml/QtWayland
 
 #------------------------------------------------------------------------------
 
@@ -135,7 +136,7 @@ Group:		System/Libraries
 Qt Wayland QtCompositor module
 
 %files -n %{qtwaylandcompositor}
-%{_qt5_libdir}/libQt%{api}Compositor.so.%{major}*
+%{_qt5_libdir}/libQt%{api}WaylandCompositor.so.%{major}*
 %{_qt5_plugindir}/wayland-graphics-integration-server/libdrm-egl-server.so
 %{_qt5_plugindir}/wayland-graphics-integration-server/libwayland-egl.so
 %{_qt5_plugindir}/wayland-graphics-integration-server/libxcomposite-egl.so
@@ -155,13 +156,13 @@ Requires:	%{qtwaylandclientd} = %{EVRD}
 Development files for the Qt Wayland QtCompositor module
 
 %files -n %{qtwaylandcompositord}
-%{_qt5_includedir}/QtCompositor
-%{_qt5_libdir}/libQt%{api}Compositor.so
-%exclude %{_qt5_includedir}/QtCompositor/%{version}
-%{_qt5_libdir}/libQt%{api}Compositor.prl
-%{_qt5_libdir}/cmake/Qt%{api}Compositor
-%{_qt5_libdir}/pkgconfig/Qt%{api}Compositor.pc
-%{_qt5_prefix}/mkspecs/modules/qt_lib_compositor.pri
+%{_qt5_includedir}/QtWaylandCompositor
+%{_qt5_libdir}/libQt%{api}WaylandCompositor.so
+%exclude %{_qt5_includedir}/QtWaylandCompositor/%{version}
+%{_qt5_libdir}/libQt%{api}WaylandCompositor.prl
+%{_qt5_libdir}/cmake/Qt%{api}WaylandCompositor
+%{_qt5_libdir}/pkgconfig/Qt%{api}WaylandCompositor.pc
+%{_qt5_prefix}/mkspecs/modules/qt_lib_waylandcompositor.pri
 %{_qt5_exampledir}/wayland
 
 #------------------------------------------------------------------------------
@@ -175,14 +176,14 @@ Provides:	qt5-qtcompositor-private-devel = %{EVRD}
 Development files for the Qt Wayland QtCompositor module
 
 %files -n %{qtwaylandcompositor_p_d}
-%{_qt5_includedir}/QtCompositor/%{version}
-%{_qt5_prefix}/mkspecs/modules/qt_lib_compositor_private.pri
+%{_qt5_includedir}/QtWaylandCompositor/%{version}
+%{_qt5_prefix}/mkspecs/modules/qt_lib_waylandcompositor_private.pri
 
 
 %prep
 %setup -q -c -n %qttarballdir
 pushd %qttarballdir
-%apply_patches
+#apply_patches
 popd
 # Presence of .git/ qmake into invoking syncqt for us with
 # correct arguments at make time.
@@ -218,11 +219,6 @@ popd
 %endif
 pushd %qttarballdir-gl
 %makeinstall_std INSTALL_ROOT=%{buildroot}
-
-# install private headers... needed by hawaii shell
-install -pm644 \
-  include/QtCompositor/%{version}/QtCompositor/private/{wayland-wayland-server-protocol.h,qwayland-server-wayland.h} \
-  %{buildroot}%{_includedir}/qt5/QtCompositor/%{version}/QtCompositor/private/
 popd
 
 ## .prl/.la file love
