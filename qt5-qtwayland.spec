@@ -61,6 +61,8 @@ BuildRequires:	%{_lib}qt5servicesupport-static-devel
 BuildRequires:	%{_lib}qt5fontdatabasesupport-static-devel
 BuildRequires:	%{_lib}qt5themesupport-static-devel
 BuildRequires:	%{_lib}qt5eventdispatchersupport-static-devel
+BuildRequires:	%{_lib}qt5eglsupport-static-devel
+BuildRequires:	%{_lib}qt5glxsupport-static-devel
 Requires:	%{qtwaylandcompositor} = %{EVRD}
 Requires:	%{qtwaylandclient} = %{EVRD}
 
