@@ -176,7 +176,7 @@ Development files for the Qt Wayland QtCompositor module
 
 
 %prep
-%setup -q -c -n %qttarballdir
+%setup -qn %qttarballdir
 
 %build
 %global optflags %{optflags} -fPIC
