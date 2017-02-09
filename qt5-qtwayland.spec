@@ -59,6 +59,7 @@ BuildRequires:	pkgconfig(nss)
 BuildRequires:	%{_lib}qt5servicesupport-static-devel
 # (tpg) needed for QtFontDatabaseSupport/private/qgenericunixfontdatabase_p.h
 BuildRequires:	%{_lib}qt5fontdatabasesupport-static-devel
+BuildRequires:	%{_lib}qt5themesupport-static-devel
 Requires:	%{qtwaylandcompositor} = %{EVRD}
 Requires:	%{qtwaylandclient} = %{EVRD}
 
