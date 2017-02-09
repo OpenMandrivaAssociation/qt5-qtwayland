@@ -62,8 +62,10 @@ BuildRequires:	re2c
 BuildRequires:	pkgconfig(xtst)
 BuildRequires:	pkgconfig(libpci)
 BuildRequires:	pkgconfig(nss)
-# (tpg) needed fro QtServiceSupport/private/qgenericunixservices_p.h
+# (tpg) needed for QtServiceSupport/private/qgenericunixservices_p.h
 BuildRequires:	%{_lib}qt5servicesupport-static-devel
+# (tpg) needed for QtFontDatabaseSupport/private/qgenericunixfontdatabase_p.h
+BuildRequires:	%{_lib}qt5fontdatabasesupport-static-devel
 Requires:	%{qtwaylandcompositor} = %{EVRD}
 Requires:	%{qtwaylandclient} = %{EVRD}
 
