@@ -11,7 +11,6 @@
 %define qtwaylandcompositor_p_d %mklibname qt%{api}compositor-private -d
 
 %define _qt5_prefix %{_libdir}/qt%{api}
-%bcond_with nonegl
 
 Name:		qt5-qtwayland
 Version:	5.8.0
@@ -28,13 +27,7 @@ Summary:	Qt5 - Wayland platform support and QtCompositor module
 Group:		Development/KDE and Qt
 License:	LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
 URL:		http://www.qt.io
-# (tpg) add these patches for 5.5.0 beta
-# https://codereview.qt-project.org/#/c/112353/
-#Patch0:		Remove_deprecated_APIs_from_QWaylandCompositor.patch
-# https://codereview.qt-project.org/#/c/111803/
-#Patch1:		Add_mode_support_to_QWaylandOutput.patch
-# https://codereview.qt-project.org/#/c/104222/
-BuildRequires:	qt5-qtbase-devel >= %{version}
+BuildRequires:	qmake5 >= %{version}
 BuildRequires:	pkgconfig(Qt5Quick) >= %{version}
 BuildRequires:	pkgconfig(Qt5Core) >= %{version}
 BuildRequires:	pkgconfig(Qt5Gui)
@@ -130,12 +123,12 @@ Devel files needed to build apps based on %{name}
 
 #----------------------------------------------------------------------------
 
-%package -n	%{qtwaylandcompositor}
+%package -n %{qtwaylandcompositor}
 Summary:	Wayland platform QtCompositor module
 Group:		System/Libraries
 
 %description -n %{qtwaylandcompositor}
-Qt Wayland QtCompositor module
+Qt Wayland QtCompositor module.
 
 %files -n %{qtwaylandcompositor}
 %{_qt5_libdir}/libQt%{api}WaylandCompositor.so.%{major}*
@@ -184,46 +177,14 @@ Development files for the Qt Wayland QtCompositor module
 
 %prep
 %setup -q -c -n %qttarballdir
-pushd %qttarballdir
-#apply_patches
-popd
-# Presence of .git/ qmake into invoking syncqt for us with
-# correct arguments at make time.
-# else, out-of-src-tree builds fail with stuff like:
-# qwaylanddisplay_p.h:52:54: fatal error: QtWaylandClient/private/qwayland-wayland.h: No such file or directory
-# #include <QtWaylandClient/private/qwayland-wayland.h>
-mkdir .git
-mv %qttarballdir %qttarballdir-nogl
-cp -r %qttarballdir-nogl %qttarballdir-gl
 
 %build
 %global optflags %{optflags} -fPIC
-export QMAKE_CXXFLAGS=" -std=c++11"
-
-%if %{with nonegl}
-pushd %qttarballdir-nogl
-# build non-egl support
-%qmake_qt5 QT_WAYLAND_GL_CONFIG=nogl
+%qmake_qt5
 %make
-popd
-%endif
-
-pushd %qttarballdir-gl
-%qmake_qt5 CONFIG+=wayland-compositor
-%make
-popd
-
-#------------------------------------------------------------------------------
 
 %install
-%if %{with nonegl}
-pushd %qttarballdir-nogl
 %makeinstall_std INSTALL_ROOT=%{buildroot}
-popd
-%endif
-pushd %qttarballdir-gl
-%makeinstall_std INSTALL_ROOT=%{buildroot}
-popd
 
 ## .prl/.la file love
 # nuke .prl reference(s) to %%buildroot, excessive (.la-like) libs
