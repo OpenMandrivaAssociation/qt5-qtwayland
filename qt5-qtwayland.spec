@@ -180,7 +180,7 @@ Development files for the Qt Wayland QtCompositor module
 
 %build
 %global optflags %{optflags} -fPIC
-%qmake_qt5
+%qmake_qt5 CONFIG+=generated_headers
 %make
 
 %install
