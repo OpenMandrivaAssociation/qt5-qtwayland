@@ -42,7 +42,6 @@ BuildRequires:	pkgconfig(Qt5DBus)
 BuildRequires:	pkgconfig(Qt5Widgets)
 BuildRequires:	pkgconfig(Qt5OpenGL)
 BuildRequires:	qt5-qtquick-private-devel
-
 BuildRequires:	pkgconfig(xkbcommon)
 BuildRequires:	pkgconfig(wayland-scanner) >= 1.10.0
 BuildRequires:	pkgconfig(wayland-server)
@@ -63,7 +62,8 @@ BuildRequires:	re2c
 BuildRequires:	pkgconfig(xtst)
 BuildRequires:	pkgconfig(libpci)
 BuildRequires:	pkgconfig(nss)
-
+# (tpg) needed fro QtServiceSupport/private/qgenericunixservices_p.h
+BuildRequires:	%{_lib}qt5servicesupport-static-devel
 Requires:	%{qtwaylandcompositor} = %{EVRD}
 Requires:	%{qtwaylandclient} = %{EVRD}
 
