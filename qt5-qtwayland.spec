@@ -197,7 +197,7 @@ mv %qttarballdir %qttarballdir-nogl
 cp -r %qttarballdir-nogl %qttarballdir-gl
 
 %build
-%global optflags %{optflags} -fPIC
+%global optflags %{optflags} -fPIC -std=c++11
 %if %{with nonegl}
 pushd %qttarballdir-nogl
 # build non-egl support
