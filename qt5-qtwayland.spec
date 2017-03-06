@@ -1,6 +1,6 @@
 %define api %(echo %{version} |cut -d. -f1)
 %define major %api
-%define beta %{nil}
+%define beta alpha
 
 %define qtwaylandclient %mklibname qt%{api}waylandclient %{major}
 %define qtwaylandclientd %mklibname qt%{api}waylandclient -d
@@ -13,7 +13,7 @@
 %define _qt5_prefix %{_libdir}/qt%{api}
 
 Name:		qt5-qtwayland
-Version:	5.8.0
+Version:	5.9.0
 %if "%{beta}" != ""
 Release:	0.%{beta}.1
 %define qttarballdir qtwayland-opensource-src-%{version}-%{beta}
