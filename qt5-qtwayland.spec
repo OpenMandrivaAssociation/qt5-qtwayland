@@ -1,6 +1,6 @@
 %define api %(echo %{version} |cut -d. -f1)
 %define major %api
-%define beta %{nil}
+%define beta beta
 
 %define qtwaylandclient %mklibname qt%{api}waylandclient %{major}
 %define qtwaylandclientd %mklibname qt%{api}waylandclient -d
@@ -13,10 +13,10 @@
 %define _qt5_prefix %{_libdir}/qt%{api}
 
 Name:		qt5-qtwayland
-Version:	5.9.2
+Version:	5.10.0
 %if "%{beta}" != ""
 Release:	0.%{beta}.1
-%define qttarballdir qtwayland-opensource-src-%{version}-%{beta}
+%define qttarballdir qtwayland-everywhere-src-%{version}-%{beta}
 Source0:	http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 %else
 Release:	1
@@ -74,6 +74,7 @@ Qt5 - Wayland platform support and QtCompositor module.
 %{_qt5_plugindir}/platforms/*.so
 %{_qt5_plugindir}/wayland-decoration-client
 %{_qt5_plugindir}/wayland-graphics-integration-client
+%dir %{_qt5_plugindir}/wayland-graphics-integration-server
 %{_qt5_plugindir}/wayland-shell-integration
 %{_libdir}/qt5/qml/QtWayland
 
@@ -137,6 +138,7 @@ Qt Wayland QtCompositor module.
 %files -n %{qtwaylandcompositor}
 %{_qt5_libdir}/libQt%{api}WaylandCompositor.so.%{major}*
 %{_qt5_plugindir}/wayland-graphics-integration-server/libdrm-egl-server.so
+%{_qt5_plugindir}/wayland-graphics-integration-server/libshm-emulation-server.so
 %{_qt5_plugindir}/wayland-graphics-integration-server/libwayland-egl.so
 %{_qt5_plugindir}/wayland-graphics-integration-server/libxcomposite-egl.so
 %{_qt5_plugindir}/wayland-graphics-integration-server/libxcomposite-glx.so
