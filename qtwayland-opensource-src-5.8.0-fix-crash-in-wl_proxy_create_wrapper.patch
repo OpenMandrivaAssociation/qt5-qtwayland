@@ -1,0 +1,21 @@
+From f1909ef4f7dc1eb9dc516c3330a9cf0547e1d8df Mon Sep 17 00:00:00 2001
+From: David Edmundson <davidedmundson@kde.org>
+Date: Thu, 2 Nov 2017 01:45:03 +0000
+Subject: [PATCH] Don't recreate hidden egl surfaces
+
+---
+ src/hardwareintegration/client/wayland-egl/qwaylandglcontext.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff -Naur qtwayland-opensource-src-5.8.0/src/hardwareintegration/client/wayland-egl/qwaylandglcontext.cpp qtwayland-opensource-src-5.8.0.tpg/src/hardwareintegration/client/wayland-egl/qwaylandglcontext.cpp
+--- qtwayland-opensource-src-5.8.0/src/hardwareintegration/client/wayland-egl/qwaylandglcontext.cpp	2017-01-09 09:38:25.000000000 +0000
++++ qtwayland-opensource-src-5.8.0.tpg/src/hardwareintegration/client/wayland-egl/qwaylandglcontext.cpp	2017-11-02 17:30:10.248451343 +0000
+@@ -407,7 +407,7 @@
+         window->createDecoration();
+ 
+     if (eglSurface == EGL_NO_SURFACE) {
+-        window->updateSurface(true);
++        window->updateSurface(window->isExposed());
+         eglSurface = window->eglSurface();
+     }
+ 

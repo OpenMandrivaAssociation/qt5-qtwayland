@@ -19,7 +19,7 @@ Release:	0.%{beta}.1
 %define qttarballdir qtwayland-opensource-src-%{version}-%{beta}
 Source0:	http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 %else
-Release:	1
+Release:	2
 %define qttarballdir qtwayland-opensource-src-%{version}
 Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}/submodules/%{qttarballdir}.tar.xz
 %endif
@@ -27,6 +27,9 @@ Summary:	Qt5 - Wayland platform support and QtCompositor module
 Group:		Development/KDE and Qt
 License:	LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
 URL:		http://www.qt.io
+# (tpg) try to fix plasmashell crashing on startup
+# https://bugs.kde.org/show_bug.cgi?id=381630
+Patch0:		qtwayland-opensource-src-5.8.0-fix-crash-in-wl_proxy_create_wrapper.patch
 BuildRequires:	qmake5 >= %{version}
 BuildRequires:	pkgconfig(Qt5Quick) >= %{version}
 BuildRequires:	pkgconfig(Qt5Core) >= %{version}
@@ -181,6 +184,7 @@ Development files for the Qt Wayland QtCompositor module
 
 %prep
 %setup -qn %qttarballdir
+%apply_patches
 
 %build
 %global optflags %{optflags} -fPIC
