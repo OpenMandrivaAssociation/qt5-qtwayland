@@ -1,0 +1,79 @@
+From a7d7bb54ad30d10370d80dc91adbc329d5a350fa Mon Sep 17 00:00:00 2001
+From: Johan Klokkhammer Helsing <johan.helsing@qt.io>
+Date: Mon, 29 May 2017 15:44:12 +0200
+Subject: [PATCH] Send SurfaceCreated and SurfaceAboutToBeDestroyed events for
+ wl_surface
+
+Previously, the events were matching the life cycle of QWaylandWindow. This
+commit changes it so the events are matching the life cycle of wl_surfaces
+instead (a QWaylandWindow can outlive several wl_surfaces).
+
+Some of these events were already sent in QWindowPrivate (the first and last).
+Now we handle the cases where the wl_surface is destroyed and recreated due to
+hiding/showing the window or when changing the role of the wl_surface.
+
+Task-number: QTBUG-58423
+Change-Id: Ie4a4e7dd529e1a41a2cf42e02cebb3c8aca4a4cc
+Reviewed-by: Giulio Camuffo <giulio.camuffo@kdab.com>
+Reviewed-by: Marco Martin <notmart@gmail.com>
+---
+ src/client/qwaylandwindow.cpp | 13 ++++++++++---
+ src/client/qwaylandwindow_p.h |  2 +-
+ 2 files changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
+index 9b99450..5bfa158 100644
+--- a/src/client/qwaylandwindow.cpp
++++ b/src/client/qwaylandwindow.cpp
+@@ -110,7 +110,7 @@ QWaylandWindow::~QWaylandWindow()
+     delete mWindowDecoration;
+ 
+     if (isInitialized())
+-        reset();
++        reset(false);
+ 
+     QList<QWaylandInputDevice *> inputDevices = mDisplay->inputDevices();
+     for (int i = 0; i < inputDevices.size(); ++i)
+@@ -132,8 +132,11 @@ void QWaylandWindow::initWindow()
+     if (window()->type() == Qt::Desktop)
+         return;
+ 
+-    if (!isInitialized())
++    if (!isInitialized()) {
+         initializeWlSurface();
++        QPlatformSurfaceEvent e(QPlatformSurfaceEvent::SurfaceCreated);
++        QGuiApplication::sendEvent(window(), &e);
++    }
+ 
+     if (shouldCreateSubSurface()) {
+         Q_ASSERT(!mSubSurfaceWindow);
+@@ -240,8 +243,12 @@ bool QWaylandWindow::shouldCreateSubSurface() const
+     return QPlatformWindow::parent() != Q_NULLPTR;
+ }
+ 
+-void QWaylandWindow::reset()
++void QWaylandWindow::reset(bool sendDestroyEvent)
+ {
++    if (isInitialized() && sendDestroyEvent) {
++        QPlatformSurfaceEvent e(QPlatformSurfaceEvent::SurfaceAboutToBeDestroyed);
++        QGuiApplication::sendEvent(window(), &e);
++    }
+     delete mShellSurface;
+     mShellSurface = 0;
+     delete mSubSurfaceWindow;
+diff --git a/src/client/qwaylandwindow_p.h b/src/client/qwaylandwindow_p.h
+index cc11b3c..9f6ff5b 100644
+--- a/src/client/qwaylandwindow_p.h
++++ b/src/client/qwaylandwindow_p.h
+@@ -252,7 +252,7 @@ private:
+     void initializeWlSurface();
+     bool shouldCreateShellSurface() const;
+     bool shouldCreateSubSurface() const;
+-    void reset();
++    void reset(bool sendDestroyEvent = true);
+     void sendExposeEvent(const QRect &rect);
+ 
+     void handleMouseEventWithDecoration(QWaylandInputDevice *inputDevice, const QWaylandPointerEvent &e);
+-- 
+2.8.3
+

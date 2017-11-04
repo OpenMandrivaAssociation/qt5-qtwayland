@@ -19,7 +19,7 @@ Release:	0.%{beta}.1
 %define qttarballdir qtwayland-opensource-src-%{version}-%{beta}
 Source0:	http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 %else
-Release:	2
+Release:	3
 %define qttarballdir qtwayland-opensource-src-%{version}
 Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}/submodules/%{qttarballdir}.tar.xz
 %endif
@@ -30,6 +30,8 @@ URL:		http://www.qt.io
 # (tpg) try to fix plasmashell crashing on startup
 # https://bugs.kde.org/show_bug.cgi?id=381630
 Patch0:		qtwayland-opensource-src-5.8.0-fix-crash-in-wl_proxy_create_wrapper.patch
+# (tpg) fix bug https://bugreports.qt.io/browse/QTBUG-58423
+Patch1:		qtwayland-opensource-src-5.8.0-Send-SurfaceCreated-and-SurfaceAboutToBeDestroyed-events-for-wl_surface.patch
 BuildRequires:	qmake5 >= %{version}
 BuildRequires:	pkgconfig(Qt5Quick) >= %{version}
 BuildRequires:	pkgconfig(Qt5Core) >= %{version}
