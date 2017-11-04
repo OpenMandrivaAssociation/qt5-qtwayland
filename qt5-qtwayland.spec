@@ -31,7 +31,8 @@ URL:		http://www.qt.io
 # https://bugs.kde.org/show_bug.cgi?id=381630
 Patch0:		qtwayland-opensource-src-5.8.0-fix-crash-in-wl_proxy_create_wrapper.patch
 # (tpg) fix bug https://bugreports.qt.io/browse/QTBUG-58423
-Patch1:		qtwayland-opensource-src-5.8.0-Send-SurfaceCreated-and-SurfaceAboutToBeDestroyed-events-for-wl_surface.patch
+Patch1:		qtwayland-opensource-src-5.8.0-Initialize-the-first-wl_surface-in-the-constructor-of-QWaylandWindow.patch
+Patch2:		qtwayland-opensource-src-5.8.0-Send-SurfaceCreated-and-SurfaceAboutToBeDestroyed-events-for-wl_surface.patch
 BuildRequires:	qmake5 >= %{version}
 BuildRequires:	pkgconfig(Qt5Quick) >= %{version}
 BuildRequires:	pkgconfig(Qt5Core) >= %{version}

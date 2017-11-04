@@ -21,11 +21,10 @@ Reviewed-by: Marco Martin <notmart@gmail.com>
  src/client/qwaylandwindow_p.h |  2 +-
  2 files changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index 9b99450..5bfa158 100644
---- a/src/client/qwaylandwindow.cpp
-+++ b/src/client/qwaylandwindow.cpp
-@@ -110,7 +110,7 @@ QWaylandWindow::~QWaylandWindow()
+diff -Naur qtwayland-opensource-src-5.8.0/src/client/qwaylandwindow.cpp qtwayland-opensource-src-5.8.0.tpg/src/client/qwaylandwindow.cpp
+--- qtwayland-opensource-src-5.8.0/src/client/qwaylandwindow.cpp	2017-11-04 19:58:01.556672000 +0000
++++ qtwayland-opensource-src-5.8.0.tpg/src/client/qwaylandwindow.cpp	2017-11-04 20:01:35.998664979 +0000
+@@ -105,7 +105,7 @@
      delete mWindowDecoration;
  
      if (isInitialized())
@@ -34,7 +33,7 @@ index 9b99450..5bfa158 100644
  
      QList<QWaylandInputDevice *> inputDevices = mDisplay->inputDevices();
      for (int i = 0; i < inputDevices.size(); ++i)
-@@ -132,8 +132,11 @@ void QWaylandWindow::initWindow()
+@@ -127,8 +127,11 @@
      if (window()->type() == Qt::Desktop)
          return;
  
@@ -47,7 +46,7 @@ index 9b99450..5bfa158 100644
  
      if (shouldCreateSubSurface()) {
          Q_ASSERT(!mSubSurfaceWindow);
-@@ -240,8 +243,12 @@ bool QWaylandWindow::shouldCreateSubSurface() const
+@@ -222,8 +225,12 @@
      return QPlatformWindow::parent() != Q_NULLPTR;
  }
  
@@ -61,19 +60,17 @@ index 9b99450..5bfa158 100644
      delete mShellSurface;
      mShellSurface = 0;
      delete mSubSurfaceWindow;
-diff --git a/src/client/qwaylandwindow_p.h b/src/client/qwaylandwindow_p.h
-index cc11b3c..9f6ff5b 100644
---- a/src/client/qwaylandwindow_p.h
-+++ b/src/client/qwaylandwindow_p.h
-@@ -252,7 +252,7 @@ private:
+diff -Naur qtwayland-opensource-src-5.8.0/src/client/qwaylandwindow_p.h qtwayland-opensource-src-5.8.0.tpg/src/client/qwaylandwindow_p.h
+--- qtwayland-opensource-src-5.8.0/src/client/qwaylandwindow_p.h	2017-11-04 19:58:01.556672000 +0000
++++ qtwayland-opensource-src-5.8.0.tpg/src/client/qwaylandwindow_p.h	2017-11-04 20:02:10.019663827 +0000
+@@ -249,7 +249,7 @@
      void initializeWlSurface();
      bool shouldCreateShellSurface() const;
      bool shouldCreateSubSurface() const;
 -    void reset();
 +    void reset(bool sendDestroyEvent = true);
-     void sendExposeEvent(const QRect &rect);
  
      void handleMouseEventWithDecoration(QWaylandInputDevice *inputDevice, const QWaylandPointerEvent &e);
+ 
 -- 
 2.8.3
-
