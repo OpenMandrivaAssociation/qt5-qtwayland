@@ -63,6 +63,8 @@ BuildRequires:	%{_lib}qt5themesupport-static-devel
 BuildRequires:	%{_lib}qt5eventdispatchersupport-static-devel
 BuildRequires:	%{_lib}qt5eglsupport-static-devel
 BuildRequires:	%{_lib}qt5glxsupport-static-devel
+# For the Provides: generator
+BuildRequires:	cmake >= 3.11.0-1
 Requires:	%{qtwaylandcompositor} = %{EVRD}
 Requires:	%{qtwaylandclient} = %{EVRD}
 
