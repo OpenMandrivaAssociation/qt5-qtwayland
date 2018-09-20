@@ -13,7 +13,7 @@
 %define _qt5_prefix %{_libdir}/qt%{api}
 
 Name:		qt5-qtwayland
-Version:	5.11.1
+Version:	5.11.2
 %if "%{beta}" != ""
 Release:	0.%{beta}.1
 %define qttarballdir qtwayland-everywhere-src-%{version}-%{beta}
@@ -142,9 +142,9 @@ Qt Wayland QtCompositor module.
 %{_qt5_libdir}/libQt%{api}WaylandCompositor.so.%{major}*
 %{_qt5_plugindir}/wayland-graphics-integration-server/libdrm-egl-server.so
 %{_qt5_plugindir}/wayland-graphics-integration-server/libshm-emulation-server.so
-%{_qt5_plugindir}/wayland-graphics-integration-server/libwayland-egl.so
 %{_qt5_plugindir}/wayland-graphics-integration-server/libxcomposite-egl.so
 %{_qt5_plugindir}/wayland-graphics-integration-server/libxcomposite-glx.so
+%{_qt5_plugindir}/wayland-graphics-integration-server/libqt-plugin-wayland-egl.so
 
 #----------------------------------------------------------------------------
 
