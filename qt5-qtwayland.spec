@@ -157,7 +157,7 @@ Requires:	%{qtwaylandclient} = %{EVRD}
 Requires:	%{qtwaylandclientd} = %{EVRD}
 
 %description -n %{qtwaylandcompositord}
-Development files for the Qt Wayland QtCompositor module
+Development files for the Qt Wayland QtCompositor module.
 
 %files -n %{qtwaylandcompositord}
 %{_qt5_includedir}/QtWaylandCompositor
@@ -177,7 +177,7 @@ Requires:	%{qtwaylandcompositord} = %{EVRD}
 Provides:	qt5-qtcompositor-private-devel = %{EVRD}
 
 %description -n %{qtwaylandcompositor_p_d}
-Development files for the Qt Wayland QtCompositor module
+Development files for the Qt Wayland QtCompositor module.
 
 %files -n %{qtwaylandcompositor_p_d}
 %{_qt5_includedir}/QtWaylandCompositor/%{version}
@@ -185,15 +185,15 @@ Development files for the Qt Wayland QtCompositor module
 
 
 %prep
-%setup -qn %qttarballdir
+%autosetup -n %qttarballdir -p1
 
 %build
 %global optflags %{optflags} -fPIC
 %qmake_qt5 CONFIG+=generated_headers
-%make
+%make_build
 
 %install
-%makeinstall_std INSTALL_ROOT=%{buildroot}
+%make_install INSTALL_ROOT=%{buildroot}
 
 ## .prl/.la file love
 # nuke .prl reference(s) to %%buildroot, excessive (.la-like) libs
