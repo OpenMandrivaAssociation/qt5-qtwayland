@@ -1,4 +1,5 @@
 removed_sources:
   qtwayland-opensource-src-5.9.2.tar.xz: d815fab38aa5f15415c1a716141d9d711cfb0c56
-sources:
   qtwayland-opensource-src-5.9.6.tar.xz: d3938440e3e3d597f516a91bc8a252afa98a0cd8
+sources:
+  qtwayland-opensource-src-5.9.7.tar.xz: ffdcecf07732ba68ceec6425c988efe100f6aed2
