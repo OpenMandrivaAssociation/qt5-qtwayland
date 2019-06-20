@@ -68,6 +68,7 @@ BuildRequires:	%{_lib}qt5glxsupport-static-devel
 # to a separate package given it doesn't seem as X[kb] specific as the
 # name implies.
 BuildRequires:	%{_lib}qt5gui5-x11-devel
+BuildRequires:	%{_lib}qt5linuxaccessibilitysupport-static-devel
 # For the Provides: generator
 BuildRequires:	cmake >= 3.11.0-1
 Requires:	%{qtwaylandcompositor} = %{EVRD}
