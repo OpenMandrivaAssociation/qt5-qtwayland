@@ -84,6 +84,7 @@ Qt5 - Wayland platform support and QtCompositor module.
 %{_qt5_plugindir}/wayland-decoration-client
 %{_qt5_plugindir}/wayland-graphics-integration-client
 %dir %{_qt5_plugindir}/wayland-graphics-integration-server
+%optional %{_qt5_plugindir}/wayland-graphics-integration-server/libdmabuf-server.so
 %{_qt5_plugindir}/wayland-shell-integration
 %{_libdir}/qt5/qml/QtWayland
 
@@ -152,6 +153,7 @@ Qt Wayland QtCompositor module.
 %{_qt5_plugindir}/wayland-graphics-integration-server/libxcomposite-glx.so
 %{_qt5_plugindir}/wayland-graphics-integration-server/libqt-plugin-wayland-egl.so
 %{_qt5_plugindir}/wayland-graphics-integration-server/libwayland-eglstream-controller.so
+%optional %{_qt5_plugindir}/wayland-graphics-integration-server/liblinux-dmabuf-unstable-v1.so
 
 #----------------------------------------------------------------------------
 
