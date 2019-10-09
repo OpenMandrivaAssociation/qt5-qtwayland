@@ -1,6 +1,6 @@
 %define api %(echo %{version} |cut -d. -f1)
 %define major %api
-%define beta %{nil}
+%define beta beta1
 
 %define qtwaylandclient %mklibname qt%{api}waylandclient %{major}
 %define qtwaylandclientd %mklibname qt%{api}waylandclient -d
@@ -13,16 +13,17 @@
 %define _qt5_prefix %{_libdir}/qt%{api}
 
 Name:		qt5-qtwayland
-Version:	5.13.1
+Version:	5.14.0
 %if "%{beta}" != ""
 Release:	0.%{beta}.1
 %define qttarballdir qtwayland-everywhere-src-%{version}-%{beta}
-Source0:	http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%(echo %{beta} |sed -e "s,1$,,")/submodules/%{qttarballdir}.tar.xz
+Source0:	http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 %else
 Release:	1
 %define qttarballdir qtwayland-everywhere-src-%{version}
 Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}/submodules/%{qttarballdir}.tar.xz
 %endif
+Patch0:		qtwayland-5.14-GL-headers.patch
 Summary:	Qt5 - Wayland platform support and QtCompositor module
 Group:		Development/KDE and Qt
 License:	LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
@@ -85,6 +86,7 @@ Qt5 - Wayland platform support and QtCompositor module.
 %{_qt5_plugindir}/wayland-graphics-integration-client
 %dir %{_qt5_plugindir}/wayland-graphics-integration-server
 %optional %{_qt5_plugindir}/wayland-graphics-integration-server/libdmabuf-server.so
+%optional %{_qt5_plugindir}/wayland-graphics-integration-server/libvulkan-server.so
 %{_qt5_plugindir}/wayland-shell-integration
 %{_libdir}/qt5/qml/QtWayland
 
@@ -206,12 +208,11 @@ Development files for the Qt Wayland QtCompositor module.
 
 ## .prl/.la file love
 # nuke .prl reference(s) to %%buildroot, excessive (.la-like) libs
-pushd %{buildroot}%{_libdir}
+cd %{buildroot}%{_libdir}
 for prl_file in libQt5*.prl ; do
-  sed -i -e "/^QMAKE_PRL_BUILD_DIR/d" ${prl_file}
-  if [ -f "$(basename ${prl_file} .prl).so" ]; then
-    rm -fv "$(basename ${prl_file} .prl).la"
-    sed -i -e "/^QMAKE_PRL_LIBS/d" ${prl_file}
-  fi
+	sed -i -e "/^QMAKE_PRL_BUILD_DIR/d" ${prl_file}
+	if [ -f "$(basename ${prl_file} .prl).so" ]; then
+		rm -fv "$(basename ${prl_file} .prl).la"
+		sed -i -e "/^QMAKE_PRL_LIBS/d" ${prl_file}
+	fi
 done
-popd
