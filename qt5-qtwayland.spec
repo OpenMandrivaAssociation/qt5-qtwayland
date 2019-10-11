@@ -36,6 +36,7 @@ BuildRequires:	pkgconfig(Qt5DBus)
 BuildRequires:	pkgconfig(Qt5Widgets)
 BuildRequires:	pkgconfig(Qt5OpenGL)
 BuildRequires:	qt5-qtquick-private-devel
+BuildRequires:	qt5-qtqmlmodels-private-devel
 BuildRequires:	pkgconfig(xkbcommon)
 BuildRequires:	pkgconfig(wayland-scanner) >= 1.10.0
 BuildRequires:	pkgconfig(wayland-server)
