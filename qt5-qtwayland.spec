@@ -35,6 +35,7 @@ BuildRequires:	pkgconfig(Qt5Gui)
 BuildRequires:	pkgconfig(Qt5DBus)
 BuildRequires:	pkgconfig(Qt5Widgets)
 BuildRequires:	pkgconfig(Qt5OpenGL)
+BuildRequires:	cmake(Qt5VulkanSupport)
 BuildRequires:	qt5-qtquick-private-devel
 BuildRequires:	qt5-qtqmlmodels-private-devel
 BuildRequires:	pkgconfig(xkbcommon)
