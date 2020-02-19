@@ -75,6 +75,7 @@ BuildRequires:	%{_lib}qt5linuxaccessibilitysupport-static-devel
 BuildRequires:	pkgconfig(Qt5LinuxAccessibilitySupport)
 # For drm_fourcc.h
 BuildRequires:	kernel-release-headers
+BuildRequires:	pkgconfig(libdrm)
 # For the Provides: generator
 BuildRequires:	cmake >= 3.11.0-1
 Requires:	%{qtwaylandcompositor} = %{EVRD}
