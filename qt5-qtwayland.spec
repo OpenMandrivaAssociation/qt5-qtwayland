@@ -151,9 +151,9 @@ Qt Wayland QtCompositor module.
 
 %files -n %{qtwaylandcompositor}
 %{_qt5_libdir}/libQt%{api}WaylandCompositor.so.%{major}*
-%{_libdir}/qt5/plugins/wayland-graphics-integration-server/libqt-wayland-compositor-dmabuf-server-buffer.so
+%optional %{_libdir}/qt5/plugins/wayland-graphics-integration-server/libqt-wayland-compositor-dmabuf-server-buffer.so
+%optional %{_libdir}/qt5/plugins/wayland-graphics-integration-server/libqt-wayland-compositor-linux-dmabuf-unstable-v1.so
 %{_libdir}/qt5/plugins/wayland-graphics-integration-server/libqt-wayland-compositor-drm-egl-server-buffer.so
-%{_libdir}/qt5/plugins/wayland-graphics-integration-server/libqt-wayland-compositor-linux-dmabuf-unstable-v1.so
 %{_libdir}/qt5/plugins/wayland-graphics-integration-server/libqt-wayland-compositor-shm-emulation-server.so
 %{_libdir}/qt5/plugins/wayland-graphics-integration-server/libqt-wayland-compositor-vulkan-server.so
 %{_libdir}/qt5/plugins/wayland-graphics-integration-server/libqt-wayland-compositor-wayland-egl.so
@@ -205,6 +205,7 @@ Development files for the Qt Wayland QtCompositor module.
 %build
 %global optflags %{optflags} -fPIC
 %qmake_qt5 CONFIG+=generated_headers
+cat config.log
 %make_build
 
 %install
