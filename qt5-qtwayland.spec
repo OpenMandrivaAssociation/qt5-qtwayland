@@ -66,7 +66,8 @@ BuildRequires:	%{_lib}qt5fontdatabasesupport-static-devel
 BuildRequires:	%{_lib}qt5themesupport-static-devel
 BuildRequires:	%{_lib}qt5eventdispatchersupport-static-devel
 BuildRequires:	%{_lib}qt5eglsupport-static-devel
-BuildRequires:	%{_lib}qt5glxsupport-static-devel
+# Needed if and only if Qt is build with desktop OpenGL
+#BuildRequires:	%{_lib}qt5glxsupport-static-devel
 # Required bit is libQt5XkbCommonSupport.a -- maybe that should move
 # to a separate package given it doesn't seem as X[kb] specific as the
 # name implies.
@@ -160,7 +161,8 @@ Qt Wayland QtCompositor module.
 %{_libdir}/qt5/plugins/wayland-graphics-integration-server/libqt-wayland-compositor-wayland-egl.so
 %{_libdir}/qt5/plugins/wayland-graphics-integration-server/libqt-wayland-compositor-wayland-eglstream-controller.so
 %{_libdir}/qt5/plugins/wayland-graphics-integration-server/libqt-wayland-compositor-xcomposite-egl.so
-%{_libdir}/qt5/plugins/wayland-graphics-integration-server/libqt-wayland-compositor-xcomposite-glx.so
+# Built if and only if Qt uses desktop OpenGL rather than OpenGL ES
+%optional %{_libdir}/qt5/plugins/wayland-graphics-integration-server/libqt-wayland-compositor-xcomposite-glx.so
 
 #----------------------------------------------------------------------------
 
