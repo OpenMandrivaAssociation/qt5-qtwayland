@@ -19,7 +19,7 @@ Release:	0.%{beta}.1
 %define qttarballdir qtwayland-everywhere-src-%{version}-%{beta}
 Source0:	http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 %else
-Release:	1
+Release:	2
 %define qttarballdir qtwayland-everywhere-src-%{version}
 Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}/submodules/%{qttarballdir}.tar.xz
 %endif
@@ -67,7 +67,7 @@ BuildRequires:	%{_lib}qt5themesupport-static-devel
 BuildRequires:	%{_lib}qt5eventdispatchersupport-static-devel
 BuildRequires:	%{_lib}qt5eglsupport-static-devel
 # Needed if and only if Qt is build with desktop OpenGL
-#BuildRequires:	%{_lib}qt5glxsupport-static-devel
+BuildRequires:	%{_lib}qt5glxsupport-static-devel
 # Required bit is libQt5XkbCommonSupport.a -- maybe that should move
 # to a separate package given it doesn't seem as X[kb] specific as the
 # name implies.
