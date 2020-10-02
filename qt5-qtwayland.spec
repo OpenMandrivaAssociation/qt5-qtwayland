@@ -66,8 +66,10 @@ BuildRequires:	%{_lib}qt5fontdatabasesupport-static-devel
 BuildRequires:	%{_lib}qt5themesupport-static-devel
 BuildRequires:	%{_lib}qt5eventdispatchersupport-static-devel
 BuildRequires:	%{_lib}qt5eglsupport-static-devel
+%ifnarch %{arm} %{aarch64}
 # Needed if and only if Qt is build with desktop OpenGL
 BuildRequires:	%{_lib}qt5glxsupport-static-devel
+%endif
 # Required bit is libQt5XkbCommonSupport.a -- maybe that should move
 # to a separate package given it doesn't seem as X[kb] specific as the
 # name implies.
