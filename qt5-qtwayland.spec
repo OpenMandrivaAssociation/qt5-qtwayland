@@ -19,11 +19,13 @@ Release:	0.%{beta}.1
 %define qttarballdir qtwayland-everywhere-src-%{version}-%{beta}
 Source0:	http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 %else
-Release:	1
+Release:	2
 %define qttarballdir qtwayland-everywhere-src-%{version}
 Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}/submodules/%{qttarballdir}.tar.xz
 %endif
 Patch0:		qtwayland-5.14-GL-headers.patch
+# https://codereview.qt-project.org/c/qt%2Fqtwayland/+/321595
+Patch1:		e5c2724.diff
 Summary:	Qt5 - Wayland platform support and QtCompositor module
 Group:		Development/KDE and Qt
 License:	LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
