@@ -12,6 +12,7 @@
 
 %define _qt5_prefix %{_libdir}/qt%{api}
 
+Summary:	Qt5 - Wayland platform support and QtCompositor module
 Name:		qt5-qtwayland
 Version:	5.15.2
 %if "%{beta}" != ""
@@ -19,17 +20,19 @@ Release:	0.%{beta}.1
 %define qttarballdir qtwayland-everywhere-src-%{version}-%{beta}
 Source0:	http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 %else
-Release:	2
+Release:	3
 %define qttarballdir qtwayland-everywhere-src-%{version}
 Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}/submodules/%{qttarballdir}.tar.xz
 %endif
-Patch0:		qtwayland-5.14-GL-headers.patch
-# https://codereview.qt-project.org/c/qt%2Fqtwayland/+/321595
-Patch1:		e5c2724.diff
-Summary:	Qt5 - Wayland platform support and QtCompositor module
 Group:		Development/KDE and Qt
 License:	LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
 URL:		http://www.qt.io
+Patch0:		qtwayland-5.14-GL-headers.patch
+# https://codereview.qt-project.org/c/qt%2Fqtwayland/+/321595
+Patch1:		e5c2724.diff
+# (tpg) silence crashing errors as a temporary workaround
+Patch2:		0000-Client-Gracefully-exit-when-the-compositor-closes.patch
+
 BuildRequires:	qmake5 >= %{version}
 BuildRequires:	pkgconfig(Qt5Quick) >= %{version}
 BuildRequires:	pkgconfig(Qt5Core) >= %{version}
