@@ -14,15 +14,15 @@
 
 Summary:	Qt5 - Wayland platform support and QtCompositor module
 Name:		qt5-qtwayland
-Version:	5.15.2
+Version:	5.15.3
 %if "%{beta}" != ""
 Release:	0.%{beta}.1
 %define qttarballdir qtwayland-everywhere-src-%{version}-%{beta}
 Source0:	http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 %else
-Release:	3
-%define qttarballdir qtwayland-everywhere-src-%{version}
-Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}/submodules/%{qttarballdir}.tar.xz
+Release:	1
+%define qttarballdir qtwayland-everywhere-src-5.15.2
+Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/5.15.2/submodules/%{qttarballdir}.tar.xz
 %endif
 Group:		Development/KDE and Qt
 License:	LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
@@ -30,8 +30,14 @@ URL:		http://www.qt.io
 Patch0:		qtwayland-5.14-GL-headers.patch
 # https://codereview.qt-project.org/c/qt%2Fqtwayland/+/321595
 Patch1:		e5c2724.diff
-# (tpg) silence crashing errors as a temporary workaround
-Patch2:		0000-Client-Gracefully-exit-when-the-compositor-closes.patch
+# From KDE
+Patch1000:	0001-Bump-version.patch
+Patch1005:	0006-Make-setting-QT_SCALE_FACTOR-work-on-Wayland.patch
+Patch1006:	0007-Do-not-try-to-eglMakeCurrent-for-unintended-case.patch
+Patch1007:	0008-Make-setting-QT_SCALE_FACTOR-work-on-Wayland.patch
+Patch1008:	0009-Ensure-that-grabbing-is-performed-in-correct-context.patch
+Patch1009:	0010-Fix-leaked-subsurface-wayland-items.patch
+Patch1010:	0011-Use-qWarning-and-_exit-instead-of-qFatal-for-wayland.patch
 
 BuildRequires:	qmake5 >= %{version}
 BuildRequires:	pkgconfig(Qt5Quick) >= %{version}
@@ -211,6 +217,7 @@ Development files for the Qt Wayland QtCompositor module.
 
 %prep
 %autosetup -n %qttarballdir -p1
+%{_qt5_prefix}/bin/syncqt.pl -version %{version}
 
 %build
 %global optflags %{optflags} -fPIC
