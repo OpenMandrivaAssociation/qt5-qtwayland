@@ -20,7 +20,7 @@ Release:	0.%{beta}.1
 %define qttarballdir qtwayland-everywhere-src-%{version}-%{beta}
 Source0:	http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 %else
-Release:	1
+Release:	2
 %define qttarballdir qtwayland-everywhere-src-5.15.2
 Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/5.15.2/submodules/%{qttarballdir}.tar.xz
 %endif
@@ -110,8 +110,8 @@ Qt5 - Wayland platform support and QtCompositor module.
 #------------------------------------------------------------------------------
 
 %package -n %{qtwaylandclient}
-Summary: Qt%{api} Component Library
-Group: System/Libraries
+Summary:	Qt%{api} Component Library
+Group:		System/Libraries
 
 %description -n %{qtwaylandclient}
 Qt%{api} Component Library.
@@ -122,12 +122,13 @@ Qt%{api} Component Library.
 #------------------------------------------------------------------------------
 
 %package -n %{qtwaylandclientd}
-Summary: Devel files needed to build apps based on %{name}
-Group:    Development/KDE and Qt
-Requires: %{qtwaylandclient} = %{EVRD}
+Summary:	Devel files needed to build apps based on %{name}
+Group:		Development/KDE and Qt
+Requires:	%{name} = %{EVRD}
+Requires:	%{qtwaylandclient} = %{EVRD}
 
 %description -n %{qtwaylandclientd}
-Devel files needed to build apps based on %{name}
+Devel files needed to build apps based on %{name}.
 
 %files -n %{qtwaylandclientd}
 %{_qt5_libdir}/libQt5WaylandClient.so
@@ -142,14 +143,14 @@ Devel files needed to build apps based on %{name}
 #------------------------------------------------------------------------------
 
 %package -n %{qtwaylandclient_p_d}
-Summary: Devel files needed to build apps based on %{name}
-Group:    Development/KDE and Qt
+Summary:	Devel files needed to build apps based on %{name}
+Group:		Development/KDE and Qt
 
-Requires: %{qtwaylandclientd} = %{EVRD}
-Provides: qt5-qtwayland-private-devel = %{EVRD}
+Requires:	%{qtwaylandclientd} = %{EVRD}
+Provides:	qt5-qtwayland-private-devel = %{EVRD}
 
 %description -n %{qtwaylandclient_p_d}
-Devel files needed to build apps based on %{name}
+Devel files needed to build apps based on %{name}.
 
 %files -n %{qtwaylandclient_p_d}
 %{_qt5_includedir}/QtWaylandClient/%{version}
@@ -220,7 +221,7 @@ Development files for the Qt Wayland QtCompositor module.
 %{_qt5_prefix}/bin/syncqt.pl -version %{version}
 
 %build
-%global optflags %{optflags} -fPIC
+%global optflags %{optflags} -O3 -fPIC
 %qmake_qt5 CONFIG+=generated_headers
 cat config.log
 %make_build
@@ -232,9 +233,9 @@ cat config.log
 # nuke .prl reference(s) to %%buildroot, excessive (.la-like) libs
 cd %{buildroot}%{_libdir}
 for prl_file in libQt5*.prl ; do
-	sed -i -e "/^QMAKE_PRL_BUILD_DIR/d" ${prl_file}
-	if [ -f "$(basename ${prl_file} .prl).so" ]; then
-		rm -fv "$(basename ${prl_file} .prl).la"
-		sed -i -e "/^QMAKE_PRL_LIBS/d" ${prl_file}
-	fi
+    sed -i -e "/^QMAKE_PRL_BUILD_DIR/d" ${prl_file}
+    if [ -f "$(basename ${prl_file} .prl).so" ]; then
+	rm -fv "$(basename ${prl_file} .prl).la"
+	sed -i -e "/^QMAKE_PRL_LIBS/d" ${prl_file}
+    fi
 done
