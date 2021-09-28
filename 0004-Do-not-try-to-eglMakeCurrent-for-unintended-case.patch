@@ -1,7 +1,7 @@
 From 2c0a03e9aea13831d05ac03996949f888afd5085 Mon Sep 17 00:00:00 2001
 From: Jaehak Lee <jaehak.lee@mobis.co.kr>
 Date: Sun, 8 Nov 2020 11:40:06 +0900
-Subject: [PATCH 07/11] Do not try to eglMakeCurrent for unintended case
+Subject: [PATCH 04/30] Do not try to eglMakeCurrent for unintended case
 
 The QSGThreadedRenderLoop::hide can be called at twice,
 when the QWindowPrivate::setVisible(false) is called.
@@ -58,5 +58,5 @@ index 46c7bb76..93edaec0 100644
  
  }
 -- 
-2.31.1
+2.33.0
 

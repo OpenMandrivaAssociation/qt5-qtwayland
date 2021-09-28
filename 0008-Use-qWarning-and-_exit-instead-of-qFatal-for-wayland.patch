@@ -1,7 +1,7 @@
 From 9ee2ea141adc7765f6c212e63839ef23a4494b30 Mon Sep 17 00:00:00 2001
 From: Weng Xuetian <wengxt@gmail.com>
 Date: Tue, 9 Mar 2021 10:43:59 -0800
-Subject: [PATCH 11/11] Use qWarning and _exit() instead of qFatal for wayland
+Subject: [PATCH 08/30] Use qWarning and _exit() instead of qFatal for wayland
  error
 
 This type of error is likely to happen upon system logout. qFatal would
@@ -34,5 +34,5 @@ index fe094f6f..f10c1f79 100644
  
  void QWaylandDisplay::flushRequests()
 -- 
-2.31.1
+2.33.0
 

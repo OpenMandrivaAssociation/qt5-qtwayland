@@ -1,7 +1,7 @@
 From a825fb5f714fd79d16cc3ebbdd327e7961b07d0a Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Morten=20Johan=20S=C3=B8rvig?= <morten.sorvig@qt.io>
 Date: Mon, 16 Nov 2020 19:37:33 +0100
-Subject: [PATCH 06/11] Make setting QT_SCALE_FACTOR work on Wayland
+Subject: [PATCH 03/30] Make setting QT_SCALE_FACTOR work on Wayland
 
 Follow-up to 8cb1b07aea12d50b4fecc45c903705dfd368022a,
 fixes one additional case (Use of minimum/maximum size).
@@ -34,5 +34,5 @@ index bc031ed5..eb053406 100644
      if (mSubSurfaceWindow) {
          QMargins m = QPlatformWindow::parent()->frameMargins();
 -- 
-2.31.1
+2.33.0
 

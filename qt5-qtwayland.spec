@@ -20,7 +20,7 @@ Release:	0.%{beta}.1
 %define qttarballdir qtwayland-everywhere-src-%{version}-%{beta}
 Source0:	http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 %else
-Release:	2
+Release:	3
 %define qttarballdir qtwayland-everywhere-src-5.15.2
 Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/5.15.2/submodules/%{qttarballdir}.tar.xz
 %endif
@@ -28,16 +28,38 @@ Group:		Development/KDE and Qt
 License:	LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
 URL:		http://www.qt.io
 Patch0:		qtwayland-5.14-GL-headers.patch
-# https://codereview.qt-project.org/c/qt%2Fqtwayland/+/321595
-Patch1:		e5c2724.diff
+
 # From KDE
 Patch1000:	0001-Bump-version.patch
-Patch1005:	0006-Make-setting-QT_SCALE_FACTOR-work-on-Wayland.patch
-Patch1006:	0007-Do-not-try-to-eglMakeCurrent-for-unintended-case.patch
-Patch1007:	0008-Make-setting-QT_SCALE_FACTOR-work-on-Wayland.patch
-Patch1008:	0009-Ensure-that-grabbing-is-performed-in-correct-context.patch
-Patch1009:	0010-Fix-leaked-subsurface-wayland-items.patch
-Patch1010:	0011-Use-qWarning-and-_exit-instead-of-qFatal-for-wayland.patch
+Patch1001:	0002-Scanner-Avoid-accessing-dangling-pointers-in-destroy.patch
+Patch1002:	0003-Make-setting-QT_SCALE_FACTOR-work-on-Wayland.patch
+Patch1003:	0004-Do-not-try-to-eglMakeCurrent-for-unintended-case.patch
+Patch1004:	0005-Make-setting-QT_SCALE_FACTOR-work-on-Wayland.patch
+Patch1005:	0006-Ensure-that-grabbing-is-performed-in-correct-context.patch
+Patch1006:	0007-Fix-leaked-subsurface-wayland-items.patch
+Patch1007:	0008-Use-qWarning-and-_exit-instead-of-qFatal-for-wayland.patch
+Patch1008:	0009-Fix-memory-leak-in-QWaylandGLContext.patch
+Patch1009:	0010-Client-Send-set_window_geometry-only-once-configured.patch
+Patch1010:	0011-Translate-opaque-area-with-frame-margins.patch
+Patch1011:	0012-Client-Send-exposeEvent-to-parent-on-subsurface-posi.patch
+Patch1012:	0013-Get-correct-decoration-margins-region.patch
+Patch1013:	0014-xdgshell-Tell-the-compositor-the-screen-we-re-expect.patch
+Patch1014:	0015-Fix-compilation.patch
+Patch1015:	0016-client-Allow-QWaylandInputContext-to-accept-composed.patch
+Patch1016:	0017-Client-Announce-an-output-after-receiving-more-compl.patch
+Patch1017:	0018-Fix-issue-with-repeated-window-size-changes.patch
+Patch1018:	0019-Include-locale.h-for-setlocale-LC_CTYPE.patch
+Patch1019:	0020-Client-Connect-drags-being-accepted-to-updating-the-.patch
+Patch1020:	0021-Client-Disconnect-registry-listener-on-destruction.patch
+Patch1021:	0022-Client-Set-XdgShell-size-hints-before-the-first-comm.patch
+Patch1022:	0023-Fix-build.patch
+Patch1023:	0024-Fix-remove-listener.patch
+Patch1024:	0025-Hook-up-queryKeyboardModifers.patch
+Patch1025:	0026-Do-not-update-the-mask-if-we-do-not-have-a-surface.patch
+Patch1026:	0027-Correctly-detect-if-image-format-is-supported-by-QIm.patch
+Patch1027:	0028-Wayland-client-Fix-crash-when-windows-are-shown-hidd.patch
+Patch1028:	0029-Client-Don-t-always-recreate-frame-callbacks.patch
+Patch1029:	0030-Client-Always-destroy-frame-callback-in-the-actual-c.patch
 
 BuildRequires:	qmake5 >= %{version}
 BuildRequires:	pkgconfig(Qt5Quick) >= %{version}
@@ -217,13 +239,12 @@ Development files for the Qt Wayland QtCompositor module.
 
 
 %prep
-%autosetup -n %qttarballdir -p1
+%autosetup -n %{qttarballdir} -p1
 %{_qt5_prefix}/bin/syncqt.pl -version %{version}
 
 %build
 %global optflags %{optflags} -O3 -fPIC
 %qmake_qt5 CONFIG+=generated_headers
-cat config.log
 %make_build
 
 %install

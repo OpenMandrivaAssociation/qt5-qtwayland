@@ -1,7 +1,7 @@
 From a8d35b3c18bdb05a0da3ed50a554a7b7bd4ebed3 Mon Sep 17 00:00:00 2001
 From: Eskil Abrahamsen Blomfeldt <eskil.abrahamsen-blomfeldt@qt.io>
 Date: Mon, 30 Nov 2020 13:13:18 +0100
-Subject: [PATCH 10/11] Fix leaked subsurface wayland items
+Subject: [PATCH 07/30] Fix leaked subsurface wayland items
 
 Whenever a subsurface was added we would create a QWaylandQuickItem,
 but this was never deleted. It is one-to-one with the surface, so it
@@ -32,5 +32,5 @@ index 15f0195c..2218f43a 100644
          bool success = QMetaObject::invokeMethod(d->subsurfaceHandler, "handleSubsurfaceAdded", Q_ARG(QWaylandSurface *, childSurface));
          if (!success)
 -- 
-2.31.1
+2.33.0
 

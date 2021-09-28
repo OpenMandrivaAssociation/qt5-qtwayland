@@ -1,7 +1,7 @@
 From dba4bc4f1d6dfee9fe9433c55b15653d703bed4f Mon Sep 17 00:00:00 2001
 From: Andreas Cord-Landwehr <cordlandwehr@kde.org>
 Date: Wed, 2 Dec 2020 20:55:52 +0100
-Subject: [PATCH 09/11] Ensure that grabbing is performed in correct context
+Subject: [PATCH 06/30] Ensure that grabbing is performed in correct context
 
 For multi-display rendering on EGL, it is mandatory that the grabbing of
 the surface happens in the same EGL context as the surface belongs to.
@@ -31,5 +31,5 @@ index 49f0860e..db1cf00f 100644
      emit grabber->failed(QWaylandSurfaceGrabber::UnknownBufferType);
  #endif
 -- 
-2.31.1
+2.33.0
 

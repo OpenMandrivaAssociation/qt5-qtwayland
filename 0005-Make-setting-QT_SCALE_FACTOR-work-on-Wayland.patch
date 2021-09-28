@@ -1,7 +1,7 @@
 From 10005185e06857ce119c50fe710f9eedde06ec5e Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Morten=20Johan=20S=C3=B8rvig?= <morten.sorvig@qt.io>
 Date: Fri, 13 Nov 2020 11:21:50 +0100
-Subject: [PATCH 08/11] Make setting QT_SCALE_FACTOR work on Wayland
+Subject: [PATCH 05/30] Make setting QT_SCALE_FACTOR work on Wayland
 
 QWindow geometry accessors return geometry in device
 independent pixels. Normally this coordinate system
@@ -108,5 +108,5 @@ index b6d23ac1..1c762944 100644
      if ((m_pending.states & Qt::WindowActive) && !(m_applied.states & Qt::WindowActive))
          m_xdgSurface->m_window->display()->handleWindowActivated(m_xdgSurface->m_window);
 -- 
-2.31.1
+2.33.0
 
