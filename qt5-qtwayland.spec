@@ -20,7 +20,7 @@ Release:	0.%{beta}.1
 %define qttarballdir qtwayland-everywhere-src-%{version}-%{beta}
 Source0:	http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 %else
-Release:	4
+Release:	5
 %define qttarballdir qtwayland-everywhere-src-5.15.2
 Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/5.15.2/submodules/%{qttarballdir}.tar.xz
 %endif
@@ -29,7 +29,7 @@ License:	LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
 URL:		http://www.qt.io
 Patch0:		qtwayland-5.14-GL-headers.patch
 
-# From KDE
+# From KDE https://invent.kde.org/qt/qt/qtwayland -b kde/5.15
 Patch1000:	0001-Bump-version.patch
 Patch1001:	0002-Scanner-Avoid-accessing-dangling-pointers-in-destroy.patch
 Patch1002:	0003-Make-setting-QT_SCALE_FACTOR-work-on-Wayland.patch
@@ -60,6 +60,9 @@ Patch1026:	0027-Correctly-detect-if-image-format-is-supported-by-QIm.patch
 Patch1027:	0028-Wayland-client-Fix-crash-when-windows-are-shown-hidd.patch
 Patch1028:	0029-Client-Don-t-always-recreate-frame-callbacks.patch
 Patch1029:	0030-Client-Always-destroy-frame-callback-in-the-actual-c.patch
+Patch1030:	0031-Fix-the-logic-for-decoding-modifiers-map-in-Wayland-.patch
+Patch1031:	0032-Wayland-client-use-wl_keyboard-to-determine-active-s.patch
+Patch1032:	0033-Client-do-not-empty-clipboard-when-a-new-popup-windo.patch
 
 BuildRequires:	qmake5 >= %{version}
 BuildRequires:	pkgconfig(Qt5Quick) >= %{version}
