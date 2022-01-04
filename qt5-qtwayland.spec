@@ -20,7 +20,7 @@ Release:	0.%{beta}.1
 %define qttarballdir qtwayland-everywhere-src-%{version}-%{beta}
 Source0:	http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 %else
-Release:	5
+Release:	6
 %define qttarballdir qtwayland-everywhere-src-5.15.2
 Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/5.15.2/submodules/%{qttarballdir}.tar.xz
 %endif
@@ -63,6 +63,8 @@ Patch1029:	0030-Client-Always-destroy-frame-callback-in-the-actual-c.patch
 Patch1030:	0031-Fix-the-logic-for-decoding-modifiers-map-in-Wayland-.patch
 Patch1031:	0032-Wayland-client-use-wl_keyboard-to-determine-active-s.patch
 Patch1032:	0033-Client-do-not-empty-clipboard-when-a-new-popup-windo.patch
+Patch1033:	0034-Fix-backport-context-destruction-was-omitted.patch
+Patch1034:	0035-Set-preedit-cursor-when-cursor-equals-to-0.patch
 
 BuildRequires:	qmake5 >= %{version}
 BuildRequires:	pkgconfig(Qt5Quick) >= %{version}
@@ -240,7 +242,6 @@ Development files for the Qt Wayland QtCompositor module.
 %{_qt5_includedir}/QtWaylandCompositor/%{version}
 %{_qt5_prefix}/mkspecs/modules/qt_lib_waylandcompositor_private.pri
 
-
 %prep
 %autosetup -n %{qttarballdir} -p1
 %{_qt5_prefix}/bin/syncqt.pl -version %{version}
@@ -263,3 +264,4 @@ for prl_file in libQt5*.prl ; do
 	sed -i -e "/^QMAKE_PRL_LIBS/d" ${prl_file}
     fi
 done
+cd -
