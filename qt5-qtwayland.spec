@@ -20,7 +20,7 @@ Release:	0.%{beta}.1
 %define qttarballdir qtwayland-everywhere-src-%{version}-%{beta}
 Source0:	http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 %else
-Release:	6
+Release:	7
 %define qttarballdir qtwayland-everywhere-src-5.15.2
 Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/5.15.2/submodules/%{qttarballdir}.tar.xz
 %endif
@@ -65,6 +65,17 @@ Patch1031:	0032-Wayland-client-use-wl_keyboard-to-determine-active-s.patch
 Patch1032:	0033-Client-do-not-empty-clipboard-when-a-new-popup-windo.patch
 Patch1033:	0034-Fix-backport-context-destruction-was-omitted.patch
 Patch1034:	0035-Set-preedit-cursor-when-cursor-equals-to-0.patch
+Patch1035:	0036-Client-Implement-DataDeviceV3.patch
+Patch1036:	0037-Client-Delay-deletion-of-QDrag-object-until-after-we.patch
+Patch1037:	0038-Client-Avoid-processing-of-events-when-showing-windo.patch
+Patch1038:	0039-Handle-registry_global-out-of-constructor.patch
+Patch1039:	0040-Connect-flushRequest-after-forceRoundTrip.patch
+Patch1040:	0041-Move-the-wayland-socket-polling-to-a-separate-event-.patch
+Patch1041:	0042-Check-pointer-for-null-before-use-in-ASSERT.patch
+Patch1042:	0043-Do-not-create-decorations-when-the-shellSurface-is-n.patch
+Patch1043:	0044-Use-wl_surface.damage_buffer-on-the-client-side.patch
+Patch1044:	0045-Fix-crash-if-no-input-method-module-could-be-loaded.patch
+Patch1045:	0046-Client-Remove-mWaitingForUpdateDelivery.patch
 
 BuildRequires:	qmake5 >= %{version}
 BuildRequires:	pkgconfig(Qt5Quick) >= %{version}
