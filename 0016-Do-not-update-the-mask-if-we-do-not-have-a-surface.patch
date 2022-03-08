@@ -1,0 +1,44 @@
+From 537c5d43941d26d89ebf00f6abf7f12f9bac1caf Mon Sep 17 00:00:00 2001
+From: Aleix Pol <aleixpol@kde.org>
+Date: Tue, 13 Jul 2021 13:32:15 +0200
+Subject: [PATCH 16/40] Do not update the mask if we do not have a surface
+
+mMask serves as a cache to remember what we've sent, the source of truth
+for the value is window()->mask().
+No need to store values that we are going to discard, because it will
+confuse the state of newly created windows.
+
+Change-Id: I6aa3da82c7f09c7ef90d0f7060f292fb042730f0
+Pick-to: 5.15 6.2
+Reviewed-by: David Edmundson <davidedmundson@kde.org>
+(cherry picked from commit 962f87190c682562b369c5ebd93dc9ce0915ed7a)
+---
+ src/client/qwaylandwindow.cpp | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
+index e96d8fe9..bd70f4af 100644
+--- a/src/client/qwaylandwindow.cpp
++++ b/src/client/qwaylandwindow.cpp
+@@ -464,14 +464,15 @@ void QWaylandWindow::lower()
+ 
+ void QWaylandWindow::setMask(const QRegion &mask)
+ {
++    QReadLocker locker(&mSurfaceLock);
++    if (!mSurface)
++        return;
++
+     if (mMask == mask)
+         return;
+ 
+     mMask = mask;
+ 
+-    if (!mSurface)
+-        return;
+-
+     if (mMask.isEmpty()) {
+         mSurface->set_input_region(nullptr);
+ 
+-- 
+2.35.1
+

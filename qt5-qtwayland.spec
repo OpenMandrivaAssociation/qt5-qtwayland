@@ -20,9 +20,9 @@ Release:	0.%{beta}.1
 %define qttarballdir qtwayland-everywhere-src-%{version}-%{beta}
 Source0:	http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 %else
-Release:	7
-%define qttarballdir qtwayland-everywhere-src-5.15.2
-Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/5.15.2/submodules/%{qttarballdir}.tar.xz
+Release:	8
+%define qttarballdir qtwayland-everywhere-opensource-src-5.15.3
+Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}/submodules/%{qttarballdir}.tar.xz
 %endif
 Group:		Development/KDE and Qt
 License:	LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
@@ -30,52 +30,46 @@ URL:		http://www.qt.io
 Patch0:		qtwayland-5.14-GL-headers.patch
 
 # From KDE https://invent.kde.org/qt/qt/qtwayland -b kde/5.15
-Patch1000:	0001-Bump-version.patch
-Patch1001:	0002-Scanner-Avoid-accessing-dangling-pointers-in-destroy.patch
-Patch1002:	0003-Make-setting-QT_SCALE_FACTOR-work-on-Wayland.patch
-Patch1003:	0004-Do-not-try-to-eglMakeCurrent-for-unintended-case.patch
-Patch1004:	0005-Make-setting-QT_SCALE_FACTOR-work-on-Wayland.patch
-Patch1005:	0006-Ensure-that-grabbing-is-performed-in-correct-context.patch
-Patch1006:	0007-Fix-leaked-subsurface-wayland-items.patch
-Patch1007:	0008-Use-qWarning-and-_exit-instead-of-qFatal-for-wayland.patch
-Patch1008:	0009-Fix-memory-leak-in-QWaylandGLContext.patch
-Patch1009:	0010-Client-Send-set_window_geometry-only-once-configured.patch
-Patch1010:	0011-Translate-opaque-area-with-frame-margins.patch
-Patch1011:	0012-Client-Send-exposeEvent-to-parent-on-subsurface-posi.patch
-Patch1012:	0013-Get-correct-decoration-margins-region.patch
-Patch1013:	0014-xdgshell-Tell-the-compositor-the-screen-we-re-expect.patch
-Patch1014:	0015-Fix-compilation.patch
-Patch1015:	0016-client-Allow-QWaylandInputContext-to-accept-composed.patch
-Patch1016:	0017-Client-Announce-an-output-after-receiving-more-compl.patch
-Patch1017:	0018-Fix-issue-with-repeated-window-size-changes.patch
-Patch1018:	0019-Include-locale.h-for-setlocale-LC_CTYPE.patch
-Patch1019:	0020-Client-Connect-drags-being-accepted-to-updating-the-.patch
-Patch1020:	0021-Client-Disconnect-registry-listener-on-destruction.patch
-Patch1021:	0022-Client-Set-XdgShell-size-hints-before-the-first-comm.patch
-Patch1022:	0023-Fix-build.patch
-Patch1023:	0024-Fix-remove-listener.patch
-Patch1024:	0025-Hook-up-queryKeyboardModifers.patch
-Patch1025:	0026-Do-not-update-the-mask-if-we-do-not-have-a-surface.patch
-Patch1026:	0027-Correctly-detect-if-image-format-is-supported-by-QIm.patch
-Patch1027:	0028-Wayland-client-Fix-crash-when-windows-are-shown-hidd.patch
-Patch1028:	0029-Client-Don-t-always-recreate-frame-callbacks.patch
-Patch1029:	0030-Client-Always-destroy-frame-callback-in-the-actual-c.patch
-Patch1030:	0031-Fix-the-logic-for-decoding-modifiers-map-in-Wayland-.patch
-Patch1031:	0032-Wayland-client-use-wl_keyboard-to-determine-active-s.patch
-Patch1032:	0033-Client-do-not-empty-clipboard-when-a-new-popup-windo.patch
-Patch1033:	0034-Fix-backport-context-destruction-was-omitted.patch
-Patch1034:	0035-Set-preedit-cursor-when-cursor-equals-to-0.patch
-Patch1035:	0036-Client-Implement-DataDeviceV3.patch
-Patch1036:	0037-Client-Delay-deletion-of-QDrag-object-until-after-we.patch
-Patch1037:	0038-Client-Avoid-processing-of-events-when-showing-windo.patch
-Patch1038:	0039-Handle-registry_global-out-of-constructor.patch
-Patch1039:	0040-Connect-flushRequest-after-forceRoundTrip.patch
-Patch1040:	0041-Move-the-wayland-socket-polling-to-a-separate-event-.patch
-Patch1041:	0042-Check-pointer-for-null-before-use-in-ASSERT.patch
-Patch1042:	0043-Do-not-create-decorations-when-the-shellSurface-is-n.patch
-Patch1043:	0044-Use-wl_surface.damage_buffer-on-the-client-side.patch
-Patch1044:	0045-Fix-crash-if-no-input-method-module-could-be-loaded.patch
-Patch1045:	0046-Client-Remove-mWaitingForUpdateDelivery.patch
+Patch1000:	0001-Use-qWarning-and-_exit-instead-of-qFatal-for-wayland.patch
+Patch1001:	0002-Translate-opaque-area-with-frame-margins.patch
+Patch1002:	0003-Client-Send-exposeEvent-to-parent-on-subsurface-posi.patch
+Patch1003:	0004-Get-correct-decoration-margins-region.patch
+Patch1004:	0005-xdgshell-Tell-the-compositor-the-screen-we-re-expect.patch
+Patch1005:	0006-client-Allow-QWaylandInputContext-to-accept-composed.patch
+Patch1006:	0007-Client-Announce-an-output-after-receiving-more-compl.patch
+Patch1007:	0008-Fix-issue-with-repeated-window-size-changes.patch
+Patch1008:	0009-Include-locale.h-for-setlocale-LC_CTYPE.patch
+Patch1009:	0010-Client-Connect-drags-being-accepted-to-updating-the-.patch
+Patch1010:	0011-Client-Disconnect-registry-listener-on-destruction.patch
+Patch1011:	0012-Client-Set-XdgShell-size-hints-before-the-first-comm.patch
+Patch1012:	0013-Fix-build.patch
+Patch1013:	0014-Fix-remove-listener.patch
+Patch1014:	0015-Hook-up-queryKeyboardModifers.patch
+Patch1015:	0016-Do-not-update-the-mask-if-we-do-not-have-a-surface.patch
+Patch1016:	0017-Correctly-detect-if-image-format-is-supported-by-QIm.patch
+Patch1017:	0018-Wayland-client-Fix-crash-when-windows-are-shown-hidd.patch
+Patch1018:	0019-Client-Don-t-always-recreate-frame-callbacks.patch
+Patch1019:	0020-Client-Always-destroy-frame-callback-in-the-actual-c.patch
+Patch1020:	0021-Fix-the-logic-for-decoding-modifiers-map-in-Wayland-.patch
+Patch1021:	0022-Wayland-client-use-wl_keyboard-to-determine-active-s.patch
+Patch1022:	0023-Client-do-not-empty-clipboard-when-a-new-popup-windo.patch
+Patch1023:	0024-Set-preedit-cursor-when-cursor-equals-to-0.patch
+Patch1024:	0025-Client-Implement-DataDeviceV3.patch
+Patch1025:	0026-Client-Delay-deletion-of-QDrag-object-until-after-we.patch
+Patch1026:	0027-Client-Avoid-processing-of-events-when-showing-windo.patch
+Patch1027:	0028-Handle-registry_global-out-of-constructor.patch
+Patch1028:	0029-Connect-flushRequest-after-forceRoundTrip.patch
+Patch1029:	0030-Move-the-wayland-socket-polling-to-a-separate-event-.patch
+Patch1030:	0031-Check-pointer-for-null-before-use-in-ASSERT.patch
+Patch1031:	0032-Do-not-create-decorations-when-the-shellSurface-is-n.patch
+Patch1032:	0033-Use-wl_surface.damage_buffer-on-the-client-side.patch
+Patch1033:	0034-Fix-crash-if-no-input-method-module-could-be-loaded.patch
+Patch1034:	0035-Client-Remove-mWaitingForUpdateDelivery.patch
+Patch1035:	0036-Cursor-position-0-should-still-show-the-cursor.patch
+Patch1036:	0037-Update-the-preedit-styling-mapping.patch
+Patch1037:	0038-client-Simplify-round-trip-behavior.patch
+Patch1038:	0039-Client-Fix-opaque-region-setter.patch
+Patch1039:	0040-Use-proper-dependencies-in-compile-tests.patch
 
 BuildRequires:	qmake5 >= %{version}
 BuildRequires:	pkgconfig(Qt5Quick) >= %{version}
@@ -254,7 +248,7 @@ Development files for the Qt Wayland QtCompositor module.
 %{_qt5_prefix}/mkspecs/modules/qt_lib_waylandcompositor_private.pri
 
 %prep
-%autosetup -n %{qttarballdir} -p1
+%autosetup -n %(echo %{qttarballdir}|sed -e 's,-opensource,,') -p1
 %{_qt5_prefix}/bin/syncqt.pl -version %{version}
 
 %build
