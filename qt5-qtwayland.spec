@@ -14,14 +14,14 @@
 
 Summary:	Qt5 - Wayland platform support and QtCompositor module
 Name:		qt5-qtwayland
-Version:	5.15.3
+Version:	5.15.4
 %if "%{beta}" != ""
 Release:	0.%{beta}.1
 %define qttarballdir qtwayland-everywhere-src-%{version}-%{beta}
 Source0:	http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 %else
-Release:	8
-%define qttarballdir qtwayland-everywhere-opensource-src-5.15.3
+Release:	1
+%define qttarballdir qtwayland-everywhere-opensource-src-%{version}
 Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}/submodules/%{qttarballdir}.tar.xz
 %endif
 Group:		Development/KDE and Qt
@@ -30,46 +30,44 @@ URL:		http://www.qt.io
 Patch0:		qtwayland-5.14-GL-headers.patch
 
 # From KDE https://invent.kde.org/qt/qt/qtwayland -b kde/5.15
-Patch1000:	0001-Use-qWarning-and-_exit-instead-of-qFatal-for-wayland.patch
-Patch1001:	0002-Translate-opaque-area-with-frame-margins.patch
-Patch1002:	0003-Client-Send-exposeEvent-to-parent-on-subsurface-posi.patch
-Patch1003:	0004-Get-correct-decoration-margins-region.patch
-Patch1004:	0005-xdgshell-Tell-the-compositor-the-screen-we-re-expect.patch
-Patch1005:	0006-client-Allow-QWaylandInputContext-to-accept-composed.patch
-Patch1006:	0007-Client-Announce-an-output-after-receiving-more-compl.patch
-Patch1007:	0008-Fix-issue-with-repeated-window-size-changes.patch
-Patch1008:	0009-Include-locale.h-for-setlocale-LC_CTYPE.patch
-Patch1009:	0010-Client-Connect-drags-being-accepted-to-updating-the-.patch
-Patch1010:	0011-Client-Disconnect-registry-listener-on-destruction.patch
-Patch1011:	0012-Client-Set-XdgShell-size-hints-before-the-first-comm.patch
-Patch1012:	0013-Fix-build.patch
-Patch1013:	0014-Fix-remove-listener.patch
-Patch1014:	0015-Hook-up-queryKeyboardModifers.patch
-Patch1015:	0016-Do-not-update-the-mask-if-we-do-not-have-a-surface.patch
-Patch1016:	0017-Correctly-detect-if-image-format-is-supported-by-QIm.patch
-Patch1017:	0018-Wayland-client-Fix-crash-when-windows-are-shown-hidd.patch
-Patch1018:	0019-Client-Don-t-always-recreate-frame-callbacks.patch
-Patch1019:	0020-Client-Always-destroy-frame-callback-in-the-actual-c.patch
-Patch1020:	0021-Fix-the-logic-for-decoding-modifiers-map-in-Wayland-.patch
-Patch1021:	0022-Wayland-client-use-wl_keyboard-to-determine-active-s.patch
-Patch1022:	0023-Client-do-not-empty-clipboard-when-a-new-popup-windo.patch
-Patch1023:	0024-Set-preedit-cursor-when-cursor-equals-to-0.patch
-Patch1024:	0025-Client-Implement-DataDeviceV3.patch
-Patch1025:	0026-Client-Delay-deletion-of-QDrag-object-until-after-we.patch
-Patch1026:	0027-Client-Avoid-processing-of-events-when-showing-windo.patch
-Patch1027:	0028-Handle-registry_global-out-of-constructor.patch
-Patch1028:	0029-Connect-flushRequest-after-forceRoundTrip.patch
-Patch1029:	0030-Move-the-wayland-socket-polling-to-a-separate-event-.patch
-Patch1030:	0031-Check-pointer-for-null-before-use-in-ASSERT.patch
-Patch1031:	0032-Do-not-create-decorations-when-the-shellSurface-is-n.patch
-Patch1032:	0033-Use-wl_surface.damage_buffer-on-the-client-side.patch
-Patch1033:	0034-Fix-crash-if-no-input-method-module-could-be-loaded.patch
-Patch1034:	0035-Client-Remove-mWaitingForUpdateDelivery.patch
-Patch1035:	0036-Cursor-position-0-should-still-show-the-cursor.patch
-Patch1036:	0037-Update-the-preedit-styling-mapping.patch
-Patch1037:	0038-client-Simplify-round-trip-behavior.patch
-Patch1038:	0039-Client-Fix-opaque-region-setter.patch
-Patch1039:	0040-Use-proper-dependencies-in-compile-tests.patch
+Patch1000:	0001-Client-Announce-an-output-after-receiving-more-compl.patch
+Patch1001:	0002-Fix-issue-with-repeated-window-size-changes.patch
+Patch1002:	0003-Include-locale.h-for-setlocale-LC_CTYPE.patch
+Patch1003:	0004-Client-Connect-drags-being-accepted-to-updating-the-.patch
+Patch1004:	0005-Client-Disconnect-registry-listener-on-destruction.patch
+Patch1005:	0006-Client-Set-XdgShell-size-hints-before-the-first-comm.patch
+Patch1006:	0007-Fix-build.patch
+Patch1007:	0008-Fix-remove-listener.patch
+Patch1008:	0009-Hook-up-queryKeyboardModifers.patch
+Patch1009:	0010-Do-not-update-the-mask-if-we-do-not-have-a-surface.patch
+Patch1010:	0011-Correctly-detect-if-image-format-is-supported-by-QIm.patch
+Patch1011:	0012-Wayland-client-Fix-crash-when-windows-are-shown-hidd.patch
+Patch1012:	0013-Client-Don-t-always-recreate-frame-callbacks.patch
+Patch1013:	0014-Client-Always-destroy-frame-callback-in-the-actual-c.patch
+Patch1014:	0015-Fix-the-logic-for-decoding-modifiers-map-in-Wayland-.patch
+Patch1015:	0016-Wayland-client-use-wl_keyboard-to-determine-active-s.patch
+Patch1016:	0017-Client-do-not-empty-clipboard-when-a-new-popup-windo.patch
+Patch1017:	0018-Set-preedit-cursor-when-cursor-equals-to-0.patch
+Patch1018:	0019-Client-Implement-DataDeviceV3.patch
+Patch1019:	0020-Client-Delay-deletion-of-QDrag-object-until-after-we.patch
+Patch1020:	0021-Client-Avoid-processing-of-events-when-showing-windo.patch
+Patch1021:	0022-Handle-registry_global-out-of-constructor.patch
+Patch1022:	0023-Connect-flushRequest-after-forceRoundTrip.patch
+Patch1023:	0024-Move-the-wayland-socket-polling-to-a-separate-event-.patch
+Patch1024:	0025-Check-pointer-for-null-before-use-in-ASSERT.patch
+Patch1025:	0026-Do-not-create-decorations-when-the-shellSurface-is-n.patch
+Patch1026:	0027-Use-wl_surface.damage_buffer-on-the-client-side.patch
+Patch1027:	0028-Fix-crash-if-no-input-method-module-could-be-loaded.patch
+Patch1028:	0029-Client-Remove-mWaitingForUpdateDelivery.patch
+Patch1029:	0030-Cursor-position-0-should-still-show-the-cursor.patch
+Patch1030:	0031-Update-the-preedit-styling-mapping.patch
+Patch1031:	0032-client-Simplify-round-trip-behavior.patch
+Patch1032:	0033-Client-Fix-opaque-region-setter.patch
+Patch1033:	0034-Use-proper-dependencies-in-compile-tests.patch
+Patch1034:	0035-client-update-button-state-and-etc-in-pointer_leave.patch
+Patch1035:	0036-Revert-Client-Remove-mWaitingForUpdateDelivery.patch
+Patch1036:	0037-Fix-race-condition-on-mWaitingForUpdateDelivery.patch
+Patch1037:	0038-use-poll-2-when-reading-from-clipboard.patch
 
 BuildRequires:	qmake5 >= %{version}
 BuildRequires:	pkgconfig(Qt5Quick) >= %{version}
