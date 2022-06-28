@@ -14,7 +14,7 @@
 
 Summary:	Qt5 - Wayland platform support and QtCompositor module
 Name:		qt5-qtwayland
-Version:	5.15.4
+Version:	5.15.5
 %if "%{beta}" != ""
 Release:	0.%{beta}.1
 %define qttarballdir qtwayland-everywhere-src-%{version}-%{beta}
@@ -32,42 +32,43 @@ Patch0:		qtwayland-5.14-GL-headers.patch
 # From KDE https://invent.kde.org/qt/qt/qtwayland -b kde/5.15
 Patch1000:	0001-Client-Announce-an-output-after-receiving-more-compl.patch
 Patch1001:	0002-Fix-issue-with-repeated-window-size-changes.patch
-Patch1002:	0003-Include-locale.h-for-setlocale-LC_CTYPE.patch
-Patch1003:	0004-Client-Connect-drags-being-accepted-to-updating-the-.patch
-Patch1004:	0005-Client-Disconnect-registry-listener-on-destruction.patch
-Patch1005:	0006-Client-Set-XdgShell-size-hints-before-the-first-comm.patch
-Patch1006:	0007-Fix-build.patch
-Patch1007:	0008-Fix-remove-listener.patch
-Patch1008:	0009-Hook-up-queryKeyboardModifers.patch
-Patch1009:	0010-Do-not-update-the-mask-if-we-do-not-have-a-surface.patch
-Patch1010:	0011-Correctly-detect-if-image-format-is-supported-by-QIm.patch
-Patch1011:	0012-Wayland-client-Fix-crash-when-windows-are-shown-hidd.patch
-Patch1012:	0013-Client-Don-t-always-recreate-frame-callbacks.patch
-Patch1013:	0014-Client-Always-destroy-frame-callback-in-the-actual-c.patch
-Patch1014:	0015-Fix-the-logic-for-decoding-modifiers-map-in-Wayland-.patch
-Patch1015:	0016-Wayland-client-use-wl_keyboard-to-determine-active-s.patch
-Patch1016:	0017-Client-do-not-empty-clipboard-when-a-new-popup-windo.patch
-Patch1017:	0018-Set-preedit-cursor-when-cursor-equals-to-0.patch
-Patch1018:	0019-Client-Implement-DataDeviceV3.patch
-Patch1019:	0020-Client-Delay-deletion-of-QDrag-object-until-after-we.patch
-Patch1020:	0021-Client-Avoid-processing-of-events-when-showing-windo.patch
-Patch1021:	0022-Handle-registry_global-out-of-constructor.patch
-Patch1022:	0023-Connect-flushRequest-after-forceRoundTrip.patch
-Patch1023:	0024-Move-the-wayland-socket-polling-to-a-separate-event-.patch
-Patch1024:	0025-Check-pointer-for-null-before-use-in-ASSERT.patch
-Patch1025:	0026-Do-not-create-decorations-when-the-shellSurface-is-n.patch
-Patch1026:	0027-Use-wl_surface.damage_buffer-on-the-client-side.patch
-Patch1027:	0028-Fix-crash-if-no-input-method-module-could-be-loaded.patch
-Patch1028:	0029-Client-Remove-mWaitingForUpdateDelivery.patch
-Patch1029:	0030-Cursor-position-0-should-still-show-the-cursor.patch
-Patch1030:	0031-Update-the-preedit-styling-mapping.patch
-Patch1031:	0032-client-Simplify-round-trip-behavior.patch
-Patch1032:	0033-Client-Fix-opaque-region-setter.patch
-Patch1033:	0034-Use-proper-dependencies-in-compile-tests.patch
-Patch1034:	0035-client-update-button-state-and-etc-in-pointer_leave.patch
-Patch1035:	0036-Revert-Client-Remove-mWaitingForUpdateDelivery.patch
-Patch1036:	0037-Fix-race-condition-on-mWaitingForUpdateDelivery.patch
-Patch1037:	0038-use-poll-2-when-reading-from-clipboard.patch
+Patch1002:	0003-Client-Connect-drags-being-accepted-to-updating-the-.patch
+Patch1003:	0004-Client-Disconnect-registry-listener-on-destruction.patch
+Patch1004:	0005-Client-Set-XdgShell-size-hints-before-the-first-comm.patch
+Patch1005:	0006-Fix-build.patch
+Patch1006:	0007-Fix-remove-listener.patch
+Patch1007:	0008-Hook-up-queryKeyboardModifers.patch
+Patch1008:	0009-Do-not-update-the-mask-if-we-do-not-have-a-surface.patch
+Patch1009:	0010-Correctly-detect-if-image-format-is-supported-by-QIm.patch
+Patch1010:	0011-Wayland-client-Fix-crash-when-windows-are-shown-hidd.patch
+Patch1011:	0012-Client-Don-t-always-recreate-frame-callbacks.patch
+Patch1012:	0013-Client-Always-destroy-frame-callback-in-the-actual-c.patch
+Patch1013:	0014-Fix-the-logic-for-decoding-modifiers-map-in-Wayland-.patch
+Patch1014:	0015-Wayland-client-use-wl_keyboard-to-determine-active-s.patch
+Patch1015:	0016-Client-do-not-empty-clipboard-when-a-new-popup-windo.patch
+Patch1016:	0017-Set-preedit-cursor-when-cursor-equals-to-0.patch
+Patch1017:	0018-Client-Implement-DataDeviceV3.patch
+Patch1018:	0019-Client-Delay-deletion-of-QDrag-object-until-after-we.patch
+Patch1019:	0020-Client-Avoid-processing-of-events-when-showing-windo.patch
+Patch1020:	0021-Handle-registry_global-out-of-constructor.patch
+Patch1021:	0022-Connect-flushRequest-after-forceRoundTrip.patch
+Patch1022:	0023-Move-the-wayland-socket-polling-to-a-separate-event-.patch
+Patch1023:	0024-Check-pointer-for-null-before-use-in-ASSERT.patch
+Patch1024:	0025-Do-not-create-decorations-when-the-shellSurface-is-n.patch
+Patch1025:	0026-Use-wl_surface.damage_buffer-on-the-client-side.patch
+Patch1026:	0027-Fix-crash-if-no-input-method-module-could-be-loaded.patch
+Patch1027:	0028-Client-Remove-mWaitingForUpdateDelivery.patch
+Patch1028:	0029-Cursor-position-0-should-still-show-the-cursor.patch
+Patch1029:	0030-Update-the-preedit-styling-mapping.patch
+Patch1030:	0031-client-Simplify-round-trip-behavior.patch
+Patch1031:	0032-Client-Fix-opaque-region-setter.patch
+Patch1032:	0033-Use-proper-dependencies-in-compile-tests.patch
+Patch1033:	0034-client-update-button-state-and-etc-in-pointer_leave.patch
+Patch1034:	0035-Revert-Client-Remove-mWaitingForUpdateDelivery.patch
+Patch1035:	0036-Fix-race-condition-on-mWaitingForUpdateDelivery.patch
+Patch1036:	0037-use-poll-2-when-reading-from-clipboard.patch
+Patch1037:	0038-Reduce-memory-leakage.patch
+Patch1038:	0039-Fix-build-with-libcxx-missing-array-include.patch
 
 BuildRequires:	qmake5 >= %{version}
 BuildRequires:	pkgconfig(Qt5Quick) >= %{version}
