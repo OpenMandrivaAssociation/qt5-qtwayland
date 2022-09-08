@@ -1,7 +1,7 @@
-From 162ac52924127add2ba1c14cef3b42a58a977243 Mon Sep 17 00:00:00 2001
+From 72eee300b30717ed4484fddfcfab66293a845194 Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Tue, 9 Feb 2021 16:09:21 +0000
-Subject: [PATCH 03/39] Client: Connect drags being accepted to updating the
+Subject: [PATCH 03/42] Client: Connect drags being accepted to updating the
  source drag icon
 
 Currently in a multi-process drag and drop when the other client accepts
@@ -35,5 +35,5 @@ index 19944a34..54a69c3c 100644
      start_drag(m_dragSource->object(), origin->wlSurface(), icon->wlSurface(), m_display->currentInputDevice()->serial());
      return true;
 -- 
-2.36.1
+2.37.2
 

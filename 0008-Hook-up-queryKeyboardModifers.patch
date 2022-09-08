@@ -1,7 +1,7 @@
-From 27869240e937e97a386b580a126246d0b064e7ce Mon Sep 17 00:00:00 2001
+From 5553201fa28bc4d868ed2ffb70951063b642abfd Mon Sep 17 00:00:00 2001
 From: David Redondo <qt@david-redondo.de>
 Date: Wed, 26 May 2021 14:49:40 +0200
-Subject: [PATCH 08/39] Hook up queryKeyboardModifers
+Subject: [PATCH 08/42] Hook up queryKeyboardModifers
 
 Can be useful when upon enter a modifiers event is received but no key
 event so no QKeyEvent is generated.
@@ -51,5 +51,5 @@ index ff70ae25..73b80658 100644
  
      QStringList themeNames() const override;
 -- 
-2.36.1
+2.37.2
 

@@ -1,7 +1,7 @@
-From 03d56082a21894ff21e08042e21fed46dc0c69a3 Mon Sep 17 00:00:00 2001
+From dc898504f36bc7edd7113cfa74ed08dedd5453cf Mon Sep 17 00:00:00 2001
 From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 Date: Wed, 5 May 2021 20:49:26 +0300
-Subject: [PATCH 01/39] Client: Announce an output after receiving more
+Subject: [PATCH 01/42] Client: Announce an output after receiving more
  complete state
 
 Output initialization is not atomic, meaning that the compositor may
@@ -142,5 +142,5 @@ index df1c94f2..050cfdc0 100644
  
  #if QT_CONFIG(cursor)
 -- 
-2.36.1
+2.37.2
 
