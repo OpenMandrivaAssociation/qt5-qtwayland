@@ -1,7 +1,7 @@
-From 72eee300b30717ed4484fddfcfab66293a845194 Mon Sep 17 00:00:00 2001
+From e0840ff3d47a3a825a523e4b393ea9f709928d63 Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Tue, 9 Feb 2021 16:09:21 +0000
-Subject: [PATCH 03/42] Client: Connect drags being accepted to updating the
+Subject: [PATCH 03/49] Client: Connect drags being accepted to updating the
  source drag icon
 
 Currently in a multi-process drag and drop when the other client accepts
@@ -23,7 +23,7 @@ Reviewed-by: Eskil Abrahamsen Blomfeldt <eskil.abrahamsen-blomfeldt@qt.io>
  1 file changed, 1 insertion(+)
 
 diff --git a/src/client/qwaylanddatadevice.cpp b/src/client/qwaylanddatadevice.cpp
-index 19944a34..54a69c3c 100644
+index 7e2e3308..bbd2d568 100644
 --- a/src/client/qwaylanddatadevice.cpp
 +++ b/src/client/qwaylanddatadevice.cpp
 @@ -124,6 +124,7 @@ bool QWaylandDataDevice::startDrag(QMimeData *mimeData, QWaylandWindow *icon)
@@ -35,5 +35,5 @@ index 19944a34..54a69c3c 100644
      start_drag(m_dragSource->object(), origin->wlSurface(), icon->wlSurface(), m_display->currentInputDevice()->serial());
      return true;
 -- 
-2.37.2
+2.38.1
 
