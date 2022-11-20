@@ -20,7 +20,7 @@ Release:	0.%{beta}.1
 %define qttarballdir qtwayland-everywhere-src-%{version}-%{beta}
 Source0:	http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 %else
-Release:	1
+Release:	2
 %define qttarballdir qtwayland-everywhere-opensource-src-%{version}
 Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}/submodules/%{qttarballdir}.tar.xz
 %endif
@@ -79,6 +79,10 @@ Patch1045:	0046-Avoid-calling-requestUpdate-from-wrong-thread.patch
 Patch1046:	0047-Client-support-high-dpi-mode-for-window-icon.patch
 Patch1047:	0048-Call-finishDrag-in-QWaylandDataDevice-dragSourceCanc.patch
 Patch1048:	0049-Hold-surface-read-lock-throughout-QWaylandEglWindow-.patch
+Patch1049:	0050-Client-Ensure-that-wl_surface-lives-as-long-as-qtqui.patch
+Patch1050:	0051-Keep-toplevel-windows-in-the-top-left-corner-of-the-.patch
+Patch1051:	0052-Revert-Client-Ensure-that-wl_surface-lives-as-long-a.patch
+Patch1052:	0053-Client-Add-F_SEAL_SHRINK-seal-to-shm-backing-file.patch
 
 BuildRequires:	qmake5 >= %{version}
 BuildRequires:	pkgconfig(Qt5Quick) >= %{version}
