@@ -1,7 +1,7 @@
-From d58b2a2ff81e3ee0c6888ce7eb7268603d4e72d4 Mon Sep 17 00:00:00 2001
+From 5fe9ca3aad86b82a2c43b33491605e53227cefad Mon Sep 17 00:00:00 2001
 From: David Redondo <qt@david-redondo.de>
 Date: Wed, 26 May 2021 14:49:40 +0200
-Subject: [PATCH 08/49] Hook up queryKeyboardModifers
+Subject: [PATCH 08/56] Hook up queryKeyboardModifers
 
 Can be useful when upon enter a modifiers event is received but no key
 event so no QKeyEvent is generated.

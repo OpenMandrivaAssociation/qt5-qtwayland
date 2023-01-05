@@ -1,7 +1,7 @@
-From 80aef0246c3b7cb658f9caca2e1ea3c4b57c0a74 Mon Sep 17 00:00:00 2001
+From 4ce9dacc726c61aca80fa283decb2b030bf826db Mon Sep 17 00:00:00 2001
 From: Jaeyoon Jung <jaeyoon.jung@lge.com>
 Date: Mon, 15 Feb 2021 08:31:06 +0900
-Subject: [PATCH 02/49] Fix issue with repeated window size changes
+Subject: [PATCH 02/56] Fix issue with repeated window size changes
 
 Check if the new window size is different from the size requested
 previously before calling wl_egl_window_resize. It addresses the issue

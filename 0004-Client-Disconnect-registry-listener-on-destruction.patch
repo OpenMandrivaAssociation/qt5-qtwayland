@@ -1,7 +1,7 @@
-From 440c43d28b09e257d2244cbdc8fece5ea45405b6 Mon Sep 17 00:00:00 2001
+From 53322088f924decda883293a48e165619d309c7f Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Fri, 14 May 2021 13:23:24 +0100
-Subject: [PATCH 04/49] Client: Disconnect registry listener on destruction
+Subject: [PATCH 04/56] Client: Disconnect registry listener on destruction
 
 If a display outlives a QWaylandClientExtension and a new global is
 announced we end up delivering an event to a now deleted extension which

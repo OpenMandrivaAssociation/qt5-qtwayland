@@ -1,7 +1,7 @@
-From 493f0931e08d4d0722614b8b88dda598a6dbb8ea Mon Sep 17 00:00:00 2001
+From f1c68a200d48545dee0e266a55953e5ddac475f5 Mon Sep 17 00:00:00 2001
 From: Georges Basile Stavracas Neto <gbsneto@gnome.org>
 Date: Thu, 27 May 2021 19:55:04 -0300
-Subject: [PATCH 10/49] Client: Don't always recreate frame callbacks
+Subject: [PATCH 10/56] Client: Don't always recreate frame callbacks
 
 The main QWaylandWindow method that is executed when handling updates is
 QWaylandWindow::handleUpdate(). This method always, unconditionally queues
@@ -38,7 +38,7 @@ Reviewed-by: Eskil Abrahamsen Blomfeldt <eskil.abrahamsen-blomfeldt@qt.io>
  2 files changed, 6 insertions(+)
 
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index afdebf55..14254f08 100644
+index cb82857a..f13018be 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -1185,6 +1185,10 @@ void QWaylandWindow::requestUpdate()

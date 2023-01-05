@@ -1,7 +1,7 @@
-From 43255b532e8fb93edab0b851341c12218cba03d4 Mon Sep 17 00:00:00 2001
+From f1e0f3caca97331b02782c4a367366078ba36b4d Mon Sep 17 00:00:00 2001
 From: Zhang Liang <zhanglianga@uniontech.com>
 Date: Mon, 1 Feb 2021 19:29:43 +0800
-Subject: [PATCH 07/49] Fix: remove listener
+Subject: [PATCH 07/56] Fix: remove listener
 
 Add the operation for removing the listener form listener list
 
