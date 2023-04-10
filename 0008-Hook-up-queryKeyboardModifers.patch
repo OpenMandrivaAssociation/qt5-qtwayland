@@ -1,7 +1,7 @@
-From 5fe9ca3aad86b82a2c43b33491605e53227cefad Mon Sep 17 00:00:00 2001
+From 0bd8b57955c74fd7cadc3ceb1409c1705208f91e Mon Sep 17 00:00:00 2001
 From: David Redondo <qt@david-redondo.de>
 Date: Wed, 26 May 2021 14:49:40 +0200
-Subject: [PATCH 08/56] Hook up queryKeyboardModifers
+Subject: [PATCH 08/55] Hook up queryKeyboardModifers
 
 Can be useful when upon enter a modifiers event is received but no key
 event so no QKeyEvent is generated.
@@ -19,7 +19,7 @@ Reviewed-by: David Edmundson <davidedmundson@kde.org>
  2 files changed, 10 insertions(+)
 
 diff --git a/src/client/qwaylandintegration.cpp b/src/client/qwaylandintegration.cpp
-index c53ccb78..e5e7dd42 100644
+index d257e2e3..cd8569b1 100644
 --- a/src/client/qwaylandintegration.cpp
 +++ b/src/client/qwaylandintegration.cpp
 @@ -262,6 +262,14 @@ QWaylandDisplay *QWaylandIntegration::display() const
@@ -51,5 +51,5 @@ index ff70ae25..73b80658 100644
  
      QStringList themeNames() const override;
 -- 
-2.38.1
+2.40.0.rc2
 

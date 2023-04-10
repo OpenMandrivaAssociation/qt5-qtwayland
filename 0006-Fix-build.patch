@@ -1,7 +1,7 @@
-From d9479064ef2e669cb79c200ee1db7e4f5e145f1f Mon Sep 17 00:00:00 2001
+From bea02a7b4bce8cc3b2a7bce10c53fccc9aedef1e Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Mon, 14 Jun 2021 12:45:37 +0100
-Subject: [PATCH 06/56] Fix build
+Subject: [PATCH 06/55] Fix build
 
 1b5e43a593e917610e6245f7a272ac081c508ba4 relied on a patch that we can't
 backport.
@@ -42,5 +42,5 @@ index 69cc46a0..9091efbe 100644
  
  class Q_WAYLAND_CLIENT_EXPORT QWaylandClientExtensionTemplatePrivate : public QWaylandClientExtensionPrivate
 -- 
-2.38.1
+2.40.0.rc2
 

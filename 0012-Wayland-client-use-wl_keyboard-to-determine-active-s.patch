@@ -1,7 +1,7 @@
-From 2cee3d23545333b16c185c36769e4be05660efe7 Mon Sep 17 00:00:00 2001
+From d40acfcc33ae9f8d105f196d1af03a640a02db0b Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?M=C3=A9ven=20Car?= <meven.car@enioka.com>
 Date: Wed, 18 Aug 2021 18:28:20 +0200
-Subject: [PATCH 12/56] Wayland client: use wl_keyboard to determine active
+Subject: [PATCH 12/55] Wayland client: use wl_keyboard to determine active
  state
 
 Commit f497a5bb87270174b8e0106b7eca1992d44ff15d made QWaylandDisplay
@@ -46,10 +46,10 @@ Reviewed-by: Eskil Abrahamsen Blomfeldt <eskil.abrahamsen-blomfeldt@qt.io>
  13 files changed, 39 insertions(+), 66 deletions(-)
 
 diff --git a/src/client/qwaylanddisplay.cpp b/src/client/qwaylanddisplay.cpp
-index e0dfe8b2..27303110 100644
+index 280e63bd..1568052e 100644
 --- a/src/client/qwaylanddisplay.cpp
 +++ b/src/client/qwaylanddisplay.cpp
-@@ -575,14 +575,10 @@ void QWaylandDisplay::handleKeyboardFocusChanged(QWaylandInputDevice *inputDevic
+@@ -579,14 +579,10 @@ void QWaylandDisplay::handleKeyboardFocusChanged(QWaylandInputDevice *inputDevic
      if (mLastKeyboardFocus == keyboardFocus)
          return;
  
@@ -68,7 +68,7 @@ index e0dfe8b2..27303110 100644
  
      mLastKeyboardFocus = keyboardFocus;
  }
-@@ -627,6 +623,13 @@ QWaylandInputDevice *QWaylandDisplay::defaultInputDevice() const
+@@ -631,6 +627,13 @@ QWaylandInputDevice *QWaylandDisplay::defaultInputDevice() const
      return mInputDevices.isEmpty() ? 0 : mInputDevices.first();
  }
  
@@ -83,10 +83,10 @@ index e0dfe8b2..27303110 100644
  
  QWaylandCursor *QWaylandDisplay::waylandCursor()
 diff --git a/src/client/qwaylanddisplay_p.h b/src/client/qwaylanddisplay_p.h
-index 3b092bc8..09a1736a 100644
+index 1bad8b67..15104d65 100644
 --- a/src/client/qwaylanddisplay_p.h
 +++ b/src/client/qwaylanddisplay_p.h
-@@ -215,6 +215,7 @@ public:
+@@ -219,6 +219,7 @@ public:
      void destroyFrameQueue(const FrameQueue &q);
      void dispatchQueueWhile(wl_event_queue *queue, std::function<bool()> condition, int timeout = -1);
  
@@ -95,7 +95,7 @@ index 3b092bc8..09a1736a 100644
      void blockingReadEvents();
      void flushRequests();
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index 4544dcec..0b64b0f4 100644
+index d3f28d68..b363c352 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -96,7 +96,6 @@ QWaylandWindow::QWaylandWindow(QWindow *window, QWaylandDisplay *display)
@@ -115,7 +115,7 @@ index 4544dcec..0b64b0f4 100644
  }
  
  QWaylandWindow *QWaylandWindow::fromWlSurface(::wl_surface *surface)
-@@ -1098,10 +1099,18 @@ bool QWaylandWindow::setMouseGrabEnabled(bool grab)
+@@ -1105,10 +1106,18 @@ bool QWaylandWindow::setMouseGrabEnabled(bool grab)
      return true;
  }
  
@@ -234,7 +234,7 @@ index 261f8cbb..c1bcd5c6 100644
  private:
      QScopedPointer<QWaylandXdgShellV6> m_xdgShell;
 diff --git a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
-index eb317f3a..11706924 100644
+index 1f51562b..b7383e19 100644
 --- a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
 +++ b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
 @@ -67,11 +67,6 @@ QWaylandXdgSurface::Toplevel::Toplevel(QWaylandXdgSurface *xdgSurface)
@@ -337,5 +337,5 @@ index e2593314..73d1eb9c 100644
      const QSize screenSize(640, 480);
      const uint maximizedSerial = exec([=] {
 -- 
-2.38.1
+2.40.0.rc2
 

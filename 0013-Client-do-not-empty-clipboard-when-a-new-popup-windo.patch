@@ -1,7 +1,7 @@
-From b1b87bf639d46605d63e07eecd1135d9e5e4ffac Mon Sep 17 00:00:00 2001
+From 23327bb4cdc00b47e0f96efca2fe494540f01601 Mon Sep 17 00:00:00 2001
 From: Jan Grulich <jgrulich@redhat.com>
 Date: Fri, 16 Jul 2021 13:00:03 +0200
-Subject: [PATCH 13/56] Client: do not empty clipboard when a new popup/window
+Subject: [PATCH 13/55] Client: do not empty clipboard when a new popup/window
  is opened
 
 If we open a new popup or a window within the same app we have to avoid
@@ -21,10 +21,10 @@ Cherry-pick: 1e57ebd501cfc2255300392cd4565cd034efeed8
  2 files changed, 13 insertions(+), 8 deletions(-)
 
 diff --git a/src/client/qwaylanddisplay.cpp b/src/client/qwaylanddisplay.cpp
-index 27303110..9f595af3 100644
+index 1568052e..aa8808e9 100644
 --- a/src/client/qwaylanddisplay.cpp
 +++ b/src/client/qwaylanddisplay.cpp
-@@ -597,6 +597,19 @@ void QWaylandDisplay::handleWaylandSync()
+@@ -601,6 +601,19 @@ void QWaylandDisplay::handleWaylandSync()
      QWindow *activeWindow = mActiveWindows.empty() ? nullptr : mActiveWindows.last()->window();
      if (activeWindow != QGuiApplication::focusWindow())
          QWindowSystemInterface::handleWindowActivated(activeWindow);
@@ -45,10 +45,10 @@ index 27303110..9f595af3 100644
  
  const wl_callback_listener QWaylandDisplay::syncCallbackListener = {
 diff --git a/src/client/qwaylandinputdevice.cpp b/src/client/qwaylandinputdevice.cpp
-index 613fe862..aaec7eb8 100644
+index e931d1f5..5d704795 100644
 --- a/src/client/qwaylandinputdevice.cpp
 +++ b/src/client/qwaylandinputdevice.cpp
-@@ -1300,14 +1300,6 @@ void QWaylandInputDevice::Keyboard::handleFocusDestroyed()
+@@ -1304,14 +1304,6 @@ void QWaylandInputDevice::Keyboard::handleFocusDestroyed()
  void QWaylandInputDevice::Keyboard::handleFocusLost()
  {
      mFocus = nullptr;
@@ -64,5 +64,5 @@ index 613fe862..aaec7eb8 100644
      mRepeatTimer.stop();
  }
 -- 
-2.38.1
+2.40.0.rc2
 
