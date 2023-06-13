@@ -1,7 +1,7 @@
-From d9b04ba05ed479b577579e6a34d97fb906791f69 Mon Sep 17 00:00:00 2001
+From 91afb601e33f492393f7b27a84aa281b55d26de2 Mon Sep 17 00:00:00 2001
 From: Sam James <sam@gentoo.org>
 Date: Sat, 18 Jun 2022 17:11:11 +0100
-Subject: [PATCH 28/55] Fix build with libcxx (missing array include)
+Subject: [PATCH 28/51] Fix build with libcxx (missing array include)
 
 Bug: https://bugs.gentoo.org/833488
 
@@ -28,5 +28,5 @@ index 56a710c3..c6a8b6c6 100644
  #include <EGL/eglext.h>
  
 -- 
-2.40.0.rc2
+2.41.0.rc2
 

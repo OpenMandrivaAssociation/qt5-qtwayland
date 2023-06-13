@@ -1,7 +1,7 @@
-From d40acfcc33ae9f8d105f196d1af03a640a02db0b Mon Sep 17 00:00:00 2001
+From 398c131a02d48fc9f538951f08caa93dccd03a1a Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?M=C3=A9ven=20Car?= <meven.car@enioka.com>
 Date: Wed, 18 Aug 2021 18:28:20 +0200
-Subject: [PATCH 12/55] Wayland client: use wl_keyboard to determine active
+Subject: [PATCH 12/51] Wayland client: use wl_keyboard to determine active
  state
 
 Commit f497a5bb87270174b8e0106b7eca1992d44ff15d made QWaylandDisplay
@@ -234,7 +234,7 @@ index 261f8cbb..c1bcd5c6 100644
  private:
      QScopedPointer<QWaylandXdgShellV6> m_xdgShell;
 diff --git a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
-index 1f51562b..b7383e19 100644
+index c3d2d3ea..9a362b74 100644
 --- a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
 +++ b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
 @@ -67,11 +67,6 @@ QWaylandXdgSurface::Toplevel::Toplevel(QWaylandXdgSurface *xdgSurface)
@@ -337,5 +337,5 @@ index e2593314..73d1eb9c 100644
      const QSize screenSize(640, 480);
      const uint maximizedSerial = exec([=] {
 -- 
-2.40.0.rc2
+2.41.0.rc2
 

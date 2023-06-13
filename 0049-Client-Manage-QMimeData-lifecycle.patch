@@ -1,7 +1,7 @@
-From 31eab11d3b6697a76cc7802d02e525c1152a42c2 Mon Sep 17 00:00:00 2001
+From dd8640794264449cb978765029fc4713f3fb31b9 Mon Sep 17 00:00:00 2001
 From: Tang Haixiang <tanghaixiang@uniontech.com>
 Date: Thu, 22 Dec 2022 15:19:53 +0800
-Subject: [PATCH 53/55] Client: Manage QMimeData lifecycle
+Subject: [PATCH 49/51] Client: Manage QMimeData lifecycle
 
 QMimeData is created by user, it is not taken care of in qtwayland,
 which will cause memory leak.
@@ -134,5 +134,5 @@ index 96f07bc3..14d1542d 100644
      void cancelled();
      void finished();
 -- 
-2.40.0.rc2
+2.41.0.rc2
 

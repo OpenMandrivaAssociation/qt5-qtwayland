@@ -1,7 +1,7 @@
-From 137958eec28cb8209069f9a3a3ab778202773ff6 Mon Sep 17 00:00:00 2001
+From a7c3f946175a78df45b1eb3301cf16a05a542d58 Mon Sep 17 00:00:00 2001
 From: Alexandros Frantzis <alexandros.frantzis@collabora.com>
 Date: Wed, 11 May 2022 17:12:52 +0300
-Subject: [PATCH 37/55] Use CRLF line delimiter for text/uri-list data
+Subject: [PATCH 35/51] Use CRLF line delimiter for text/uri-list data
 
 According to RFC 2483, which describes text/uri-list, the line delimiter
 must be CRLF (instead of the currently used LF). Some applications
@@ -36,5 +36,5 @@ index 051a91dc..e2fe1928 100644
      } else {
          content = mimeData->data(mimeType);
 -- 
-2.40.0.rc2
+2.41.0.rc2
 

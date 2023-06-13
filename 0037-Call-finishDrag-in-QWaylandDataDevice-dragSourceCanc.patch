@@ -1,7 +1,7 @@
-From 35c03e72007630040659188b2bc7f47b1df82577 Mon Sep 17 00:00:00 2001
+From 3f0371cb22e117020e57255858e02f9237210a3b Mon Sep 17 00:00:00 2001
 From: Fushan Wen <qydwhotmail@gmail.com>
 Date: Sun, 18 Sep 2022 18:17:18 +0800
-Subject: [PATCH 39/55] Call `finishDrag()` in
+Subject: [PATCH 37/51] Call `finishDrag()` in
  `QWaylandDataDevice::dragSourceCancelled()`
 
 Drags can either get finished or cancelled. If a drag is finished
@@ -34,5 +34,5 @@ index fbb5aa91..e3e60ed5 100644
  }
  
 -- 
-2.40.0.rc2
+2.41.0.rc2
 

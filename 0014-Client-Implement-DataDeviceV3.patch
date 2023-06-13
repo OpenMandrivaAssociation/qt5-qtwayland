@@ -1,7 +1,7 @@
-From e0e004c77140da5e454dadf4d6809c1603b5735d Mon Sep 17 00:00:00 2001
+From 52f362f8dfd27a65cdee945ba923ae30521ab922 Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Tue, 16 Feb 2021 09:51:47 +0000
-Subject: [PATCH 14/55] Client: Implement DataDeviceV3
+Subject: [PATCH 14/51] Client: Implement DataDeviceV3
 
 DataDeviceV2 fixes a leak of DataDevice resources.
 
@@ -509,5 +509,5 @@ index 1568b3b9..067410d0 100644
  class DataDeviceCompositor : public DefaultCompositor {
  public:
 -- 
-2.40.0.rc2
+2.41.0.rc2
 

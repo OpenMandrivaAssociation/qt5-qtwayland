@@ -1,7 +1,7 @@
-From 0064749af275016ae3b4b09964d8d31d756d3468 Mon Sep 17 00:00:00 2001
+From 36522a8ed9f43cd49100e06040711de9c2c0c163 Mon Sep 17 00:00:00 2001
 From: Eskil Abrahamsen Blomfeldt <eskil.abrahamsen-blomfeldt@qt.io>
 Date: Mon, 8 Aug 2022 12:14:01 +0200
-Subject: [PATCH 38/55] Avoid calling requestUpdate from wrong thread
+Subject: [PATCH 36/51] Avoid calling requestUpdate from wrong thread
 
 In certain circumstances, we can get to createDecoration()
 from the render thread (from QWaylandGLContext::makeCurrent)
@@ -39,5 +39,5 @@ index 117e3383..4ddf9fbe 100644
  
      return mWindowDecoration;
 -- 
-2.40.0.rc2
+2.41.0.rc2
 

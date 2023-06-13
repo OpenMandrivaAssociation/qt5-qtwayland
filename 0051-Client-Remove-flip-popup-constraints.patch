@@ -1,7 +1,7 @@
-From c4c3fc69250c01cb35aaae5ea1ea2bcc8236dff0 Mon Sep 17 00:00:00 2001
+From aabaa4efd1d284f07c3cb5b8a7d62a9143701bc4 Mon Sep 17 00:00:00 2001
 From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 Date: Thu, 12 Jan 2023 14:49:25 +0200
-Subject: [PATCH 55/55] Client: Remove flip popup constraints
+Subject: [PATCH 51/51] Client: Remove flip popup constraints
 
 xdg_positioner doesn't have good anchor rect and other needed
 information so the compositor can properly flip popups. In some windows
@@ -37,5 +37,5 @@ index ad666129..822b385c 100644
      positioner->destroy();
  
 -- 
-2.40.0.rc2
+2.41.0.rc2
 

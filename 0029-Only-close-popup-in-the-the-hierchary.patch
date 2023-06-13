@@ -1,7 +1,7 @@
-From 9265dae0d87eaf2a0dfc8a67c46f6c11bd14d2ab Mon Sep 17 00:00:00 2001
+From 76a2b1919f04152e77740b2d1601df893b8d79ba Mon Sep 17 00:00:00 2001
 From: Weng Xuetian <wengxt@gmail.com>
 Date: Wed, 20 Jul 2022 15:57:40 -0700
-Subject: [PATCH 29/55] Only close popup in the the hierchary
+Subject: [PATCH 29/51] Only close popup in the the hierchary
 
 Imagine following event sequences:
 1. a tooltip is shown. activePopups = {tooltip}
@@ -209,7 +209,7 @@ index 8c371661..151c78e3 100644
          auto *shell = m_xdgSurface->m_shell;
          Q_ASSERT(shell->m_topmostGrabbingPopup == this);
 diff --git a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
-index b7383e19..962001b3 100644
+index 9a362b74..ead99989 100644
 --- a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
 +++ b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
 @@ -195,12 +195,17 @@ QtWayland::xdg_toplevel::resize_edge QWaylandXdgSurface::Toplevel::convertToResi
@@ -246,10 +246,10 @@ index b7383e19..962001b3 100644
          Q_ASSERT(shell->m_topmostGrabbingPopup == this);
 -        shell->m_topmostGrabbingPopup = m_parent->m_popup;
 +        shell->m_topmostGrabbingPopup = m_parentXdgSurface ? m_parentXdgSurface->m_popup : nullptr;
-     }
- }
+         m_grabbing = false;
  
-@@ -393,8 +402,6 @@ void QWaylandXdgSurface::setPopup(QWaylandWindow *parent)
+         // Synthesize Qt enter/leave events for popup
+@@ -403,8 +412,6 @@ void QWaylandXdgSurface::setPopup(QWaylandWindow *parent)
  {
      Q_ASSERT(!m_toplevel && !m_popup);
  
@@ -258,7 +258,7 @@ index b7383e19..962001b3 100644
      auto positioner = new QtWayland::xdg_positioner(m_shell->create_positioner());
      // set_popup expects a position relative to the parent
      QPoint transientPos = m_window->geometry().topLeft(); // this is absolute
-@@ -411,8 +418,9 @@ void QWaylandXdgSurface::setPopup(QWaylandWindow *parent)
+@@ -421,8 +428,9 @@ void QWaylandXdgSurface::setPopup(QWaylandWindow *parent)
          | QtWayland::xdg_positioner::constraint_adjustment_slide_y
          | QtWayland::xdg_positioner::constraint_adjustment_flip_x
          | QtWayland::xdg_positioner::constraint_adjustment_flip_y);
@@ -397,5 +397,5 @@ index 73d1eb9c..747875b4 100644
  void tst_xdgshell::switchPopups()
  {
 -- 
-2.40.0.rc2
+2.41.0.rc2
 

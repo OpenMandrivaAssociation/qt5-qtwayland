@@ -1,7 +1,7 @@
-From bdf04e01153aeda2c2bafa059dd21dc377eb82e1 Mon Sep 17 00:00:00 2001
+From 152984fa2347a2f02568ac6cd9baba5bd8e4d56d Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Fri, 5 Aug 2022 15:00:31 +0100
-Subject: [PATCH 33/55] Client: clear focus on touch cancel
+Subject: [PATCH 32/51] Client: clear focus on touch cancel
 
 When we get a touch_cancel event all touches should be treated as
 lifted.
@@ -112,5 +112,5 @@ index 296dbf47..210d8ddb 100644
      Seat *m_seat = nullptr;
  };
 -- 
-2.40.0.rc2
+2.41.0.rc2
 

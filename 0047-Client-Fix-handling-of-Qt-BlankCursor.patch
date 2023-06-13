@@ -1,7 +1,7 @@
-From fbb9d65cf158bcf63440e9839acae9238ad4e0a7 Mon Sep 17 00:00:00 2001
+From aeb7bf67a99fecf5f4e49ba7c49edf9c8b9db2b6 Mon Sep 17 00:00:00 2001
 From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 Date: Tue, 22 Nov 2022 23:27:34 +0200
-Subject: [PATCH 51/55] Client: Fix handling of Qt::BlankCursor
+Subject: [PATCH 47/51] Client: Fix handling of Qt::BlankCursor
 
 The cursor may not be properly set when a window has Qt::BlankCursor and
 it's shown. In that case, the cursor surface may not be present and
@@ -34,5 +34,5 @@ index 5b880984..9a0fe49d 100644
      }
  
 -- 
-2.40.0.rc2
+2.41.0.rc2
 

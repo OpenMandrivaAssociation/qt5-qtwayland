@@ -14,7 +14,7 @@
 
 Summary:	Qt5 - Wayland platform support and QtCompositor module
 Name:		qt5-qtwayland
-Version:	5.15.9
+Version:	5.15.10
 %if "%{beta}" != ""
 Release:	0.%{beta}.1
 %define qttarballdir qtwayland-everywhere-src-%{version}-%{beta}
@@ -59,32 +59,28 @@ Patch1026:	0026-use-poll-2-when-reading-from-clipboard.patch
 Patch1027:	0027-Reduce-memory-leakage.patch
 Patch1028:	0028-Fix-build-with-libcxx-missing-array-include.patch
 Patch1029:	0029-Only-close-popup-in-the-the-hierchary.patch
-Patch1030:	0030-Build-fixes-for-GCC-11.patch
-Patch1031:	0031-Check-pointer-for-null-before-use-in-ASSERT.patch
-Patch1032:	0032-Use-wl_surface.damage_buffer-on-the-client-side.patch
-Patch1033:	0033-Client-clear-focus-on-touch-cancel.patch
-Patch1034:	0034-Guard-mResizeDirty-by-the-correctMutex.patch
-Patch1035:	0035-client-Synthesize-enter-leave-event-for-popup-in-xdg.patch
-Patch1036:	0036-Fix-compile-tests.patch
-Patch1037:	0037-Use-CRLF-line-delimiter-for-text-uri-list-data.patch
-Patch1038:	0038-Avoid-calling-requestUpdate-from-wrong-thread.patch
-Patch1039:	0039-Call-finishDrag-in-QWaylandDataDevice-dragSourceCanc.patch
-Patch1040:	0040-Hold-surface-read-lock-throughout-QWaylandEglWindow-.patch
-Patch1041:	0041-Client-Ensure-that-wl_surface-lives-as-long-as-qtqui.patch
-Patch1042:	0042-Keep-toplevel-windows-in-the-top-left-corner-of-the-.patch
-Patch1043:	0043-Revert-Client-Ensure-that-wl_surface-lives-as-long-a.patch
-Patch1044:	0044-Client-Add-F_SEAL_SHRINK-seal-to-shm-backing-file.patch
-Patch1045:	0045-Client-Call-wl_output_release-upon-QWaylandScreen-de.patch
-Patch1046:	0046-Client-Bump-wl_output-version.patch
-Patch1047:	0047-Fix-frame-sync-related-to-unprotected-multithread-ac.patch
-Patch1048:	0048-Client-Handle-zwp_primary_selection_device_manager_v.patch
-Patch1049:	0049-Fixes-the-build-on-CentOS.patch
-Patch1050:	0050-client-Avoid-protocol-error-with-invalid-min-max-siz.patch
-Patch1051:	0051-Client-Fix-handling-of-Qt-BlankCursor.patch
-Patch1052:	0052-client-Force-a-roundtrip-when-an-XdgOutput-is-not-re.patch
-Patch1053:	0053-Client-Manage-QMimeData-lifecycle.patch
-Patch1054:	0054-client-Do-not-cast-placeholder-screens-to-QWaylandSc.patch
-Patch1055:	0055-Client-Remove-flip-popup-constraints.patch
+Patch1030:	0030-Check-pointer-for-null-before-use-in-ASSERT.patch
+Patch1031:	0031-Use-wl_surface.damage_buffer-on-the-client-side.patch
+Patch1032:	0032-Client-clear-focus-on-touch-cancel.patch
+Patch1033:	0033-Guard-mResizeDirty-by-the-correctMutex.patch
+Patch1034:	0034-Fix-compile-tests.patch
+Patch1035:	0035-Use-CRLF-line-delimiter-for-text-uri-list-data.patch
+Patch1036:	0036-Avoid-calling-requestUpdate-from-wrong-thread.patch
+Patch1037:	0037-Call-finishDrag-in-QWaylandDataDevice-dragSourceCanc.patch
+Patch1038:	0038-Hold-surface-read-lock-throughout-QWaylandEglWindow-.patch
+Patch1039:	0039-Keep-toplevel-windows-in-the-top-left-corner-of-the-.patch
+Patch1040:	0040-Client-Add-F_SEAL_SHRINK-seal-to-shm-backing-file.patch
+Patch1041:	0041-Client-Call-wl_output_release-upon-QWaylandScreen-de.patch
+Patch1042:	0042-Client-Bump-wl_output-version.patch
+Patch1043:	0043-Fix-frame-sync-related-to-unprotected-multithread-ac.patch
+Patch1044:	0044-Client-Handle-zwp_primary_selection_device_manager_v.patch
+Patch1045:	0045-Fixes-the-build-on-CentOS.patch
+Patch1046:	0046-client-Avoid-protocol-error-with-invalid-min-max-siz.patch
+Patch1047:	0047-Client-Fix-handling-of-Qt-BlankCursor.patch
+Patch1048:	0048-client-Force-a-roundtrip-when-an-XdgOutput-is-not-re.patch
+Patch1049:	0049-Client-Manage-QMimeData-lifecycle.patch
+Patch1050:	0050-client-Do-not-cast-placeholder-screens-to-QWaylandSc.patch
+Patch1051:	0051-Client-Remove-flip-popup-constraints.patch
 
 BuildRequires:	qmake5 >= %{version}
 BuildRequires:	pkgconfig(Qt5Quick) >= %{version}

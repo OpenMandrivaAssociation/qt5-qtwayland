@@ -1,7 +1,7 @@
-From 58c67c6e8f2d94cef7f8eec072ebad031769e144 Mon Sep 17 00:00:00 2001
+From 39f6f824e660c36b2865bf55f9ea609aaa02697e Mon Sep 17 00:00:00 2001
 From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 Date: Tue, 1 Feb 2022 13:05:36 +0200
-Subject: [PATCH 20/55] Client: Remove mWaitingForUpdateDelivery
+Subject: [PATCH 20/51] Client: Remove mWaitingForUpdateDelivery
 
 Currently, mWaitingForUpdateDelivery is shared between the main thread
 (doHandleFrameCallback()) and the frame callback event thread
@@ -75,5 +75,5 @@ index 54ac67a9..cf7ce879 100644
      QElapsedTimer mFrameCallbackElapsedTimer;
      struct ::wl_callback *mFrameCallback = nullptr;
 -- 
-2.40.0.rc2
+2.41.0.rc2
 

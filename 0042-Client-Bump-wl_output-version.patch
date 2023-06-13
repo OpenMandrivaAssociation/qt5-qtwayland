@@ -1,7 +1,7 @@
-From 8071f24324ffa8c556068816e009a5887e1a6ddd Mon Sep 17 00:00:00 2001
+From 4293409e97c6ecfaec49b87818f9b439010187c9 Mon Sep 17 00:00:00 2001
 From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 Date: Tue, 22 Nov 2022 12:33:41 +0200
-Subject: [PATCH 46/55] Client: Bump wl_output version
+Subject: [PATCH 42/51] Client: Bump wl_output version
 
 wl_output_release is available starting with wl_output v3.
 
@@ -26,5 +26,5 @@ index 64ae4fe7..5537dafd 100644
      , mWaylandDisplay(waylandDisplay)
      , mOutputName(QStringLiteral("Screen%1").arg(id))
 -- 
-2.40.0.rc2
+2.41.0.rc2
 

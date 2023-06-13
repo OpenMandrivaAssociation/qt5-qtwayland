@@ -1,7 +1,7 @@
-From 23327bb4cdc00b47e0f96efca2fe494540f01601 Mon Sep 17 00:00:00 2001
+From 4cbf15b311fd9b00b28205e474c4b31a92ab819d Mon Sep 17 00:00:00 2001
 From: Jan Grulich <jgrulich@redhat.com>
 Date: Fri, 16 Jul 2021 13:00:03 +0200
-Subject: [PATCH 13/55] Client: do not empty clipboard when a new popup/window
+Subject: [PATCH 13/51] Client: do not empty clipboard when a new popup/window
  is opened
 
 If we open a new popup or a window within the same app we have to avoid
@@ -64,5 +64,5 @@ index e931d1f5..5d704795 100644
      mRepeatTimer.stop();
  }
 -- 
-2.40.0.rc2
+2.41.0.rc2
 

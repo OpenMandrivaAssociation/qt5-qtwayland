@@ -1,7 +1,7 @@
-From ec0171610350305be51c3e4be7c6f086cb360fe6 Mon Sep 17 00:00:00 2001
+From b14eb8fdac3bfa2763a83541a3e4764c0eac153e Mon Sep 17 00:00:00 2001
 From: Roman Genkhel <roman.genhel@lge.com>
 Date: Thu, 12 Nov 2020 12:21:51 +0300
-Subject: [PATCH 31/55] Check pointer for null before use in ASSERT
+Subject: [PATCH 30/51] Check pointer for null before use in ASSERT
 
 Task-number: QTBUG-85195
 Change-Id: I331e54f6e58aa9d536351a55223610c60b3cb414
@@ -30,5 +30,5 @@ index 9e82c174..0a5fc15b 100644
          buffer->setBusy();
  
 -- 
-2.40.0.rc2
+2.41.0.rc2
 

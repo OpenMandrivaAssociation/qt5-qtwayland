@@ -1,7 +1,7 @@
-From f584a8350503e349669744a1587634431ac0dc82 Mon Sep 17 00:00:00 2001
+From 0cf12729a90380d3ef11efebfbfa9458c397d592 Mon Sep 17 00:00:00 2001
 From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 Date: Sat, 19 Feb 2022 17:01:04 +0200
-Subject: [PATCH 22/55] Client: Fix opaque region setter
+Subject: [PATCH 22/51] Client: Fix opaque region setter
 
 The rect is in the global coordinate system, while the opaque region
 must be in the surface local coordinate system.
@@ -27,5 +27,5 @@ index de5af1bd..69319228 100644
  
  void QWaylandWindow::resizeFromApplyConfigure(const QSize &sizeWithMargins, const QPoint &offset)
 -- 
-2.40.0.rc2
+2.41.0.rc2
 

@@ -1,7 +1,7 @@
-From d04d4c7fe2e00285e7d70da42094f213e13c6ed8 Mon Sep 17 00:00:00 2001
+From 5028633b140c013b14a487889eeef992233d4edf Mon Sep 17 00:00:00 2001
 From: Eskil Abrahamsen Blomfeldt <eskil.abrahamsen-blomfeldt@qt.io>
 Date: Mon, 23 May 2022 09:47:24 +0200
-Subject: [PATCH 50/55] client: Avoid protocol error with invalid min/max size
+Subject: [PATCH 46/51] client: Avoid protocol error with invalid min/max size
 
 If the application sets an invalid minimum and maximum size
 (where the minimum is higher than the maximum), then we
@@ -52,5 +52,5 @@ index ead99989..ad666129 100644
              maxHeight = 0;
          m_toplevel->set_max_size(maxWidth, maxHeight);
 -- 
-2.40.0.rc2
+2.41.0.rc2
 

@@ -1,7 +1,7 @@
-From 2c403a8522db9aa6a9f365dba5f8ef5af205295c Mon Sep 17 00:00:00 2001
+From 2a7884f0d51d4da20e675640b8d987004c9d77c5 Mon Sep 17 00:00:00 2001
 From: Paul Olav Tvete <paul.tvete@qt.io>
 Date: Tue, 15 Mar 2022 16:53:04 +0100
-Subject: [PATCH 25/55] Fix race condition on mWaitingForUpdateDelivery
+Subject: [PATCH 25/51] Fix race condition on mWaitingForUpdateDelivery
 
 Change-Id: I0e91bda73722468b9339fc434fe04420b5e7d3da
 Reviewed-by: David Edmundson <davidedmundson@kde.org>
@@ -55,5 +55,5 @@ index 54ac67a9..c0a76345 100644
      QElapsedTimer mFrameCallbackElapsedTimer;
      struct ::wl_callback *mFrameCallback = nullptr;
 -- 
-2.40.0.rc2
+2.41.0.rc2
 

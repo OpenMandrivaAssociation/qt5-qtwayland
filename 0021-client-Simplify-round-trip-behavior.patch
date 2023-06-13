@@ -1,7 +1,7 @@
-From 71a1a9791df20307dd4eb688b0957d0f695823c5 Mon Sep 17 00:00:00 2001
+From 89b396cbef7c8fb7041d3a13d952d468c5c57e56 Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Wed, 9 Feb 2022 17:20:48 +0000
-Subject: [PATCH 21/55] client: Simplify round trip behavior
+Subject: [PATCH 21/51] client: Simplify round trip behavior
 
 The custom event queue was removed in
 302d4ffb8549214eb4028dc3e47ec4ee4e12ffbd (2015) so the comment about not
@@ -78,5 +78,5 @@ index ebcdbd22..d371ffec 100644
  
  bool QWaylandDisplay::supportsWindowDecoration() const
 -- 
-2.40.0.rc2
+2.41.0.rc2
 

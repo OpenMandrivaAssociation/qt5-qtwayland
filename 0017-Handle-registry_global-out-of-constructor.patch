@@ -1,7 +1,7 @@
-From 5889bb845d951a7877201bca97ffe4bb2491d966 Mon Sep 17 00:00:00 2001
+From f22c2639663d9b9010fd79a5873e11a716106b65 Mon Sep 17 00:00:00 2001
 From: Elvis Lee <kwangwoong.lee@lge.com>
 Date: Thu, 18 Feb 2021 15:45:49 +0900
-Subject: [PATCH 17/55] Handle registry_global out of constructor
+Subject: [PATCH 17/51] Handle registry_global out of constructor
 
 Factory functions in QWaylandDisplay::registry_global() can be overridden.
 Later, other classes instantiated in the registry_global can support
@@ -81,5 +81,5 @@ index cd8569b1..8afecb31 100644
      mDisplay->ensureScreen();
  }
 -- 
-2.40.0.rc2
+2.41.0.rc2
 

@@ -1,7 +1,7 @@
-From c12b0ed6db709e2af40ab3687d880aff5c56b5c1 Mon Sep 17 00:00:00 2001
+From 9e03f149e70896d92b51d9c25af681ddc2b5acfb Mon Sep 17 00:00:00 2001
 From: Aleix Pol <aleixpol@kde.org>
 Date: Mon, 19 Dec 2022 15:31:03 +0100
-Subject: [PATCH 49/55] Fixes the build on CentOS
+Subject: [PATCH 45/51] Fixes the build on CentOS
 
 Change-Id: I3c21972e7681be99b0f45c3ea3a57be285e4ff8e
 ---
@@ -22,5 +22,5 @@ index 98acd42d..41cffdf7 100644
      if (fd >= 0)
          fcntl(fd, F_ADD_SEALS, F_SEAL_SHRINK | F_SEAL_SEAL);
 -- 
-2.40.0.rc2
+2.41.0.rc2
 

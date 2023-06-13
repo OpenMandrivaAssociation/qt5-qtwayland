@@ -1,7 +1,7 @@
-From 2f0528fc51a378bdd8a3ff93d996765fccf54cce Mon Sep 17 00:00:00 2001
+From ddfa956f6c39c53249116b979f679b255ed4a596 Mon Sep 17 00:00:00 2001
 From: Kenneth Topp <ken@bllue.org>
 Date: Mon, 4 Apr 2022 09:36:21 -0400
-Subject: [PATCH 26/55] use poll(2) when reading from clipboard
+Subject: [PATCH 26/51] use poll(2) when reading from clipboard
 
 change clipboard read away from select(2) call which can fail when
 an application has large number of open files
@@ -44,5 +44,5 @@ index c9e158cc..fe0ea8c9 100644
          } else if (ready == 0) {
              qWarning("QWaylandDataOffer: timeout reading from pipe");
 -- 
-2.40.0.rc2
+2.41.0.rc2
 

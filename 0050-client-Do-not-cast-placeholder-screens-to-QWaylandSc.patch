@@ -1,7 +1,7 @@
-From 18c2bcec31f68aafd66d7ec503ec6511ca804d07 Mon Sep 17 00:00:00 2001
+From 346cebf39b90f7fe012f57e66d493634aba20f89 Mon Sep 17 00:00:00 2001
 From: Aleix Pol <aleixpol@kde.org>
 Date: Mon, 6 Mar 2023 01:11:45 +0100
-Subject: [PATCH 54/55] client: Do not cast placeholder screens to
+Subject: [PATCH 50/51] client: Do not cast placeholder screens to
  QWaylandScreen
 
 It's wrong to C-cast an object to a class that isn't theirs. Check if it
@@ -30,5 +30,5 @@ index bf54a1a0..9763c312 100644
  
      return nullptr;
 -- 
-2.40.0.rc2
+2.41.0.rc2
 

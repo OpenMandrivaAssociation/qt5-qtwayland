@@ -1,7 +1,7 @@
-From 9edd2a05c79a1c40867440826c830c76136152da Mon Sep 17 00:00:00 2001
+From fde475c6e235429e7af64a54b9d81e893c618af7 Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Sun, 14 Nov 2021 13:54:19 +0000
-Subject: [PATCH 16/55] Client: Avoid processing of events when showing windows
+Subject: [PATCH 16/51] Client: Avoid processing of events when showing windows
 
 The only time we want to dispatch events from the wayland socket is when
 the application is waiting for external events. Doing so at any other
@@ -34,5 +34,5 @@ index b363c352..b98435ed 100644
          setGeometry(windowGeometry());
          // Don't flush the events here, or else the newly visible window may start drawing, but since
 -- 
-2.40.0.rc2
+2.41.0.rc2
 

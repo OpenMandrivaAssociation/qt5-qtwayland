@@ -1,7 +1,7 @@
-From c6639e225f45564def8f6729c83887ab73495e59 Mon Sep 17 00:00:00 2001
+From 16d52e9ad900a25a02ff4eae43cc7d7e43dbad8a Mon Sep 17 00:00:00 2001
 From: Paul Olav Tvete <paul.tvete@qt.io>
 Date: Tue, 15 Mar 2022 15:59:15 +0100
-Subject: [PATCH 24/55] Revert "Client: Remove mWaitingForUpdateDelivery"
+Subject: [PATCH 24/51] Revert "Client: Remove mWaitingForUpdateDelivery"
 
 The reverted commit introduces a severe performance regression
 when a client window is resized while a QtQuick renderthread
@@ -55,5 +55,5 @@ index cf7ce879..54ac67a9 100644
      QElapsedTimer mFrameCallbackElapsedTimer;
      struct ::wl_callback *mFrameCallback = nullptr;
 -- 
-2.40.0.rc2
+2.41.0.rc2
 
