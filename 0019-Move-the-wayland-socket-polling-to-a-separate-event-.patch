@@ -1,7 +1,7 @@
-From 965fc31b57176d7d913d90465a857c285abd0a59 Mon Sep 17 00:00:00 2001
+From 1fe2895d2e3ccae0ae0abb2760e1714ac296c3ea Mon Sep 17 00:00:00 2001
 From: Adrien Faveraux <af@brain-networks.fr>
 Date: Fri, 26 Nov 2021 09:18:58 +0100
-Subject: [PATCH 19/51] Move the wayland socket polling to a separate event
+Subject: [PATCH 19/59] Move the wayland socket polling to a separate event
  thread
 
 New event threads is introduced which calls poll() on the wayland fd,
@@ -32,7 +32,7 @@ Reviewed-by: Eskil Abrahamsen Blomfeldt <eskil.abrahamsen-blomfeldt@qt.io>
  5 files changed, 255 insertions(+), 108 deletions(-)
 
 diff --git a/src/client/qwaylanddisplay.cpp b/src/client/qwaylanddisplay.cpp
-index 97fb8cbe..ebcdbd22 100644
+index c2482030..c38f6f82 100644
 --- a/src/client/qwaylanddisplay.cpp
 +++ b/src/client/qwaylanddisplay.cpp
 @@ -87,10 +87,203 @@
@@ -371,13 +371,15 @@ index 97fb8cbe..ebcdbd22 100644
  }
  
  QWaylandScreen *QWaylandDisplay::screenForOutput(struct wl_output *output) const
-@@ -678,4 +816,6 @@ QWaylandCursorTheme *QWaylandDisplay::loadCursorTheme(const QString &name, int p
+@@ -678,6 +816,8 @@ QWaylandCursorTheme *QWaylandDisplay::loadCursorTheme(const QString &name, int p
  
  } // namespace QtWaylandClient
  
 +#include "qwaylanddisplay.moc"
 +
  QT_END_NAMESPACE
+ 
+ #include "moc_qwaylanddisplay_p.cpp"
 diff --git a/src/client/qwaylanddisplay_p.h b/src/client/qwaylanddisplay_p.h
 index 49820255..cf91b924 100644
 --- a/src/client/qwaylanddisplay_p.h
@@ -458,7 +460,7 @@ index 661cea53..fbf00c6b 100644
      // Call after eventDispatcher is fully connected, for QWaylandDisplay::forceRoundTrip()
      mDisplay->initialize();
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index b98435ed..292dd023 100644
+index 83a394c4..3d9741d2 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -76,7 +76,6 @@ QWaylandWindow *QWaylandWindow::mMouseGrab = nullptr;
@@ -506,7 +508,7 @@ index b98435ed..292dd023 100644
  
      if (mWaitingForFrameCallback) {
          qCDebug(lcWaylandBackingstore) << "Didn't receive frame callback in time, window should now be inexposed";
-@@ -1179,8 +1182,11 @@ void QWaylandWindow::requestUpdate()
+@@ -1183,8 +1186,11 @@ void QWaylandWindow::requestUpdate()
      Q_ASSERT(hasPendingUpdateRequest()); // should be set by QPA
  
      // If we have a frame callback all is good and will be taken care of there
@@ -520,7 +522,7 @@ index b98435ed..292dd023 100644
  
      // If we've already called deliverUpdateRequest(), but haven't seen any attach+commit/swap yet
      // This is a somewhat redundant behavior and might indicate a bug in the calling code, so log
-@@ -1193,7 +1199,12 @@ void QWaylandWindow::requestUpdate()
+@@ -1197,7 +1203,12 @@ void QWaylandWindow::requestUpdate()
      // so use invokeMethod to delay the delivery a bit.
      QMetaObject::invokeMethod(this, [this] {
          // Things might have changed in the meantime
@@ -534,7 +536,7 @@ index b98435ed..292dd023 100644
              deliverUpdateRequest();
      }, Qt::QueuedConnection);
  }
-@@ -1213,9 +1224,10 @@ void QWaylandWindow::handleUpdate()
+@@ -1217,9 +1228,10 @@ void QWaylandWindow::handleUpdate()
      if (!mSurface)
          return;
  
@@ -547,7 +549,7 @@ index b98435ed..292dd023 100644
      mFrameCallback = wl_surface_frame(wrappedSurface);
      wl_proxy_wrapper_destroy(wrappedSurface);
      wl_callback_add_listener(mFrameCallback, &QWaylandWindow::callbackListener, this);
-@@ -1225,6 +1237,8 @@ void QWaylandWindow::handleUpdate()
+@@ -1229,6 +1241,8 @@ void QWaylandWindow::handleUpdate()
      // Start a timer for handling the case when the compositor stops sending frame callbacks.
      if (mFrameCallbackTimeout > 0) {
          QMetaObject::invokeMethod(this, [this] {
@@ -570,5 +572,5 @@ index fb3ed606..54ac67a9 100644
  
      // True when we have called deliverRequestUpdate, but the client has not yet attached a new buffer
 -- 
-2.41.0.rc2
+2.42.0
 

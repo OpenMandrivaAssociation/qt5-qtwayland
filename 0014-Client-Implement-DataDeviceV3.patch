@@ -1,7 +1,7 @@
-From 52f362f8dfd27a65cdee945ba923ae30521ab922 Mon Sep 17 00:00:00 2001
+From 23c698917e0fdac0d9519334b7c375cf226e36c7 Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Tue, 16 Feb 2021 09:51:47 +0000
-Subject: [PATCH 14/51] Client: Implement DataDeviceV3
+Subject: [PATCH 14/59] Client: Implement DataDeviceV3
 
 DataDeviceV2 fixes a leak of DataDevice resources.
 
@@ -36,7 +36,7 @@ Reviewed-by: Eskil Abrahamsen Blomfeldt <eskil.abrahamsen-blomfeldt@qt.io>
  12 files changed, 153 insertions(+), 46 deletions(-)
 
 diff --git a/src/client/qwaylanddatadevice.cpp b/src/client/qwaylanddatadevice.cpp
-index bbd2d568..fbb5aa91 100644
+index 0124b890..d154c695 100644
 --- a/src/client/qwaylanddatadevice.cpp
 +++ b/src/client/qwaylanddatadevice.cpp
 @@ -72,6 +72,8 @@ QWaylandDataDevice::QWaylandDataDevice(QWaylandDataDeviceManager *manager, QWayl
@@ -340,7 +340,7 @@ index 9cf1483c..6f667398 100644
  
  
 diff --git a/src/client/qwaylanddatasource.cpp b/src/client/qwaylanddatasource.cpp
-index f45122fb..5599cbd4 100644
+index 9b17cdfa..9610366d 100644
 --- a/src/client/qwaylanddatasource.cpp
 +++ b/src/client/qwaylanddatasource.cpp
 @@ -101,7 +101,32 @@ void QWaylandDataSource::data_source_send(const QString &mime_type, int32_t fd)
@@ -378,10 +378,10 @@ index f45122fb..5599cbd4 100644
  
  }
 diff --git a/src/client/qwaylanddatasource_p.h b/src/client/qwaylanddatasource_p.h
-index 25afff79..96f07bc3 100644
+index 3003da1b..b6a9e06b 100644
 --- a/src/client/qwaylanddatasource_p.h
 +++ b/src/client/qwaylanddatasource_p.h
-@@ -77,17 +77,25 @@ public:
+@@ -77,16 +77,24 @@ public:
      QMimeData *mimeData() const;
  
  Q_SIGNALS:
@@ -401,7 +401,6 @@ index 25afff79..96f07bc3 100644
 +    void data_source_action(uint32_t action) override;
  
  private:
-     QWaylandDisplay *m_display = nullptr;
      QMimeData *m_mime_data = nullptr;
 +    bool m_accepted = false;
 +    Qt::DropAction m_dropAction = Qt::IgnoreAction;
@@ -409,7 +408,7 @@ index 25afff79..96f07bc3 100644
  
  }
 diff --git a/src/client/qwaylanddisplay.cpp b/src/client/qwaylanddisplay.cpp
-index aa8808e9..2d298532 100644
+index 7560bf41..7f28d01c 100644
 --- a/src/client/qwaylanddisplay.cpp
 +++ b/src/client/qwaylanddisplay.cpp
 @@ -356,7 +356,7 @@ void QWaylandDisplay::registry_global(uint32_t id, const QString &interface, uin
@@ -509,5 +508,5 @@ index 1568b3b9..067410d0 100644
  class DataDeviceCompositor : public DefaultCompositor {
  public:
 -- 
-2.41.0.rc2
+2.42.0
 

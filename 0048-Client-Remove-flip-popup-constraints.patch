@@ -1,7 +1,7 @@
-From aabaa4efd1d284f07c3cb5b8a7d62a9143701bc4 Mon Sep 17 00:00:00 2001
+From 53ee577e86f88abbbdbba26c593d03d87994b757 Mon Sep 17 00:00:00 2001
 From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 Date: Thu, 12 Jan 2023 14:49:25 +0200
-Subject: [PATCH 51/51] Client: Remove flip popup constraints
+Subject: [PATCH 48/59] Client: Remove flip popup constraints
 
 xdg_positioner doesn't have good anchor rect and other needed
 information so the compositor can properly flip popups. In some windows
@@ -22,7 +22,7 @@ Reviewed-by: Liang Qi <liang.qi@qt.io>
  1 file changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
-index ad666129..822b385c 100644
+index 696eaf77..2cc36510 100644
 --- a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
 +++ b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
 @@ -425,9 +425,7 @@ void QWaylandXdgSurface::setPopup(QWaylandWindow *parent)
@@ -37,5 +37,5 @@ index ad666129..822b385c 100644
      positioner->destroy();
  
 -- 
-2.41.0.rc2
+2.42.0
 

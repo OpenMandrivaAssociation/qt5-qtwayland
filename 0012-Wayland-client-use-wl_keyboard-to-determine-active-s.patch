@@ -1,7 +1,7 @@
-From 398c131a02d48fc9f538951f08caa93dccd03a1a Mon Sep 17 00:00:00 2001
+From 2a68cb54a8a07a59e140fe8acd966ca6bb485afd Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?M=C3=A9ven=20Car?= <meven.car@enioka.com>
 Date: Wed, 18 Aug 2021 18:28:20 +0200
-Subject: [PATCH 12/51] Wayland client: use wl_keyboard to determine active
+Subject: [PATCH 12/59] Wayland client: use wl_keyboard to determine active
  state
 
 Commit f497a5bb87270174b8e0106b7eca1992d44ff15d made QWaylandDisplay
@@ -46,7 +46,7 @@ Reviewed-by: Eskil Abrahamsen Blomfeldt <eskil.abrahamsen-blomfeldt@qt.io>
  13 files changed, 39 insertions(+), 66 deletions(-)
 
 diff --git a/src/client/qwaylanddisplay.cpp b/src/client/qwaylanddisplay.cpp
-index 280e63bd..1568052e 100644
+index 16f8ca1a..d1ca0274 100644
 --- a/src/client/qwaylanddisplay.cpp
 +++ b/src/client/qwaylanddisplay.cpp
 @@ -579,14 +579,10 @@ void QWaylandDisplay::handleKeyboardFocusChanged(QWaylandInputDevice *inputDevic
@@ -95,7 +95,7 @@ index 1bad8b67..15104d65 100644
      void blockingReadEvents();
      void flushRequests();
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index d3f28d68..b363c352 100644
+index c532b44a..fdffe584 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -96,7 +96,6 @@ QWaylandWindow::QWaylandWindow(QWindow *window, QWaylandDisplay *display)
@@ -115,7 +115,7 @@ index d3f28d68..b363c352 100644
  }
  
  QWaylandWindow *QWaylandWindow::fromWlSurface(::wl_surface *surface)
-@@ -1105,10 +1106,18 @@ bool QWaylandWindow::setMouseGrabEnabled(bool grab)
+@@ -1109,10 +1110,18 @@ bool QWaylandWindow::setMouseGrabEnabled(bool grab)
      return true;
  }
  
@@ -234,7 +234,7 @@ index 261f8cbb..c1bcd5c6 100644
  private:
      QScopedPointer<QWaylandXdgShellV6> m_xdgShell;
 diff --git a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
-index c3d2d3ea..9a362b74 100644
+index 699a75eb..888bab77 100644
 --- a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
 +++ b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
 @@ -67,11 +67,6 @@ QWaylandXdgSurface::Toplevel::Toplevel(QWaylandXdgSurface *xdgSurface)
@@ -337,5 +337,5 @@ index e2593314..73d1eb9c 100644
      const QSize screenSize(640, 480);
      const uint maximizedSerial = exec([=] {
 -- 
-2.41.0.rc2
+2.42.0
 

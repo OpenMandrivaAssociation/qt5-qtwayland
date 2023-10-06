@@ -1,7 +1,7 @@
-From f5e0a5773064636b6802a4f8f7fb0cb3cec46a68 Mon Sep 17 00:00:00 2001
+From 668ebf5792f1eb0910245465e5407fcab86ce98b Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Mon, 3 May 2021 23:01:53 +0100
-Subject: [PATCH 05/51] Client: Set XdgShell size hints before the first commit
+Subject: [PATCH 05/59] Client: Set XdgShell size hints before the first commit
 
 propagateSizeHints is only called in QWindow we have platform window and
 minimumSizeHint is then sent. We also need to send existing hints when
@@ -20,7 +20,7 @@ Reviewed-by: Aleix Pol Gonzalez <aleixpol@kde.org>
  2 files changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
-index fa9c01aa..c3d2d3ea 100644
+index 94ea573e..699a75eb 100644
 --- a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
 +++ b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
 @@ -105,8 +105,6 @@ void QWaylandXdgSurface::Toplevel::applyConfigure()
@@ -54,5 +54,5 @@ index 2277bbb8..2fdd0a7c 100644
      QCOMPOSITOR_TRY_COMPARE(xdgToplevel()->m_committed.minSize, QSize(100, 100));
      QCOMPOSITOR_TRY_COMPARE(xdgToplevel()->m_committed.maxSize, QSize(1000, 1000));
 -- 
-2.41.0.rc2
+2.42.0
 

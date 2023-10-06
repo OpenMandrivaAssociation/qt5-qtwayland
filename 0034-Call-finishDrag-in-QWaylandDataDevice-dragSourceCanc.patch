@@ -1,7 +1,7 @@
-From 3f0371cb22e117020e57255858e02f9237210a3b Mon Sep 17 00:00:00 2001
+From c31476115b3f2f34ffef4ce139640d0619fd274d Mon Sep 17 00:00:00 2001
 From: Fushan Wen <qydwhotmail@gmail.com>
 Date: Sun, 18 Sep 2022 18:17:18 +0800
-Subject: [PATCH 37/51] Call `finishDrag()` in
+Subject: [PATCH 34/59] Call `finishDrag()` in
  `QWaylandDataDevice::dragSourceCancelled()`
 
 Drags can either get finished or cancelled. If a drag is finished
@@ -22,7 +22,7 @@ BUG: 446111
  1 file changed, 1 insertion(+)
 
 diff --git a/src/client/qwaylanddatadevice.cpp b/src/client/qwaylanddatadevice.cpp
-index fbb5aa91..e3e60ed5 100644
+index d154c695..9b3c18ac 100644
 --- a/src/client/qwaylanddatadevice.cpp
 +++ b/src/client/qwaylanddatadevice.cpp
 @@ -296,6 +296,7 @@ void QWaylandDataDevice::selectionSourceCancelled()
@@ -34,5 +34,5 @@ index fbb5aa91..e3e60ed5 100644
  }
  
 -- 
-2.41.0.rc2
+2.42.0
 

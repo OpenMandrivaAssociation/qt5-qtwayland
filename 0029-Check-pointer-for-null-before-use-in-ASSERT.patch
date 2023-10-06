@@ -1,7 +1,7 @@
-From b14eb8fdac3bfa2763a83541a3e4764c0eac153e Mon Sep 17 00:00:00 2001
+From 7afa1f5d74b0a99c3dcfb4a3be68eee4fa28d7f6 Mon Sep 17 00:00:00 2001
 From: Roman Genkhel <roman.genhel@lge.com>
 Date: Thu, 12 Nov 2020 12:21:51 +0300
-Subject: [PATCH 30/51] Check pointer for null before use in ASSERT
+Subject: [PATCH 29/59] Check pointer for null before use in ASSERT
 
 Task-number: QTBUG-85195
 Change-Id: I331e54f6e58aa9d536351a55223610c60b3cb414
@@ -12,7 +12,7 @@ Reviewed-by: David Edmundson <davidedmundson@kde.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index 9e82c174..0a5fc15b 100644
+index 096859e8..6d49fdfd 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -536,12 +536,12 @@ void QWaylandWindow::sendRecursiveExposeEvent()
@@ -30,5 +30,5 @@ index 9e82c174..0a5fc15b 100644
          buffer->setBusy();
  
 -- 
-2.41.0.rc2
+2.42.0
 

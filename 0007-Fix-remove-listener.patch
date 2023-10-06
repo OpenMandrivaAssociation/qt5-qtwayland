@@ -1,7 +1,7 @@
-From 07a83b80d7c1b90146d9c6b6339bf4e730ca50b9 Mon Sep 17 00:00:00 2001
+From cfbb11da7f7ecbf6372967f01015d269d832dccf Mon Sep 17 00:00:00 2001
 From: Zhang Liang <zhanglianga@uniontech.com>
 Date: Mon, 1 Feb 2021 19:29:43 +0800
-Subject: [PATCH 07/51] Fix: remove listener
+Subject: [PATCH 07/59] Fix: remove listener
 
 Add the operation for removing the listener form listener list
 
@@ -13,7 +13,7 @@ Reviewed-by: David Edmundson <davidedmundson@kde.org>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/src/client/qwaylanddisplay.cpp b/src/client/qwaylanddisplay.cpp
-index 78e387bc..280e63bd 100644
+index 8a6d5db1..16f8ca1a 100644
 --- a/src/client/qwaylanddisplay.cpp
 +++ b/src/client/qwaylanddisplay.cpp
 @@ -456,9 +456,10 @@ void QWaylandDisplay::addRegistryListener(RegistryListener listener, void *data)
@@ -29,5 +29,5 @@ index 78e387bc..280e63bd 100644
  
  uint32_t QWaylandDisplay::currentTimeMillisec()
 -- 
-2.41.0.rc2
+2.42.0
 

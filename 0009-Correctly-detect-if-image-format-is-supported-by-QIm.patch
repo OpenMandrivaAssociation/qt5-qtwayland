@@ -1,7 +1,7 @@
-From cedb1d0987486f0162d8a10defb3705f5e3b3a45 Mon Sep 17 00:00:00 2001
+From d9d5f69f5619dbaa40ca9b97981721467424947b Mon Sep 17 00:00:00 2001
 From: Jan Blackquill <uhhadd@gmail.com>
 Date: Tue, 24 Aug 2021 14:36:34 -0400
-Subject: [PATCH 09/51] Correctly detect if image format is supported by
+Subject: [PATCH 09/59] Correctly detect if image format is supported by
  QImageWriter
 
 The code queries potential image formats by stripping a mimetype of its
@@ -51,7 +51,7 @@ Reviewed-by: Qt CI Bot <qt_ci_bot@qt-project.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/shared/qwaylandmimehelper.cpp b/src/shared/qwaylandmimehelper.cpp
-index a5fdd34d..051a91dc 100644
+index c5266ab3..e2fe1928 100644
 --- a/src/shared/qwaylandmimehelper.cpp
 +++ b/src/shared/qwaylandmimehelper.cpp
 @@ -60,7 +60,7 @@ QByteArray QWaylandMimeHelper::getByteArray(QMimeData *mimeData, const QString &
@@ -64,5 +64,5 @@ index a5fdd34d..051a91dc 100644
                      fmt = imgFmt;
              }
 -- 
-2.41.0.rc2
+2.42.0
 

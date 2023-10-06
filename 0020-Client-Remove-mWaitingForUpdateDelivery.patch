@@ -1,7 +1,7 @@
-From 39f6f824e660c36b2865bf55f9ea609aaa02697e Mon Sep 17 00:00:00 2001
+From fa1d00f0c46d09187c43e9a133a55e8d3f8b3652 Mon Sep 17 00:00:00 2001
 From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 Date: Tue, 1 Feb 2022 13:05:36 +0200
-Subject: [PATCH 20/51] Client: Remove mWaitingForUpdateDelivery
+Subject: [PATCH 20/59] Client: Remove mWaitingForUpdateDelivery
 
 Currently, mWaitingForUpdateDelivery is shared between the main thread
 (doHandleFrameCallback()) and the frame callback event thread
@@ -23,7 +23,7 @@ Reviewed-by: David Edmundson <davidedmundson@kde.org>
  2 files changed, 12 insertions(+), 18 deletions(-)
 
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index 292dd023..de5af1bd 100644
+index 3d9741d2..afc9c137 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -651,23 +651,18 @@ void QWaylandWindow::handleFrameCallback()
@@ -75,5 +75,5 @@ index 54ac67a9..cf7ce879 100644
      QElapsedTimer mFrameCallbackElapsedTimer;
      struct ::wl_callback *mFrameCallback = nullptr;
 -- 
-2.41.0.rc2
+2.42.0
 

@@ -1,7 +1,7 @@
-From 7c43759079528c33c30c4a823de7fb2dff6acd27 Mon Sep 17 00:00:00 2001
+From b55964ec30a055ac199e4d6b463afd67b651381c Mon Sep 17 00:00:00 2001
 From: Weng Xuetian <wengxt@gmail.com>
 Date: Sun, 27 Nov 2022 12:44:40 -0800
-Subject: [PATCH 43/51] Fix frame sync related to unprotected multithread
+Subject: [PATCH 40/59] Fix frame sync related to unprotected multithread
  access
 
 There is a few crashes happens in real life that frame callback is
@@ -21,7 +21,7 @@ Change-Id: Ie01d08d07a2f10f70606ed1935caac09cb4f0382
  2 files changed, 43 insertions(+), 32 deletions(-)
 
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index f322a8d6..6337db00 100644
+index 7c7e49ac..2e445340 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -252,13 +252,16 @@ void QWaylandWindow::reset()
@@ -162,5 +162,5 @@ index 487a91a6..2f219d8c 100644
      static QWaylandWindow *mMouseGrab;
  
 -- 
-2.41.0.rc2
+2.42.0
 

@@ -1,7 +1,7 @@
-From 5028633b140c013b14a487889eeef992233d4edf Mon Sep 17 00:00:00 2001
+From 4a6222595cc45d57471d5f89959ec2963877fb47 Mon Sep 17 00:00:00 2001
 From: Eskil Abrahamsen Blomfeldt <eskil.abrahamsen-blomfeldt@qt.io>
 Date: Mon, 23 May 2022 09:47:24 +0200
-Subject: [PATCH 46/51] client: Avoid protocol error with invalid min/max size
+Subject: [PATCH 43/59] client: Avoid protocol error with invalid min/max size
 
 If the application sets an invalid minimum and maximum size
 (where the minimum is higher than the maximum), then we
@@ -35,7 +35,7 @@ Reviewed-by: David Edmundson <davidedmundson@kde.org>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
-index ead99989..ad666129 100644
+index 774c86f8..696eaf77 100644
 --- a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
 +++ b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
 @@ -384,10 +384,10 @@ void QWaylandXdgSurface::setSizeHints()
@@ -52,5 +52,5 @@ index ead99989..ad666129 100644
              maxHeight = 0;
          m_toplevel->set_max_size(maxWidth, maxHeight);
 -- 
-2.41.0.rc2
+2.42.0
 

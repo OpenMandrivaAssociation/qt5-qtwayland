@@ -1,7 +1,7 @@
-From 76a2b1919f04152e77740b2d1601df893b8d79ba Mon Sep 17 00:00:00 2001
+From b308ffb47e635b407a1387ec369e5b3af8554122 Mon Sep 17 00:00:00 2001
 From: Weng Xuetian <wengxt@gmail.com>
 Date: Wed, 20 Jul 2022 15:57:40 -0700
-Subject: [PATCH 29/51] Only close popup in the the hierchary
+Subject: [PATCH 28/59] Only close popup in the the hierchary
 
 Imagine following event sequences:
 1. a tooltip is shown. activePopups = {tooltip}
@@ -31,7 +31,7 @@ Reviewed-by: David Edmundson <davidedmundson@kde.org>
  9 files changed, 136 insertions(+), 30 deletions(-)
 
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index 264ca59b..9e82c174 100644
+index 77f82b37..096859e8 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -239,6 +239,7 @@ bool QWaylandWindow::shouldCreateSubSurface() const
@@ -81,7 +81,7 @@ index 264ca59b..9e82c174 100644
          reset();
      }
  }
-@@ -1297,6 +1280,20 @@ void QWaylandWindow::setOpaqueArea(const QRegion &opaqueArea)
+@@ -1301,6 +1284,20 @@ void QWaylandWindow::setOpaqueArea(const QRegion &opaqueArea)
      wl_region_destroy(region);
  }
  
@@ -209,7 +209,7 @@ index 8c371661..151c78e3 100644
          auto *shell = m_xdgSurface->m_shell;
          Q_ASSERT(shell->m_topmostGrabbingPopup == this);
 diff --git a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
-index 9a362b74..ead99989 100644
+index 888bab77..774c86f8 100644
 --- a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
 +++ b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
 @@ -195,12 +195,17 @@ QtWayland::xdg_toplevel::resize_edge QWaylandXdgSurface::Toplevel::convertToResi
@@ -397,5 +397,5 @@ index 73d1eb9c..747875b4 100644
  void tst_xdgshell::switchPopups()
  {
 -- 
-2.41.0.rc2
+2.42.0
 

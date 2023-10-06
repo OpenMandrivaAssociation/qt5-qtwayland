@@ -1,7 +1,7 @@
-From dd8640794264449cb978765029fc4713f3fb31b9 Mon Sep 17 00:00:00 2001
+From 091f3dad76007774e103ed8c81adcbf0eca89977 Mon Sep 17 00:00:00 2001
 From: Tang Haixiang <tanghaixiang@uniontech.com>
 Date: Thu, 22 Dec 2022 15:19:53 +0800
-Subject: [PATCH 49/51] Client: Manage QMimeData lifecycle
+Subject: [PATCH 46/59] Client: Manage QMimeData lifecycle
 
 QMimeData is created by user, it is not taken care of in qtwayland,
 which will cause memory leak.
@@ -105,7 +105,7 @@ index ce14e124..bb52683d 100644
  
  }
 diff --git a/src/client/qwaylanddatasource.cpp b/src/client/qwaylanddatasource.cpp
-index 5599cbd4..e085152c 100644
+index 9610366d..1a6b9835 100644
 --- a/src/client/qwaylanddatasource.cpp
 +++ b/src/client/qwaylanddatasource.cpp
 @@ -71,11 +71,6 @@ QWaylandDataSource::~QWaylandDataSource()
@@ -121,7 +121,7 @@ index 5599cbd4..e085152c 100644
  {
      Q_EMIT cancelled();
 diff --git a/src/client/qwaylanddatasource_p.h b/src/client/qwaylanddatasource_p.h
-index 96f07bc3..14d1542d 100644
+index b6a9e06b..089c5485 100644
 --- a/src/client/qwaylanddatasource_p.h
 +++ b/src/client/qwaylanddatasource_p.h
 @@ -74,8 +74,6 @@ public:
@@ -134,5 +134,5 @@ index 96f07bc3..14d1542d 100644
      void cancelled();
      void finished();
 -- 
-2.41.0.rc2
+2.42.0
 

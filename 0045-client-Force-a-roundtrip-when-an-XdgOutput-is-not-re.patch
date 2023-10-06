@@ -1,7 +1,7 @@
-From 2e4c35db38a55243bc2458dc87cc9ff6afb81586 Mon Sep 17 00:00:00 2001
+From 58664797ea7f63baf8e4a22e5ca2906363bf4539 Mon Sep 17 00:00:00 2001
 From: Marco Martin <notmart@gmail.com>
 Date: Fri, 24 Feb 2023 17:40:48 +0100
-Subject: [PATCH 48/51] client: Force a roundtrip when an XdgOutput is not
+Subject: [PATCH 45/59] client: Force a roundtrip when an XdgOutput is not
  ready yet
 
 Is possible that the server sends a surface_enter before
@@ -21,7 +21,7 @@ Reviewed-by: David Edmundson <davidedmundson@kde.org>
  4 files changed, 42 insertions(+)
 
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index 6337db00..3b700002 100644
+index 2e445340..9bf5b150 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -1042,6 +1042,8 @@ void QWaylandWindow::handleScreensChanged()
@@ -113,5 +113,5 @@ index 80429608..68e8d77a 100644
  QCOMPOSITOR_TEST_MAIN(tst_xdgoutput)
  #include "tst_xdgoutput.moc"
 -- 
-2.41.0.rc2
+2.42.0
 

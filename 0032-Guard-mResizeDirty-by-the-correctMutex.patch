@@ -1,7 +1,7 @@
-From 11824dcf4164898a48b0629a072370a195dcc8f1 Mon Sep 17 00:00:00 2001
+From ad92da9b721ee6faad78a5fcbbe05904455b27ab Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Thu, 3 Feb 2022 19:42:33 +0000
-Subject: [PATCH 33/51] Guard mResizeDirty by the correctMutex
+Subject: [PATCH 32/59] Guard mResizeDirty by the correctMutex
 
 mResizeDirty is used in the GUI thread in setCanResize which can be
 called from the GUI thread. It is queried and set whilst the resizeLock
@@ -15,7 +15,7 @@ Reviewed-by: Eskil Abrahamsen Blomfeldt <eskil.abrahamsen-blomfeldt@qt.io>
  1 file changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index 5b7f9df9..117e3383 100644
+index 4e5ca97c..f8c71d9c 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -358,11 +358,12 @@ void QWaylandWindow::setGeometry(const QRect &rect)
@@ -35,5 +35,5 @@ index 5b7f9df9..117e3383 100644
      }
      QRect exposeGeometry(QPoint(), geometry().size());
 -- 
-2.41.0.rc2
+2.42.0
 

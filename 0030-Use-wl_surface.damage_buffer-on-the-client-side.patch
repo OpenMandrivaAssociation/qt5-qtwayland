@@ -1,7 +1,7 @@
-From 7daab1d4a36463f0904fdde539894609f8b367c1 Mon Sep 17 00:00:00 2001
+From 892892aca2465d3903ea51120e46b40f0924b00d Mon Sep 17 00:00:00 2001
 From: Paul Olav Tvete <paul.tvete@qt.io>
 Date: Mon, 6 Jul 2020 14:37:35 +0200
-Subject: [PATCH 31/51] Use wl_surface.damage_buffer on the client side
+Subject: [PATCH 30/59] Use wl_surface.damage_buffer on the client side
 
 Prefer the newer, recommended damage_buffer when the compositor
 supports it.
@@ -20,7 +20,7 @@ Reviewed-by: Eskil Abrahamsen Blomfeldt <eskil.abrahamsen-blomfeldt@qt.io>
  6 files changed, 28 insertions(+), 6 deletions(-)
 
 diff --git a/src/client/qwaylanddisplay.cpp b/src/client/qwaylanddisplay.cpp
-index 1b9ec699..6898a881 100644
+index 4a331a4c..f23c459d 100644
 --- a/src/client/qwaylanddisplay.cpp
 +++ b/src/client/qwaylanddisplay.cpp
 @@ -493,7 +493,7 @@ void QWaylandDisplay::registry_global(uint32_t id, const QString &interface, uin
@@ -33,7 +33,7 @@ index 1b9ec699..6898a881 100644
      } else if (interface == QStringLiteral("wl_shm")) {
          mShm.reset(new QWaylandShm(this, version, id));
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index 0a5fc15b..5b7f9df9 100644
+index 6d49fdfd..4e5ca97c 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -563,7 +563,11 @@ void QWaylandWindow::damage(const QRect &rect)
@@ -127,5 +127,5 @@ index 949dc23d..d176837e 100644
                         uint32_t callback) override;
      void surface_commit(Resource *resource) override;
 -- 
-2.41.0.rc2
+2.42.0
 

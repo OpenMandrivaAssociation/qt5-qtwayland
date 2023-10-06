@@ -1,0 +1,63 @@
+From 959738880c1c2ba6b496657d6bcd8b67d1e326ae Mon Sep 17 00:00:00 2001
+From: Eskil Abrahamsen Blomfeldt <eskil.abrahamsen-blomfeldt@qt.io>
+Date: Thu, 12 Jan 2023 14:56:18 +0100
+Subject: [PATCH 54/59] client: Fix infinite recursion with text-input-v2
+
+It was possible to get into an infinite recursion when
+double-clicking an entry in an item view to edit it.
+
+What would happen is that the editor takes focus, and we call
+commit on the input method commit in case the previous focused
+widget has pending input that needs to be committed. The
+subsequent method event then causes the QAbstractItemView to
+set focus, and since we have not yet updated the focus in the
+previous call, we end up in an infinite recursion, eventually
+crashing when the stack overflows.
+
+As a guard for this, we only send an input method event when there
+is actually pre-edit text to commit, and we reset the pre-edit
+text immediately so that any subsequent call will just exit.
+
+[ChangeLog][QtWaylandClient] Fixed a possible crash when editing
+a field in an item view.
+
+Pick-to: 5.15 6.2 6.4 6.5
+Fixes: QTBUG-109302
+Change-Id: I45237c80e53b1386705279899e19319180d78fa1
+Reviewed-by: Liang Qi <liang.qi@qt.io>
+Reviewed-by: Paul Olav Tvete <paul.tvete@qt.io>
+Reviewed-by: Inho Lee <inho.lee@qt.io>
+(cherry picked from commit db4afd9caf037cfff7aca8b130d326c340b7fed0)
+
+* asturmlechner 2023-08-14: Resolve conflict with dev branch commit
+  af8f8c33ea885f472682f98e0699721f50b1f020 - change applied in
+  qwaylandinputcontext.cpp instead.
+---
+ src/client/qwaylandinputcontext.cpp | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/src/client/qwaylandinputcontext.cpp b/src/client/qwaylandinputcontext.cpp
+index 47696a6a..9435e961 100644
+--- a/src/client/qwaylandinputcontext.cpp
++++ b/src/client/qwaylandinputcontext.cpp
+@@ -93,9 +93,14 @@ void QWaylandTextInput::reset()
+ void QWaylandTextInput::commit()
+ {
+     if (QObject *o = QGuiApplication::focusObject()) {
+-        QInputMethodEvent event;
+-        event.setCommitString(m_preeditCommit);
+-        QCoreApplication::sendEvent(o, &event);
++        if (!m_preeditCommit.isEmpty()) {
++
++            QInputMethodEvent event;
++            event.setCommitString(m_preeditCommit);
++            m_preeditCommit = QString();
++
++            QCoreApplication::sendEvent(o, &event);
++        }
+     }
+ 
+     reset();
+-- 
+2.42.0
+

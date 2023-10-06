@@ -1,7 +1,7 @@
-From 20bef824f4b78598fbffa5ada8271e22b658f635 Mon Sep 17 00:00:00 2001
+From de7fbc797929fee6604ed404aefc6ed452beeda1 Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Mon, 12 Sep 2022 13:28:08 +0100
-Subject: [PATCH 38/51] Hold surface read lock throughout
+Subject: [PATCH 35/59] Hold surface read lock throughout
  QWaylandEglWindow::updateSurface
 
 QWaylandEGLWindow::updateSurface is called from both the main and render
@@ -50,7 +50,7 @@ index 2be87bc0..ea3d1995 100644
  };
  
 diff --git a/src/hardwareintegration/client/wayland-egl/qwaylandeglwindow.cpp b/src/hardwareintegration/client/wayland-egl/qwaylandeglwindow.cpp
-index 13dd747a..872a6237 100644
+index 64f7caeb..dbe2845a 100644
 --- a/src/hardwareintegration/client/wayland-egl/qwaylandeglwindow.cpp
 +++ b/src/hardwareintegration/client/wayland-egl/qwaylandeglwindow.cpp
 @@ -40,6 +40,7 @@
@@ -81,5 +81,5 @@ index 13dd747a..872a6237 100644
          }
  
 -- 
-2.41.0.rc2
+2.42.0
 
