@@ -1,7 +1,7 @@
-From a2808e43ff20ab164dfcc9a570da8c28bcfe8334 Mon Sep 17 00:00:00 2001
+From 1ba5387a84778d25bdb80edefaaab9bf8501e2cf Mon Sep 17 00:00:00 2001
 From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 Date: Tue, 27 Sep 2022 22:05:07 +0300
-Subject: [PATCH 41/59] Client: Handle zwp_primary_selection_device_manager_v1
+Subject: [PATCH 41/60] Client: Handle zwp_primary_selection_device_manager_v1
  global removal
 
 The zwp_primary_selection_device_manager_v1 global can be withdrawn if
@@ -46,7 +46,7 @@ index f23c459d..cc321497 100644
              break;
          }
 diff --git a/src/client/qwaylandprimaryselectionv1.cpp b/src/client/qwaylandprimaryselectionv1.cpp
-index 78b1de13..cf3b4b22 100644
+index 7805dd73..dac532b2 100644
 --- a/src/client/qwaylandprimaryselectionv1.cpp
 +++ b/src/client/qwaylandprimaryselectionv1.cpp
 @@ -54,11 +54,6 @@ QWaylandPrimarySelectionDeviceManagerV1::QWaylandPrimarySelectionDeviceManagerV1
@@ -62,5 +62,5 @@ index 78b1de13..cf3b4b22 100644
  
  QWaylandPrimarySelectionDeviceV1 *QWaylandPrimarySelectionDeviceManagerV1::createDevice(QWaylandInputDevice *seat)
 -- 
-2.42.0
+2.43.0
 

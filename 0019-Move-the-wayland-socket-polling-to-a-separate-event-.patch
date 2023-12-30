@@ -1,7 +1,7 @@
-From 1fe2895d2e3ccae0ae0abb2760e1714ac296c3ea Mon Sep 17 00:00:00 2001
+From 4edf024d48b3364208b72225b856ae0e6350b615 Mon Sep 17 00:00:00 2001
 From: Adrien Faveraux <af@brain-networks.fr>
 Date: Fri, 26 Nov 2021 09:18:58 +0100
-Subject: [PATCH 19/59] Move the wayland socket polling to a separate event
+Subject: [PATCH 19/60] Move the wayland socket polling to a separate event
  thread
 
 New event threads is introduced which calls poll() on the wayland fd,
@@ -460,7 +460,7 @@ index 661cea53..fbf00c6b 100644
      // Call after eventDispatcher is fully connected, for QWaylandDisplay::forceRoundTrip()
      mDisplay->initialize();
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index 83a394c4..3d9741d2 100644
+index 41e56d24..a38f7d55 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -76,7 +76,6 @@ QWaylandWindow *QWaylandWindow::mMouseGrab = nullptr;
@@ -508,7 +508,7 @@ index 83a394c4..3d9741d2 100644
  
      if (mWaitingForFrameCallback) {
          qCDebug(lcWaylandBackingstore) << "Didn't receive frame callback in time, window should now be inexposed";
-@@ -1183,8 +1186,11 @@ void QWaylandWindow::requestUpdate()
+@@ -1186,8 +1189,11 @@ void QWaylandWindow::requestUpdate()
      Q_ASSERT(hasPendingUpdateRequest()); // should be set by QPA
  
      // If we have a frame callback all is good and will be taken care of there
@@ -522,7 +522,7 @@ index 83a394c4..3d9741d2 100644
  
      // If we've already called deliverUpdateRequest(), but haven't seen any attach+commit/swap yet
      // This is a somewhat redundant behavior and might indicate a bug in the calling code, so log
-@@ -1197,7 +1203,12 @@ void QWaylandWindow::requestUpdate()
+@@ -1200,7 +1206,12 @@ void QWaylandWindow::requestUpdate()
      // so use invokeMethod to delay the delivery a bit.
      QMetaObject::invokeMethod(this, [this] {
          // Things might have changed in the meantime
@@ -536,7 +536,7 @@ index 83a394c4..3d9741d2 100644
              deliverUpdateRequest();
      }, Qt::QueuedConnection);
  }
-@@ -1217,9 +1228,10 @@ void QWaylandWindow::handleUpdate()
+@@ -1220,9 +1231,10 @@ void QWaylandWindow::handleUpdate()
      if (!mSurface)
          return;
  
@@ -549,7 +549,7 @@ index 83a394c4..3d9741d2 100644
      mFrameCallback = wl_surface_frame(wrappedSurface);
      wl_proxy_wrapper_destroy(wrappedSurface);
      wl_callback_add_listener(mFrameCallback, &QWaylandWindow::callbackListener, this);
-@@ -1229,6 +1241,8 @@ void QWaylandWindow::handleUpdate()
+@@ -1232,6 +1244,8 @@ void QWaylandWindow::handleUpdate()
      // Start a timer for handling the case when the compositor stops sending frame callbacks.
      if (mFrameCallbackTimeout > 0) {
          QMetaObject::invokeMethod(this, [this] {
@@ -572,5 +572,5 @@ index fb3ed606..54ac67a9 100644
  
      // True when we have called deliverRequestUpdate, but the client has not yet attached a new buffer
 -- 
-2.42.0
+2.43.0
 

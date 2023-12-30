@@ -1,7 +1,7 @@
-From b308ffb47e635b407a1387ec369e5b3af8554122 Mon Sep 17 00:00:00 2001
+From 105aaac22d4a589dd17efa3b1f09e253443f773b Mon Sep 17 00:00:00 2001
 From: Weng Xuetian <wengxt@gmail.com>
 Date: Wed, 20 Jul 2022 15:57:40 -0700
-Subject: [PATCH 28/59] Only close popup in the the hierchary
+Subject: [PATCH 28/60] Only close popup in the the hierchary
 
 Imagine following event sequences:
 1. a tooltip is shown. activePopups = {tooltip}
@@ -31,7 +31,7 @@ Reviewed-by: David Edmundson <davidedmundson@kde.org>
  9 files changed, 136 insertions(+), 30 deletions(-)
 
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index 77f82b37..096859e8 100644
+index 014e2d87..1e916ca1 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -239,6 +239,7 @@ bool QWaylandWindow::shouldCreateSubSurface() const
@@ -81,7 +81,7 @@ index 77f82b37..096859e8 100644
          reset();
      }
  }
-@@ -1301,6 +1284,20 @@ void QWaylandWindow::setOpaqueArea(const QRegion &opaqueArea)
+@@ -1304,6 +1287,20 @@ void QWaylandWindow::setOpaqueArea(const QRegion &opaqueArea)
      wl_region_destroy(region);
  }
  
@@ -397,5 +397,5 @@ index 73d1eb9c..747875b4 100644
  void tst_xdgshell::switchPopups()
  {
 -- 
-2.42.0
+2.43.0
 

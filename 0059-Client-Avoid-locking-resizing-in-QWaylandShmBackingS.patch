@@ -1,7 +1,7 @@
-From 4de268cbaf6ff3b633429577f06d3d746a3b202a Mon Sep 17 00:00:00 2001
+From 50c9a7e926b522dea083a346b20b8f198e1d91b7 Mon Sep 17 00:00:00 2001
 From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 Date: Wed, 30 Aug 2023 09:49:41 +0300
-Subject: [PATCH 59/59] Client: Avoid locking resizing in
+Subject: [PATCH 59/60] Client: Avoid locking resizing in
  QWaylandShmBackingStore
 
 QWaylandWindow::setCanResize(false) will block applying configure
@@ -65,5 +65,5 @@ index 90e37e95..145f933b 100644
  
  void QWaylandShmBackingStore::ensureSize()
 -- 
-2.42.0
+2.43.0
 

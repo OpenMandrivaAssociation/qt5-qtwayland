@@ -1,7 +1,7 @@
-From 53e02e2ccf64ce1459fd46a71c88d069d8d5e478 Mon Sep 17 00:00:00 2001
+From f73a8cfbc481bc47e89e37b3e75f421da655a2f3 Mon Sep 17 00:00:00 2001
 From: Jungi Byun <jungi.byun@lge.com>
 Date: Wed, 27 Jan 2021 08:24:23 +0900
-Subject: [PATCH 52/59] Replace scale with devicePixelRatio for non-integer
+Subject: [PATCH 52/60] Replace scale with devicePixelRatio for non-integer
  scaling
 
 The 'scale' event from wayland cannot support non-integer scaling
@@ -84,7 +84,7 @@ index e01632da..f3fae438 100644
      QSize size() const override { return mImage.size(); }
      int scale() const override { return int(mImage.devicePixelRatio()); }
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index 9bf5b150..92eeba53 100644
+index 5280a9f7..38b10269 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -185,7 +185,7 @@ void QWaylandWindow::initWindow()
@@ -120,7 +120,7 @@ index 9bf5b150..92eeba53 100644
      } else {
          for (const QRect &rect: damage)
              mSurface->damage(rect.x(), rect.y(), rect.width(), rect.height());
-@@ -1103,14 +1103,14 @@ bool QWaylandWindow::isActive() const
+@@ -1106,14 +1106,14 @@ bool QWaylandWindow::isActive() const
      return mDisplay->isWindowActivated(this);
  }
  
@@ -165,5 +165,5 @@ index c1f45fa6..bbc63444 100644
  
          //Draw Decoration
 -- 
-2.42.0
+2.43.0
 

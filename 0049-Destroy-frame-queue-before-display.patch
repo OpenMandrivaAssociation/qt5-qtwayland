@@ -1,7 +1,7 @@
-From c64fb8989dcde2a00381d8ff75e7cf63dfc94b90 Mon Sep 17 00:00:00 2001
+From ab3a4d8f09154bd436c84a3727e5965e48fec65b Mon Sep 17 00:00:00 2001
 From: David Redondo <qt@david-redondo.de>
 Date: Tue, 11 Apr 2023 14:27:27 +0200
-Subject: [PATCH 49/59] Destroy frame queue before display
+Subject: [PATCH 49/60] Destroy frame queue before display
 
 wl_event_queue_destroy accesses the display.
 Found by running a test under valgrind.
@@ -34,5 +34,5 @@ index cc321497..737b539d 100644
  
  // Steps which is called just after constructor. This separates registry_global() out of the constructor
 -- 
-2.42.0
+2.43.0
 

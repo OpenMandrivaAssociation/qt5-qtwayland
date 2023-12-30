@@ -1,7 +1,7 @@
-From 6c1ce5358f5c2bc06d796300c221f5b78628269b Mon Sep 17 00:00:00 2001
+From dc7cdf538aa46b74ea27e1b2b4c1b5a24a5fd31b Mon Sep 17 00:00:00 2001
 From: Paul Olav Tvete <paul.tvete@qt.io>
 Date: Tue, 15 Mar 2022 16:53:04 +0100
-Subject: [PATCH 25/59] Fix race condition on mWaitingForUpdateDelivery
+Subject: [PATCH 25/60] Fix race condition on mWaitingForUpdateDelivery
 
 Change-Id: I0e91bda73722468b9339fc434fe04420b5e7d3da
 Reviewed-by: David Edmundson <davidedmundson@kde.org>
@@ -11,7 +11,7 @@ Reviewed-by: David Edmundson <davidedmundson@kde.org>
  2 files changed, 3 insertions(+), 6 deletions(-)
 
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index ff3690be..77f82b37 100644
+index 3d1be31c..014e2d87 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -652,24 +652,21 @@ void QWaylandWindow::handleFrameCallback()
@@ -55,5 +55,5 @@ index 54ac67a9..c0a76345 100644
      QElapsedTimer mFrameCallbackElapsedTimer;
      struct ::wl_callback *mFrameCallback = nullptr;
 -- 
-2.42.0
+2.43.0
 

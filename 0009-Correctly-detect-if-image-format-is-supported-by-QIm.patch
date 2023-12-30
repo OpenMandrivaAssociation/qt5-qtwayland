@@ -1,7 +1,7 @@
-From d9d5f69f5619dbaa40ca9b97981721467424947b Mon Sep 17 00:00:00 2001
+From 7e9cf789bd95ea62b89796cbc0b81a42986eae71 Mon Sep 17 00:00:00 2001
 From: Jan Blackquill <uhhadd@gmail.com>
 Date: Tue, 24 Aug 2021 14:36:34 -0400
-Subject: [PATCH 09/59] Correctly detect if image format is supported by
+Subject: [PATCH 09/60] Correctly detect if image format is supported by
  QImageWriter
 
 The code queries potential image formats by stripping a mimetype of its
@@ -64,5 +64,5 @@ index c5266ab3..e2fe1928 100644
                      fmt = imgFmt;
              }
 -- 
-2.42.0
+2.43.0
 

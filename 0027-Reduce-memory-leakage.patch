@@ -1,7 +1,7 @@
-From a6fefb960c7f78db7985c4ac159aabe194ac57cd Mon Sep 17 00:00:00 2001
+From 74d63ccb5ebc85ef4211c193fa5806ccbf925475 Mon Sep 17 00:00:00 2001
 From: Ulf Hermann <ulf.hermann@qt.io>
 Date: Tue, 22 Feb 2022 12:31:08 +0100
-Subject: [PATCH 27/59] Reduce memory leakage
+Subject: [PATCH 27/60] Reduce memory leakage
 
 We need to clean up the event queue when we're done.
 
@@ -27,5 +27,5 @@ index b8da02b3..4a331a4c 100644
  
  // Steps which is called just after constructor. This separates registry_global() out of the constructor
 -- 
-2.42.0
+2.43.0
 

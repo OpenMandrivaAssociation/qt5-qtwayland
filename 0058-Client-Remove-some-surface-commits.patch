@@ -1,7 +1,7 @@
-From 035f5d4526d155b45f7d3efddc6505f9e186ae06 Mon Sep 17 00:00:00 2001
+From f43a54f97face1dec875146282c89124b73e1633 Mon Sep 17 00:00:00 2001
 From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 Date: Fri, 25 Aug 2023 10:15:29 +0300
-Subject: [PATCH 58/59] Client: Remove some surface commits
+Subject: [PATCH 58/60] Client: Remove some surface commits
 
 The buffer transform, input and opaque regions are double buffered
 state. They will be applied on the next surface commit.
@@ -22,7 +22,7 @@ Reviewed-by: David Edmundson <davidedmundson@kde.org>
  2 files changed, 7 deletions(-)
 
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index cf2a03fe..d3958d46 100644
+index 5eee0414..7a9bccc1 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -478,8 +478,6 @@ void QWaylandWindow::setMask(const QRegion &mask)
@@ -58,5 +58,5 @@ index 2cc36510..535c3398 100644
  
  void QWaylandXdgSurface::setWindowGeometry(const QRect &rect)
 -- 
-2.42.0
+2.43.0
 

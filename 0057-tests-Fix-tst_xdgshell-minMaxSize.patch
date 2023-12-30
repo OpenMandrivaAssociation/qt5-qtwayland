@@ -1,7 +1,7 @@
-From 0091a19ae0d73ec6390d86823fd6a8c4fc9f7f3b Mon Sep 17 00:00:00 2001
+From 88f0f5e82fdfe25012bb485e57c342b763cabed3 Mon Sep 17 00:00:00 2001
 From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 Date: Fri, 15 Sep 2023 10:06:32 +0300
-Subject: [PATCH 57/59] tests: Fix tst_xdgshell::minMaxSize()
+Subject: [PATCH 57/60] tests: Fix tst_xdgshell::minMaxSize()
 
 Amends e8cff6fb39c0fd01548bce18542820a6612dbe49.
 
@@ -31,5 +31,5 @@ index 747875b4..afbeef53 100644
  }
  
 -- 
-2.42.0
+2.43.0
 

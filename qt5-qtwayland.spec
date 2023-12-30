@@ -14,7 +14,7 @@
 
 Summary:	Qt5 - Wayland platform support and QtCompositor module
 Name:		qt5-qtwayland
-Version:	5.15.11
+Version:	5.15.12
 %if "%{beta}" != ""
 Release:	0.%{beta}.1
 %define qttarballdir qtwayland-everywhere-src-%{version}-%{beta}
@@ -30,65 +30,7 @@ URL:		http://www.qt.io
 Patch0:		qtwayland-5.14-GL-headers.patch
 
 # From KDE https://invent.kde.org/qt/qt/qtwayland -b kde/5.15
-Patch1001:	0001-Client-Announce-an-output-after-receiving-more-compl.patch
-Patch1002:	0002-Fix-issue-with-repeated-window-size-changes.patch
-Patch1003:	0003-Client-Connect-drags-being-accepted-to-updating-the-.patch
-Patch1004:	0004-Client-Disconnect-registry-listener-on-destruction.patch
-Patch1005:	0005-Client-Set-XdgShell-size-hints-before-the-first-comm.patch
-Patch1006:	0006-Fix-build.patch
-Patch1007:	0007-Fix-remove-listener.patch
-Patch1008:	0008-Hook-up-queryKeyboardModifers.patch
-Patch1009:	0009-Correctly-detect-if-image-format-is-supported-by-QIm.patch
-Patch1010:	0010-Client-Don-t-always-recreate-frame-callbacks.patch
-Patch1011:	0011-Client-Always-destroy-frame-callback-in-the-actual-c.patch
-Patch1012:	0012-Wayland-client-use-wl_keyboard-to-determine-active-s.patch
-Patch1013:	0013-Client-do-not-empty-clipboard-when-a-new-popup-windo.patch
-Patch1014:	0014-Client-Implement-DataDeviceV3.patch
-Patch1015:	0015-Client-Delay-deletion-of-QDrag-object-until-after-we.patch
-Patch1016:	0016-Client-Avoid-processing-of-events-when-showing-windo.patch
-Patch1017:	0017-Handle-registry_global-out-of-constructor.patch
-Patch1018:	0018-Connect-flushRequest-after-forceRoundTrip.patch
-Patch1019:	0019-Move-the-wayland-socket-polling-to-a-separate-event-.patch
-Patch1020:	0020-Client-Remove-mWaitingForUpdateDelivery.patch
-Patch1021:	0021-client-Simplify-round-trip-behavior.patch
-Patch1022:	0022-Client-Fix-opaque-region-setter.patch
-Patch1023:	0023-Use-proper-dependencies-in-compile-tests.patch
-Patch1024:	0024-Revert-Client-Remove-mWaitingForUpdateDelivery.patch
-Patch1025:	0025-Fix-race-condition-on-mWaitingForUpdateDelivery.patch
-Patch1026:	0026-use-poll-2-when-reading-from-clipboard.patch
-Patch1027:	0027-Reduce-memory-leakage.patch
-Patch1028:	0028-Only-close-popup-in-the-the-hierchary.patch
-Patch1029:	0029-Check-pointer-for-null-before-use-in-ASSERT.patch
-Patch1030:	0030-Use-wl_surface.damage_buffer-on-the-client-side.patch
-Patch1031:	0031-Client-clear-focus-on-touch-cancel.patch
-Patch1032:	0032-Guard-mResizeDirty-by-the-correctMutex.patch
-Patch1033:	0033-Fix-compile-tests.patch
-Patch1034:	0034-Call-finishDrag-in-QWaylandDataDevice-dragSourceCanc.patch
-Patch1035:	0035-Hold-surface-read-lock-throughout-QWaylandEglWindow-.patch
-Patch1036:	0036-Keep-toplevel-windows-in-the-top-left-corner-of-the-.patch
-Patch1037:	0037-Client-Add-F_SEAL_SHRINK-seal-to-shm-backing-file.patch
-Patch1038:	0038-Client-Call-wl_output_release-upon-QWaylandScreen-de.patch
-Patch1039:	0039-Client-Bump-wl_output-version.patch
-Patch1040:	0040-Fix-frame-sync-related-to-unprotected-multithread-ac.patch
-Patch1041:	0041-Client-Handle-zwp_primary_selection_device_manager_v.patch
-Patch1042:	0042-Fixes-the-build-on-CentOS.patch
-Patch1043:	0043-client-Avoid-protocol-error-with-invalid-min-max-siz.patch
-Patch1044:	0044-Client-Fix-handling-of-Qt-BlankCursor.patch
-Patch1045:	0045-client-Force-a-roundtrip-when-an-XdgOutput-is-not-re.patch
-Patch1046:	0046-Client-Manage-QMimeData-lifecycle.patch
-Patch1047:	0047-client-Do-not-cast-placeholder-screens-to-QWaylandSc.patch
-Patch1048:	0048-Client-Remove-flip-popup-constraints.patch
-Patch1049:	0049-Destroy-frame-queue-before-display.patch
-Patch1050:	0050-client-Fix-crash-on-dnd-updates-after-client-facing-.patch
-Patch1051:	0051-Convert-cursor-bitmap-to-supported-format.patch
-Patch1052:	0052-Replace-scale-with-devicePixelRatio-for-non-integer-.patch
-Patch1053:	0053-Client-Fix-buffer-damage.patch
-Patch1054:	0054-client-Fix-infinite-recursion-with-text-input-v2.patch
-Patch1055:	0055-Client-Fix-the-mouse-being-stuck-in-pressed-state-af.patch
-Patch1056:	0056-Client-Commit-the-initial-surface-state-explicitly.patch
-Patch1057:	0057-tests-Fix-tst_xdgshell-minMaxSize.patch
-Patch1058:	0058-Client-Remove-some-surface-commits.patch
-Patch1059:	0059-Client-Avoid-locking-resizing-in-QWaylandShmBackingS.patch
+%(P=1001; cd %{_sourcedir}; for i in [0-9][0-9][0-9][0-9]-*.patch; do echo -e "Patch$P:\t$i"; P=$((P+1)); done)
 
 BuildRequires:	qmake5 >= %{version}
 BuildRequires:	pkgconfig(Qt5Quick) >= %{version}

@@ -1,7 +1,7 @@
-From 2dabdd8227088d01a6d375e25226b1805769021d Mon Sep 17 00:00:00 2001
+From ce2b76af4bc04e033519458afc6f24dfbcf0c9aa Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Wed, 7 Jun 2023 22:12:15 +0100
-Subject: [PATCH 50/59] client: Fix crash on dnd updates after client facing
+Subject: [PATCH 50/60] client: Fix crash on dnd updates after client facing
  drag ends
 
 A platform drag and a application-facing drag have two different
@@ -38,5 +38,5 @@ index 9b3c18ac..9c3308d5 100644
              if (wl_data_source_get_version(m_dragSource->object()) < 3) {
                  drag->setResponse(accepted);
 -- 
-2.42.0
+2.43.0
 

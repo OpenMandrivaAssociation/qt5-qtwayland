@@ -1,7 +1,7 @@
-From 74b040b6ab20bdad4e251db621e397e0dbbc8efc Mon Sep 17 00:00:00 2001
+From db37b16a573ac6dabbbbf6d0a873dc56fe458763 Mon Sep 17 00:00:00 2001
 From: Fabian Vogt <fabian@ritter-vogt.de>
 Date: Fri, 4 Feb 2022 11:07:36 +0100
-Subject: [PATCH 23/59] Use proper dependencies in compile tests
+Subject: [PATCH 23/60] Use proper dependencies in compile tests
 
 Use the dependencies as found by the "libraries" section instead of relying
 on them being available in the default location (e.g. "-ldrm").
@@ -122,5 +122,5 @@ index bcfd5215..da95d07b 100644
      },
  
 -- 
-2.42.0
+2.43.0
 

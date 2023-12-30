@@ -1,7 +1,7 @@
-From 4b4bfbb61b7f232061e0b8e0d4be6487596a3521 Mon Sep 17 00:00:00 2001
+From ceaf5e699d2b59fdb906211b1d39145cf61b8a3f Mon Sep 17 00:00:00 2001
 From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 Date: Tue, 22 Nov 2022 23:27:34 +0200
-Subject: [PATCH 44/59] Client: Fix handling of Qt::BlankCursor
+Subject: [PATCH 44/60] Client: Fix handling of Qt::BlankCursor
 
 The cursor may not be properly set when a window has Qt::BlankCursor and
 it's shown. In that case, the cursor surface may not be present and
@@ -20,7 +20,7 @@ Reviewed-by: Qt CI Bot <qt_ci_bot@qt-project.org>
  1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/src/client/qwaylandinputdevice.cpp b/src/client/qwaylandinputdevice.cpp
-index 4d58e9ab..132c5345 100644
+index 5e0fe1dc..77349c81 100644
 --- a/src/client/qwaylandinputdevice.cpp
 +++ b/src/client/qwaylandinputdevice.cpp
 @@ -310,8 +310,7 @@ void QWaylandInputDevice::Pointer::updateCursor()
@@ -34,5 +34,5 @@ index 4d58e9ab..132c5345 100644
      }
  
 -- 
-2.42.0
+2.43.0
 

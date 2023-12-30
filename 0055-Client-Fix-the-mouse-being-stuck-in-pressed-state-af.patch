@@ -1,7 +1,7 @@
-From b792de4b59ab80e14c21a953f4e026f6f342b609 Mon Sep 17 00:00:00 2001
+From 4031936df1427ec2067886b7fc8a7e311f3382fe Mon Sep 17 00:00:00 2001
 From: Ilya Fedin <fedin-ilja2010@ya.ru>
 Date: Sun, 19 Mar 2023 10:20:11 +0400
-Subject: [PATCH 55/59] Client: Fix the mouse being stuck in pressed state
+Subject: [PATCH 55/60] Client: Fix the mouse being stuck in pressed state
  after DnD
 
 I can still reproduce the problem using QtWidgets applications
@@ -21,7 +21,7 @@ Reviewed-by: David Edmundson <davidedmundson@kde.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/client/qwaylandinputdevice.cpp b/src/client/qwaylandinputdevice.cpp
-index 132c5345..34c185a3 100644
+index 77349c81..ab978d3f 100644
 --- a/src/client/qwaylandinputdevice.cpp
 +++ b/src/client/qwaylandinputdevice.cpp
 @@ -845,7 +845,7 @@ void QWaylandInputDevice::Pointer::releaseButtons()
@@ -34,5 +34,5 @@ index 132c5345..34c185a3 100644
      }
  }
 -- 
-2.42.0
+2.43.0
 

@@ -1,7 +1,7 @@
-From b42a0b7a97545859cc1a83556491f90a3d408790 Mon Sep 17 00:00:00 2001
+From bfe63a1c28634403d867c4f8860501d9aaa34d87 Mon Sep 17 00:00:00 2001
 From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 Date: Thu, 3 Aug 2023 12:28:44 +0300
-Subject: [PATCH 53/59] Client: Fix buffer damage
+Subject: [PATCH 53/60] Client: Fix buffer damage
 
 If the specified damage rectangle has fractional coordinates in the buffer
 local coordinate space, the buffer damage needs to be expanded, i.e.
@@ -28,7 +28,7 @@ Reviewed-by: David Edmundson <davidedmundson@kde.org>
  1 file changed, 15 insertions(+), 5 deletions(-)
 
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index 92eeba53..e2e513af 100644
+index 38b10269..5d01507d 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -573,10 +573,15 @@ void QWaylandWindow::damage(const QRect &rect)
@@ -67,5 +67,5 @@ index 92eeba53..e2e513af 100644
          for (const QRect &rect: damage)
              mSurface->damage(rect.x(), rect.y(), rect.width(), rect.height());
 -- 
-2.42.0
+2.43.0
 

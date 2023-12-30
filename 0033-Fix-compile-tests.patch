@@ -1,7 +1,7 @@
-From 1c9db5444951c613ad4866b282ddeb6de5820e7d Mon Sep 17 00:00:00 2001
+From 203893924c1402ae4702661d435f0898894febff Mon Sep 17 00:00:00 2001
 From: Albert Astals Cid <aacid@kde.org>
 Date: Fri, 9 Sep 2022 15:37:49 +0200
-Subject: [PATCH 33/59] Fix compile tests
+Subject: [PATCH 33/60] Fix compile tests
 
 Broken in c618467da4c06528537026e2b78f92265bce446f
 ---
@@ -25,5 +25,5 @@ index b063e0d9..2ea382f1 100644
      {
          auto e = window.m_events.takeFirst();
 -- 
-2.42.0
+2.43.0
 
