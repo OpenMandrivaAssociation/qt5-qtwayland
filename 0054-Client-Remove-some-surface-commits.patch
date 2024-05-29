@@ -1,7 +1,7 @@
-From f43a54f97face1dec875146282c89124b73e1633 Mon Sep 17 00:00:00 2001
+From a313c253fd8a29837d22983627189c1a68901859 Mon Sep 17 00:00:00 2001
 From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 Date: Fri, 25 Aug 2023 10:15:29 +0300
-Subject: [PATCH 58/60] Client: Remove some surface commits
+Subject: [PATCH 54/57] Client: Remove some surface commits
 
 The buffer transform, input and opaque regions are double buffered
 state. They will be applied on the next surface commit.
@@ -58,5 +58,5 @@ index 2cc36510..535c3398 100644
  
  void QWaylandXdgSurface::setWindowGeometry(const QRect &rect)
 -- 
-2.43.0
+2.45.1
 

@@ -1,7 +1,7 @@
-From c84d171fa84065fb3b4b6b3d33e7707676d87e47 Mon Sep 17 00:00:00 2001
+From 50592b09ef8536989cbb00c21a2f055a00599dc0 Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Wed, 17 May 2023 09:06:03 +0300
-Subject: [PATCH 60/60] Client: Always populate mimedata in drags
+Subject: [PATCH 56/57] Client: Always populate mimedata in drags
 
 It's possible for clients to perform a drag and drop operation within
 their own client without any mimeData. A user can directly access the
@@ -48,5 +48,5 @@ index 9c3308d5..07b18ab0 100644
  
      if (wl_data_device_get_version(object()) >= 3)
 -- 
-2.43.0
+2.45.1
 

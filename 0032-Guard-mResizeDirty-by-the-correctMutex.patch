@@ -1,7 +1,7 @@
-From 0fdf006c21adb77228807819e72589a4339d0c97 Mon Sep 17 00:00:00 2001
+From 6bbd411d6064e620541b7a5a449ae54f9286f8d3 Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Thu, 3 Feb 2022 19:42:33 +0000
-Subject: [PATCH 32/60] Guard mResizeDirty by the correctMutex
+Subject: [PATCH 32/57] Guard mResizeDirty by the correctMutex
 
 mResizeDirty is used in the GUI thread in setCanResize which can be
 called from the GUI thread. It is queried and set whilst the resizeLock
@@ -35,5 +35,5 @@ index 60665394..e5d1a97d 100644
      }
      QRect exposeGeometry(QPoint(), geometry().size());
 -- 
-2.43.0
+2.45.1
 

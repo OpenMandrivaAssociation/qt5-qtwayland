@@ -1,7 +1,7 @@
-From f94619c834d638200555e16cfcb659254b6f621e Mon Sep 17 00:00:00 2001
+From bb566348a4e8e26ee50a8632d8aef4329b792bb6 Mon Sep 17 00:00:00 2001
 From: Georges Basile Stavracas Neto <gbsneto@gnome.org>
 Date: Thu, 27 May 2021 20:02:53 -0300
-Subject: [PATCH 11/60] Client: Always destroy frame callback in the actual
+Subject: [PATCH 11/57] Client: Always destroy frame callback in the actual
  callback
 
 It's good hygiene to destroy all frame callbacks. Destroy the
@@ -54,5 +54,5 @@ index 9de284de..e0093013 100644
      struct ::wl_surface *wrappedSurface = reinterpret_cast<struct ::wl_surface *>(wl_proxy_create_wrapper(mSurface->object()));
      wl_proxy_set_queue(reinterpret_cast<wl_proxy *>(wrappedSurface), mFrameQueue.queue);
 -- 
-2.43.0
+2.45.1
 

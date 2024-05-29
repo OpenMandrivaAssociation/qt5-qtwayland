@@ -1,7 +1,7 @@
-From 040674d4b9d66fbe735559270727ddbc38ae3d03 Mon Sep 17 00:00:00 2001
+From d843a29d5b99578d1bea1a6590218563b8b8c70e Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Mon, 12 Sep 2022 13:28:08 +0100
-Subject: [PATCH 35/60] Hold surface read lock throughout
+Subject: [PATCH 35/57] Hold surface read lock throughout
  QWaylandEglWindow::updateSurface
 
 QWaylandEGLWindow::updateSurface is called from both the main and render
@@ -81,5 +81,5 @@ index 64f7caeb..dbe2845a 100644
          }
  
 -- 
-2.43.0
+2.45.1
 

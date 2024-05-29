@@ -1,7 +1,7 @@
-From db37b16a573ac6dabbbbf6d0a873dc56fe458763 Mon Sep 17 00:00:00 2001
+From 924ae083285f4e6c4b9c29be635e4d4d901cb73a Mon Sep 17 00:00:00 2001
 From: Fabian Vogt <fabian@ritter-vogt.de>
 Date: Fri, 4 Feb 2022 11:07:36 +0100
-Subject: [PATCH 23/60] Use proper dependencies in compile tests
+Subject: [PATCH 23/57] Use proper dependencies in compile tests
 
 Use the dependencies as found by the "libraries" section instead of relying
 on them being available in the default location (e.g. "-ldrm").
@@ -18,25 +18,15 @@ different patch and not a cherry-pick of 5fc2e1915c3a
 
 Fixes: QTBUG-100475
 ---
- src/client/configure.json     |  8 ++++----
- src/compositor/configure.json | 34 +++++++++++++++++++++++++++++-----
- 2 files changed, 33 insertions(+), 9 deletions(-)
+ src/client/configure.json     |  5 +++--
+ src/compositor/configure.json | 28 +++++++++++++++++++++++++++-
+ 2 files changed, 30 insertions(+), 3 deletions(-)
 
 diff --git a/src/client/configure.json b/src/client/configure.json
-index 2f424580..29222357 100644
+index 73f23362..6247f85e 100644
 --- a/src/client/configure.json
 +++ b/src/client/configure.json
-@@ -149,8 +149,7 @@
-                     "#endif"
-                 ]
-             },
--            "libs": "-ldrm",
--            "use": "egl"
-+            "use": "drm egl"
-         },
-         "vulkan-server-buffer": {
-             "label": "Vulkan Buffer Sharing",
-@@ -168,7 +167,8 @@
+@@ -167,7 +167,8 @@
                      "exportAllocInfo.handleTypes = VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT_KHR;",
                      "return 0;"
                  ]
@@ -46,7 +36,7 @@ index 2f424580..29222357 100644
          },
          "egl_1_5-wayland": {
              "label": "EGL 1.5 with Wayland Platform",
-@@ -183,7 +183,7 @@
+@@ -182,7 +183,7 @@
                      "eglGetPlatformDisplay(EGL_PLATFORM_WAYLAND_EXT, (struct wl_display *)(nullptr), nullptr);"
                  ]
              },
@@ -56,7 +46,7 @@ index 2f424580..29222357 100644
      },
  
 diff --git a/src/compositor/configure.json b/src/compositor/configure.json
-index bcfd5215..da95d07b 100644
+index c5b0f03e..031e4cc3 100644
 --- a/src/compositor/configure.json
 +++ b/src/compositor/configure.json
 @@ -7,6 +7,31 @@
@@ -91,27 +81,7 @@ index bcfd5215..da95d07b 100644
          "wayland-server": {
              "label": "wayland-server",
              "headers": "wayland-version.h",
-@@ -151,8 +176,7 @@
-                     "#endif"
-                 ]
-             },
--            "libs": "-ldrm",
--            "use": "egl"
-+            "use": "drm egl"
-         },
-         "dmabuf-client-buffer": {
-             "label": "Linux Client dma-buf Buffer Sharing",
-@@ -176,8 +200,7 @@
-                     "return 0;"
-                 ]
-             },
--            "libs": "-ldrm",
--            "use": "egl"
-+            "use": "drm egl"
-         },
-         "vulkan-server-buffer": {
-             "label": "Vulkan Buffer Sharing",
-@@ -195,7 +218,8 @@
+@@ -193,7 +218,8 @@
                      "exportAllocInfo.handleTypes = VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT_KHR;",
                      "return 0;"
                  ]
@@ -122,5 +92,5 @@ index bcfd5215..da95d07b 100644
      },
  
 -- 
-2.43.0
+2.45.1
 

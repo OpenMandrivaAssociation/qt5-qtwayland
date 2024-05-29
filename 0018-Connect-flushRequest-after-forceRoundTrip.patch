@@ -1,7 +1,7 @@
-From c0d644c436f3b181ade2c3db0035069df15aad79 Mon Sep 17 00:00:00 2001
+From 60cf8e8845bed6bb23e71ed0a27583ede6099bf8 Mon Sep 17 00:00:00 2001
 From: Elvis Lee <kwangwoong.lee@lge.com>
 Date: Wed, 17 Mar 2021 16:31:10 +0900
-Subject: [PATCH 18/60] Connect flushRequest after forceRoundTrip
+Subject: [PATCH 18/57] Connect flushRequest after forceRoundTrip
 
 If flushRequest is connected with aboutToBlock, the flushRequest
 may consumes all events so that processEvents might be blocked in forceRoundTrip.
@@ -43,5 +43,5 @@ index 8afecb31..661cea53 100644
      mDisplay->ensureScreen();
  }
 -- 
-2.43.0
+2.45.1
 

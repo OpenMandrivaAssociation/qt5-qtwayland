@@ -1,7 +1,7 @@
-From bd137d850cd1ffe22664a649fd911b9f4fac86c8 Mon Sep 17 00:00:00 2001
+From 7024b57e6b25ea4c666eb665f64cf2cebd2b4905 Mon Sep 17 00:00:00 2001
 From: Arjen Hiemstra <ahiemstra@heimr.nl>
 Date: Thu, 18 Nov 2021 13:05:30 +0100
-Subject: [PATCH 15/60] Client: Delay deletion of QDrag object until after
+Subject: [PATCH 15/57] Client: Delay deletion of QDrag object until after
  we're done with it
 
 In certain cases, most notably when performing drag and drop operations
@@ -63,5 +63,5 @@ index 747f0190..46f629ac 100644
  private:
      QWaylandDisplay *m_display = nullptr;
 -- 
-2.43.0
+2.45.1
 

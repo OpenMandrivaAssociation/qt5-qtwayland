@@ -1,7 +1,7 @@
-From a90ba98c6bd7882c1781ee4fbe0b2729267a4cc0 Mon Sep 17 00:00:00 2001
+From b767f236aab5fea0f732df50deec54d3852eabdc Mon Sep 17 00:00:00 2001
 From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 Date: Thu, 17 Nov 2022 15:25:37 +0200
-Subject: [PATCH 37/60] Client: Add F_SEAL_SHRINK seal to shm backing file
+Subject: [PATCH 37/57] Client: Add F_SEAL_SHRINK seal to shm backing file
 
 This lets libwayland-server avoid installing a SIGBUS handler when it
 wants to mmap() the backing file and access the contents of shared
@@ -49,5 +49,5 @@ index dc7ff670..98acd42d 100644
  
      QScopedPointer<QFile> filePointer;
 -- 
-2.43.0
+2.45.1
 

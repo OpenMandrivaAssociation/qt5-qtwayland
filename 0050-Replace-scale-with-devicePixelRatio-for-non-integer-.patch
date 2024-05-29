@@ -1,7 +1,7 @@
-From f73a8cfbc481bc47e89e37b3e75f421da655a2f3 Mon Sep 17 00:00:00 2001
+From 9ac7adba8880a50ca5a77a6003de75ea1176bcfb Mon Sep 17 00:00:00 2001
 From: Jungi Byun <jungi.byun@lge.com>
 Date: Wed, 27 Jan 2021 08:24:23 +0900
-Subject: [PATCH 52/60] Replace scale with devicePixelRatio for non-integer
+Subject: [PATCH 50/57] Replace scale with devicePixelRatio for non-integer
  scaling
 
 The 'scale' event from wayland cannot support non-integer scaling
@@ -165,5 +165,5 @@ index c1f45fa6..bbc63444 100644
  
          //Draw Decoration
 -- 
-2.43.0
+2.45.1
 

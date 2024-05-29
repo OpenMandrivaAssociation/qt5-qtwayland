@@ -1,7 +1,7 @@
-From 610c2f8cecaf57bc1b72352ed49d1c8196c552a6 Mon Sep 17 00:00:00 2001
+From ab57fd5148378d6493f237cc65ad20ff29ef3c86 Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Fri, 5 Aug 2022 15:00:31 +0100
-Subject: [PATCH 31/60] Client: clear focus on touch cancel
+Subject: [PATCH 31/57] Client: clear focus on touch cancel
 
 When we get a touch_cancel event all touches should be treated as
 lifted.
@@ -23,7 +23,7 @@ Reviewed-by: Eskil Abrahamsen Blomfeldt <eskil.abrahamsen-blomfeldt@qt.io>
  4 files changed, 39 insertions(+)
 
 diff --git a/src/client/qwaylandinputdevice.cpp b/src/client/qwaylandinputdevice.cpp
-index 55a5d40c..5e0fe1dc 100644
+index 95fa3787..b32dbd39 100644
 --- a/src/client/qwaylandinputdevice.cpp
 +++ b/src/client/qwaylandinputdevice.cpp
 @@ -1392,6 +1392,7 @@ void QWaylandInputDevice::Touch::touch_cancel()
@@ -112,5 +112,5 @@ index 296dbf47..210d8ddb 100644
      Seat *m_seat = nullptr;
  };
 -- 
-2.43.0
+2.45.1
 

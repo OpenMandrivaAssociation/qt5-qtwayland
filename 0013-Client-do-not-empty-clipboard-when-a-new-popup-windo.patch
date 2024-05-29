@@ -1,7 +1,7 @@
-From 96c0b2fa2b7f141eb0b74ccd2baaa2b420b05366 Mon Sep 17 00:00:00 2001
+From d0ec39839bd429aea3c679fadf565af92552034a Mon Sep 17 00:00:00 2001
 From: Jan Grulich <jgrulich@redhat.com>
 Date: Fri, 16 Jul 2021 13:00:03 +0200
-Subject: [PATCH 13/60] Client: do not empty clipboard when a new popup/window
+Subject: [PATCH 13/57] Client: do not empty clipboard when a new popup/window
  is opened
 
 If we open a new popup or a window within the same app we have to avoid
@@ -45,7 +45,7 @@ index d1ca0274..7560bf41 100644
  
  const wl_callback_listener QWaylandDisplay::syncCallbackListener = {
 diff --git a/src/client/qwaylandinputdevice.cpp b/src/client/qwaylandinputdevice.cpp
-index b0e9692b..55a5d40c 100644
+index 346c438c..95fa3787 100644
 --- a/src/client/qwaylandinputdevice.cpp
 +++ b/src/client/qwaylandinputdevice.cpp
 @@ -1304,14 +1304,6 @@ void QWaylandInputDevice::Keyboard::handleFocusDestroyed()
@@ -64,5 +64,5 @@ index b0e9692b..55a5d40c 100644
      mRepeatTimer.stop();
  }
 -- 
-2.43.0
+2.45.1
 

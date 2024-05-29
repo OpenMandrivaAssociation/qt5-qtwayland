@@ -1,7 +1,7 @@
-From a6f61b6700a471bad4fc985f9ee60f5eb057f279 Mon Sep 17 00:00:00 2001
+From 7e917dc1178ce65659944a8c18540bb3493ba987 Mon Sep 17 00:00:00 2001
 From: Marco Martin <notmart@gmail.com>
 Date: Fri, 24 Feb 2023 17:40:48 +0100
-Subject: [PATCH 45/60] client: Force a roundtrip when an XdgOutput is not
+Subject: [PATCH 45/57] client: Force a roundtrip when an XdgOutput is not
  ready yet
 
 Is possible that the server sends a surface_enter before
@@ -113,5 +113,5 @@ index 80429608..68e8d77a 100644
  QCOMPOSITOR_TEST_MAIN(tst_xdgoutput)
  #include "tst_xdgoutput.moc"
 -- 
-2.43.0
+2.45.1
 
