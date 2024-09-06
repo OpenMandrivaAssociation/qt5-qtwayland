@@ -14,7 +14,7 @@
 
 Summary:	Qt5 - Wayland platform support and QtCompositor module
 Name:		qt5-qtwayland
-Version:	5.15.14
+Version:	5.15.15
 %if "%{beta}" != ""
 Release:	0.%{beta}.1
 %define qttarballdir qtwayland-everywhere-src-%{version}-%{beta}

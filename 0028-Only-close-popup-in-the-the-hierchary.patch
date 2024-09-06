@@ -1,7 +1,7 @@
-From fbcaba4a2d418212acaf83302323f8f878976129 Mon Sep 17 00:00:00 2001
+From a91e358bcfaa8195dfadd94b5ccd0a5faad9a82b Mon Sep 17 00:00:00 2001
 From: Weng Xuetian <wengxt@gmail.com>
 Date: Wed, 20 Jul 2022 15:57:40 -0700
-Subject: [PATCH 28/57] Only close popup in the the hierchary
+Subject: [PATCH 28/59] Only close popup in the the hierchary
 
 Imagine following event sequences:
 1. a tooltip is shown. activePopups = {tooltip}
@@ -292,7 +292,7 @@ index 96785205..4b518f0a 100644
      };
  
 diff --git a/tests/auto/client/xdgshell/tst_xdgshell.cpp b/tests/auto/client/xdgshell/tst_xdgshell.cpp
-index 73d1eb9c..747875b4 100644
+index 1da70ff2..c5271f63 100644
 --- a/tests/auto/client/xdgshell/tst_xdgshell.cpp
 +++ b/tests/auto/client/xdgshell/tst_xdgshell.cpp
 @@ -46,6 +46,7 @@ private slots:
@@ -397,5 +397,5 @@ index 73d1eb9c..747875b4 100644
  void tst_xdgshell::switchPopups()
  {
 -- 
-2.45.1
+2.46.0
 

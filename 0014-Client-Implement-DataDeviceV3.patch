@@ -1,7 +1,7 @@
-From 97681a0562fc4649a8b1921a57374fa4f23128ca Mon Sep 17 00:00:00 2001
+From e0f612dcae95df15c60e4b4684f6dbcd8095152c Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Tue, 16 Feb 2021 09:51:47 +0000
-Subject: [PATCH 14/57] Client: Implement DataDeviceV3
+Subject: [PATCH 14/59] Client: Implement DataDeviceV3
 
 DataDeviceV2 fixes a leak of DataDevice resources.
 
@@ -340,10 +340,10 @@ index 9cf1483c..6f667398 100644
  
  
 diff --git a/src/client/qwaylanddatasource.cpp b/src/client/qwaylanddatasource.cpp
-index c2bc9dc4..520097c3 100644
+index c86c1416..321170a6 100644
 --- a/src/client/qwaylanddatasource.cpp
 +++ b/src/client/qwaylanddatasource.cpp
-@@ -110,7 +110,32 @@ void QWaylandDataSource::data_source_send(const QString &mime_type, int32_t fd)
+@@ -105,7 +105,32 @@ void QWaylandDataSource::data_source_send(const QString &mime_type, int32_t fd)
  
  void QWaylandDataSource::data_source_target(const QString &mime_type)
  {
@@ -378,11 +378,11 @@ index c2bc9dc4..520097c3 100644
  
  }
 diff --git a/src/client/qwaylanddatasource_p.h b/src/client/qwaylanddatasource_p.h
-index 3003da1b..b6a9e06b 100644
+index 520b3165..089c5485 100644
 --- a/src/client/qwaylanddatasource_p.h
 +++ b/src/client/qwaylanddatasource_p.h
-@@ -77,16 +77,24 @@ public:
-     QMimeData *mimeData() const;
+@@ -75,16 +75,24 @@ public:
+     ~QWaylandDataSource() override;
  
  Q_SIGNALS:
 -    void targetChanged(const QString &mime_type);
@@ -508,5 +508,5 @@ index 1568b3b9..067410d0 100644
  class DataDeviceCompositor : public DefaultCompositor {
  public:
 -- 
-2.45.1
+2.46.0
 

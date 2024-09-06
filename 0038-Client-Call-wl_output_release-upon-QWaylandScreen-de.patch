@@ -1,7 +1,7 @@
-From 55098e08444cafe88bd7be9e64f98aa7e68b0a8a Mon Sep 17 00:00:00 2001
+From 6a0baec0d8766b55655aef13d88546e1261348d7 Mon Sep 17 00:00:00 2001
 From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 Date: Mon, 21 Nov 2022 18:39:40 +0200
-Subject: [PATCH 38/57] Client: Call wl_output_release() upon QWaylandScreen
+Subject: [PATCH 38/59] Client: Call wl_output_release() upon QWaylandScreen
  destruction
 
 It ensures that the proxy gets destroyed.
@@ -27,5 +27,5 @@ index 7c2d9be3..64ae4fe7 100644
  
  uint QWaylandScreen::requiredEvents() const
 -- 
-2.45.1
+2.46.0
 

@@ -1,7 +1,7 @@
-From ceb128581bd6ba68887be7e61b61fe25b4c34a6c Mon Sep 17 00:00:00 2001
+From fa3f3172fd12b10c25fc56cce1f85fbd17fa3a5c Mon Sep 17 00:00:00 2001
 From: Paul Olav Tvete <paul.tvete@qt.io>
 Date: Mon, 6 Jul 2020 14:37:35 +0200
-Subject: [PATCH 30/57] Use wl_surface.damage_buffer on the client side
+Subject: [PATCH 30/59] Use wl_surface.damage_buffer on the client side
 
 Prefer the newer, recommended damage_buffer when the compositor
 supports it.
@@ -127,5 +127,5 @@ index 949dc23d..d176837e 100644
                         uint32_t callback) override;
      void surface_commit(Resource *resource) override;
 -- 
-2.45.1
+2.46.0
 

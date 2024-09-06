@@ -1,7 +1,7 @@
-From 3b4fec13353cd531b508a67d4d132e0c3cf37699 Mon Sep 17 00:00:00 2001
+From 2e579f2d19d81bcfc01a1f8e9fa90cadec3c67f6 Mon Sep 17 00:00:00 2001
 From: Adrien Faveraux <af@brain-networks.fr>
 Date: Fri, 26 Nov 2021 09:18:58 +0100
-Subject: [PATCH 19/57] Move the wayland socket polling to a separate event
+Subject: [PATCH 19/59] Move the wayland socket polling to a separate event
  thread
 
 New event threads is introduced which calls poll() on the wayland fd,
@@ -572,5 +572,5 @@ index fb3ed606..54ac67a9 100644
  
      // True when we have called deliverRequestUpdate, but the client has not yet attached a new buffer
 -- 
-2.45.1
+2.46.0
 

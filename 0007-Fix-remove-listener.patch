@@ -1,7 +1,7 @@
-From 78ce1949e7215c61d4a86e8f098abccde4491bc2 Mon Sep 17 00:00:00 2001
+From 6ab275a36f59f885d8e388d85f319efbf451d02f Mon Sep 17 00:00:00 2001
 From: Zhang Liang <zhanglianga@uniontech.com>
 Date: Mon, 1 Feb 2021 19:29:43 +0800
-Subject: [PATCH 07/57] Fix: remove listener
+Subject: [PATCH 07/59] Fix: remove listener
 
 Add the operation for removing the listener form listener list
 
@@ -29,5 +29,5 @@ index 8a6d5db1..16f8ca1a 100644
  
  uint32_t QWaylandDisplay::currentTimeMillisec()
 -- 
-2.45.1
+2.46.0
 

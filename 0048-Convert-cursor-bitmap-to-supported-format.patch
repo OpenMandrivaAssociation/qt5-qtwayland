@@ -1,7 +1,7 @@
-From 3cc570e8305c4a3c3178fd20fef3ef1d5a21ba9c Mon Sep 17 00:00:00 2001
+From 31979df9078cad1519e8e37929fc84a9ed8f711c Mon Sep 17 00:00:00 2001
 From: Michael Weghorn <m.weghorn@posteo.de>
 Date: Mon, 20 Feb 2023 14:02:23 +0100
-Subject: [PATCH 49/57] Convert cursor bitmap to supported format
+Subject: [PATCH 48/59] Convert cursor bitmap to supported format
 
 The 1-bit image formats QImage::Format_Mono and
 QImage::Format_MonoLSB used by cursor bitmaps don't have
@@ -62,5 +62,5 @@ index e4eca9d4..ba76ba2d 100644
      memcpy(buffer->image()->bits(), img.bits(), size_t(img.sizeInBytes()));
      return buffer;
 -- 
-2.45.1
+2.46.0
 

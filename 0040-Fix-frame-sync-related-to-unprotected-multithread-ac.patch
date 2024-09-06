@@ -1,7 +1,7 @@
-From 77b78fab19f073f70b94534ffec15efd0bbdaa02 Mon Sep 17 00:00:00 2001
+From 085ca8ffe2e74ba8ba217ab32d1b84024cdd2802 Mon Sep 17 00:00:00 2001
 From: Weng Xuetian <wengxt@gmail.com>
 Date: Sun, 27 Nov 2022 12:44:40 -0800
-Subject: [PATCH 40/57] Fix frame sync related to unprotected multithread
+Subject: [PATCH 40/59] Fix frame sync related to unprotected multithread
  access
 
 There is a few crashes happens in real life that frame callback is
@@ -162,5 +162,5 @@ index 487a91a6..2f219d8c 100644
      static QWaylandWindow *mMouseGrab;
  
 -- 
-2.45.1
+2.46.0
 
