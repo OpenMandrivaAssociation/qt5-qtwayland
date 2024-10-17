@@ -26,7 +26,7 @@ Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f
 %endif
 Group:		Development/KDE and Qt
 License:	LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
-URL:		http://www.qt.io
+URL:		https://www.qt.io
 Patch0:		qtwayland-5.14-GL-headers.patch
 
 # From KDE https://invent.kde.org/qt/qt/qtwayland -b kde/5.15
