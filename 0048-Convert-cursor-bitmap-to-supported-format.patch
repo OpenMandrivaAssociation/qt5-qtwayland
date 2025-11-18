@@ -1,7 +1,7 @@
-From 31979df9078cad1519e8e37929fc84a9ed8f711c Mon Sep 17 00:00:00 2001
+From f5110358be64646c992fac2d01e2c6a2af14fd9d Mon Sep 17 00:00:00 2001
 From: Michael Weghorn <m.weghorn@posteo.de>
 Date: Mon, 20 Feb 2023 14:02:23 +0100
-Subject: [PATCH 48/59] Convert cursor bitmap to supported format
+Subject: [PATCH 48/55] Convert cursor bitmap to supported format
 
 The 1-bit image formats QImage::Format_Mono and
 QImage::Format_MonoLSB used by cursor bitmaps don't have
@@ -21,7 +21,7 @@ Backport changes: Use Qt::ReturnByValue version for QCursor::mask() and QCursor:
  1 file changed, 22 insertions(+), 1 deletion(-)
 
 diff --git a/src/client/qwaylandcursor.cpp b/src/client/qwaylandcursor.cpp
-index e4eca9d4..ba76ba2d 100644
+index e4eca9d4e..ba76ba2d0 100644
 --- a/src/client/qwaylandcursor.cpp
 +++ b/src/client/qwaylandcursor.cpp
 @@ -44,6 +44,7 @@
@@ -62,5 +62,5 @@ index e4eca9d4..ba76ba2d 100644
      memcpy(buffer->image()->bits(), img.bits(), size_t(img.sizeInBytes()));
      return buffer;
 -- 
-2.46.0
+2.51.2
 

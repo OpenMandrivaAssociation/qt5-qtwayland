@@ -1,7 +1,7 @@
-From fa3f3172fd12b10c25fc56cce1f85fbd17fa3a5c Mon Sep 17 00:00:00 2001
+From 30a03bf1e3d79e9ae2ba236499bb1844a4af2bc1 Mon Sep 17 00:00:00 2001
 From: Paul Olav Tvete <paul.tvete@qt.io>
 Date: Mon, 6 Jul 2020 14:37:35 +0200
-Subject: [PATCH 30/59] Use wl_surface.damage_buffer on the client side
+Subject: [PATCH 30/55] Use wl_surface.damage_buffer on the client side
 
 Prefer the newer, recommended damage_buffer when the compositor
 supports it.
@@ -20,7 +20,7 @@ Reviewed-by: Eskil Abrahamsen Blomfeldt <eskil.abrahamsen-blomfeldt@qt.io>
  6 files changed, 28 insertions(+), 6 deletions(-)
 
 diff --git a/src/client/qwaylanddisplay.cpp b/src/client/qwaylanddisplay.cpp
-index 4a331a4c..f23c459d 100644
+index 4a331a4ce..f23c459d5 100644
 --- a/src/client/qwaylanddisplay.cpp
 +++ b/src/client/qwaylanddisplay.cpp
 @@ -493,7 +493,7 @@ void QWaylandDisplay::registry_global(uint32_t id, const QString &interface, uin
@@ -33,7 +33,7 @@ index 4a331a4c..f23c459d 100644
      } else if (interface == QStringLiteral("wl_shm")) {
          mShm.reset(new QWaylandShm(this, version, id));
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index d98a70e4..60665394 100644
+index d98a70e4f..606653945 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -563,7 +563,11 @@ void QWaylandWindow::damage(const QRect &rect)
@@ -67,7 +67,7 @@ index d98a70e4..60665394 100644
      buffer->setCommitted();
      mSurface->commit();
 diff --git a/tests/auto/client/shared/coreprotocol.h b/tests/auto/client/shared/coreprotocol.h
-index a1af137a..296dbf47 100644
+index a1af137a1..296dbf474 100644
 --- a/tests/auto/client/shared/coreprotocol.h
 +++ b/tests/auto/client/shared/coreprotocol.h
 @@ -158,7 +158,7 @@ class WlCompositor : public Global, public QtWaylandServer::wl_compositor
@@ -80,7 +80,7 @@ index a1af137a..296dbf47 100644
          , m_compositor(compositor)
      {}
 diff --git a/tests/auto/client/shared_old/mockcompositor.cpp b/tests/auto/client/shared_old/mockcompositor.cpp
-index a415cbf5..b1d3d07d 100644
+index a415cbf56..b1d3d07d5 100644
 --- a/tests/auto/client/shared_old/mockcompositor.cpp
 +++ b/tests/auto/client/shared_old/mockcompositor.cpp
 @@ -342,7 +342,7 @@ Compositor::Compositor(MockCompositor *mockCompositor)
@@ -93,7 +93,7 @@ index a415cbf5..b1d3d07d 100644
      m_data_device_manager.reset(new DataDeviceManager(this, m_display));
  
 diff --git a/tests/auto/client/shared_old/mocksurface.cpp b/tests/auto/client/shared_old/mocksurface.cpp
-index e9df5f90..c3246e4a 100644
+index e9df5f907..c3246e4a8 100644
 --- a/tests/auto/client/shared_old/mocksurface.cpp
 +++ b/tests/auto/client/shared_old/mocksurface.cpp
 @@ -125,6 +125,16 @@ void Surface::surface_damage(Resource *resource,
@@ -114,7 +114,7 @@ index e9df5f90..c3246e4a 100644
                              uint32_t callback)
  {
 diff --git a/tests/auto/client/shared_old/mocksurface.h b/tests/auto/client/shared_old/mocksurface.h
-index 949dc23d..d176837e 100644
+index 949dc23dd..d176837e7 100644
 --- a/tests/auto/client/shared_old/mocksurface.h
 +++ b/tests/auto/client/shared_old/mocksurface.h
 @@ -65,6 +65,8 @@ protected:
@@ -127,5 +127,5 @@ index 949dc23d..d176837e 100644
                         uint32_t callback) override;
      void surface_commit(Resource *resource) override;
 -- 
-2.46.0
+2.51.2
 

@@ -1,7 +1,7 @@
-From 8e854aa7c6d6ba8d79e307b2922d8c8fd50609e4 Mon Sep 17 00:00:00 2001
+From d50d515f1f9c2c87177457d85da5c441523d964a Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Mon, 12 Sep 2022 13:28:08 +0100
-Subject: [PATCH 35/59] Hold surface read lock throughout
+Subject: [PATCH 35/55] Hold surface read lock throughout
  QWaylandEglWindow::updateSurface
 
 QWaylandEGLWindow::updateSurface is called from both the main and render
@@ -25,7 +25,7 @@ Reviewed-by: Eskil Abrahamsen Blomfeldt <eskil.abrahamsen-blomfeldt@qt.io>
  2 files changed, 8 insertions(+), 4 deletions(-)
 
 diff --git a/src/client/qwaylandwindow_p.h b/src/client/qwaylandwindow_p.h
-index 2be87bc0..ea3d1995 100644
+index 2be87bc0c..ea3d1995b 100644
 --- a/src/client/qwaylandwindow_p.h
 +++ b/src/client/qwaylandwindow_p.h
 @@ -220,7 +220,11 @@ signals:
@@ -50,7 +50,7 @@ index 2be87bc0..ea3d1995 100644
  };
  
 diff --git a/src/hardwareintegration/client/wayland-egl/qwaylandeglwindow.cpp b/src/hardwareintegration/client/wayland-egl/qwaylandeglwindow.cpp
-index 64f7caeb..dbe2845a 100644
+index 9971a9ff2..95e8c666c 100644
 --- a/src/hardwareintegration/client/wayland-egl/qwaylandeglwindow.cpp
 +++ b/src/hardwareintegration/client/wayland-egl/qwaylandeglwindow.cpp
 @@ -40,6 +40,7 @@
@@ -67,9 +67,9 @@ index 64f7caeb..dbe2845a 100644
      } else {
 +        QReadLocker locker(&mSurfaceLock);
          if (m_waylandEglWindow) {
-             int current_width, current_height;
-             static bool disableResizeCheck = qgetenv("QT_WAYLAND_DISABLE_RESIZECHECK").toInt();
-@@ -129,8 +131,8 @@ void QWaylandEglWindow::updateSurface(bool create)
+             int current_width = 0;
+             int current_height = 0;
+@@ -130,8 +132,8 @@ void QWaylandEglWindow::updateSurface(bool create)
  
                  m_resize = true;
              }
@@ -81,5 +81,5 @@ index 64f7caeb..dbe2845a 100644
          }
  
 -- 
-2.46.0
+2.51.2
 

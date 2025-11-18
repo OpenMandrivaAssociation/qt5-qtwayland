@@ -1,7 +1,7 @@
-From f3c9926d5c0735fe9514240b3eb6be781b4bacd0 Mon Sep 17 00:00:00 2001
+From e02da7d1a729ed168b135baf74ce8f9a501e8414 Mon Sep 17 00:00:00 2001
 From: Arjen Hiemstra <ahiemstra@heimr.nl>
 Date: Thu, 18 Nov 2021 13:05:30 +0100
-Subject: [PATCH 15/59] Client: Delay deletion of QDrag object until after
+Subject: [PATCH 15/55] Client: Delay deletion of QDrag object until after
  we're done with it
 
 In certain cases, most notably when performing drag and drop operations
@@ -22,7 +22,7 @@ Reviewed-by: David Edmundson <davidedmundson@kde.org>
  2 files changed, 12 insertions(+)
 
 diff --git a/src/client/qwaylanddnd.cpp b/src/client/qwaylanddnd.cpp
-index 97ee5b2e..7c53f5fa 100644
+index 97ee5b2ed..7c53f5faa 100644
 --- a/src/client/qwaylanddnd.cpp
 +++ b/src/client/qwaylanddnd.cpp
 @@ -80,6 +80,9 @@ void QWaylandDrag::cancel()
@@ -51,7 +51,7 @@ index 97ee5b2e..7c53f5fa 100644
  
  }
 diff --git a/src/client/qwaylanddnd_p.h b/src/client/qwaylanddnd_p.h
-index 747f0190..46f629ac 100644
+index 747f0190b..46f629ace 100644
 --- a/src/client/qwaylanddnd_p.h
 +++ b/src/client/qwaylanddnd_p.h
 @@ -83,6 +83,7 @@ protected:
@@ -63,5 +63,5 @@ index 747f0190..46f629ac 100644
  private:
      QWaylandDisplay *m_display = nullptr;
 -- 
-2.46.0
+2.51.2
 

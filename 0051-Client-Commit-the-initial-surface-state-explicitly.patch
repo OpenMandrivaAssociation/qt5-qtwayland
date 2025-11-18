@@ -1,7 +1,7 @@
-From 967e6ceca9e16cf5a5e92d63958057f84a1b54fd Mon Sep 17 00:00:00 2001
+From c0aa61347bc0edb51909253774c7efcbae9e8352 Mon Sep 17 00:00:00 2001
 From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 Date: Fri, 25 Aug 2023 10:19:07 +0300
-Subject: [PATCH 51/59] Client: Commit the initial surface state explicitly
+Subject: [PATCH 51/55] Client: Commit the initial surface state explicitly
 
 QWaylandWindow lacks an explicit step to finish initializing the shell
 surface by committing the surface. So far it used to work because of
@@ -20,7 +20,7 @@ Reviewed-by: David Edmundson <davidedmundson@kde.org>
  1 file changed, 2 insertions(+)
 
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index 5d01507d..5eee0414 100644
+index 5d01507dc..5eee0414c 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -200,6 +200,8 @@ void QWaylandWindow::initWindow()
@@ -33,5 +33,5 @@ index 5d01507d..5eee0414 100644
  
  void QWaylandWindow::initializeWlSurface()
 -- 
-2.46.0
+2.51.2
 

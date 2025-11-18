@@ -1,7 +1,7 @@
-From 01a9aef0a5630382039ba08d20427c69d43dc91e Mon Sep 17 00:00:00 2001
+From aa6386768a90fb089a7a302c38cd7230d268b76b Mon Sep 17 00:00:00 2001
 From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 Date: Tue, 27 Sep 2022 22:05:07 +0300
-Subject: [PATCH 41/59] Client: Handle zwp_primary_selection_device_manager_v1
+Subject: [PATCH 41/55] Client: Handle zwp_primary_selection_device_manager_v1
  global removal
 
 The zwp_primary_selection_device_manager_v1 global can be withdrawn if
@@ -19,7 +19,7 @@ Reviewed-by: Eskil Abrahamsen Blomfeldt <eskil.abrahamsen-blomfeldt@qt.io>
  2 files changed, 9 insertions(+), 5 deletions(-)
 
 diff --git a/src/client/qwaylanddisplay.cpp b/src/client/qwaylanddisplay.cpp
-index f23c459d..cc321497 100644
+index f23c459d5..cc3214978 100644
 --- a/src/client/qwaylanddisplay.cpp
 +++ b/src/client/qwaylanddisplay.cpp
 @@ -519,6 +519,8 @@ void QWaylandDisplay::registry_global(uint32_t id, const QString &interface, uin
@@ -46,7 +46,7 @@ index f23c459d..cc321497 100644
              break;
          }
 diff --git a/src/client/qwaylandprimaryselectionv1.cpp b/src/client/qwaylandprimaryselectionv1.cpp
-index 7805dd73..dac532b2 100644
+index 7805dd734..dac532b20 100644
 --- a/src/client/qwaylandprimaryselectionv1.cpp
 +++ b/src/client/qwaylandprimaryselectionv1.cpp
 @@ -54,11 +54,6 @@ QWaylandPrimarySelectionDeviceManagerV1::QWaylandPrimarySelectionDeviceManagerV1
@@ -62,5 +62,5 @@ index 7805dd73..dac532b2 100644
  
  QWaylandPrimarySelectionDeviceV1 *QWaylandPrimarySelectionDeviceManagerV1::createDevice(QWaylandInputDevice *seat)
 -- 
-2.46.0
+2.51.2
 

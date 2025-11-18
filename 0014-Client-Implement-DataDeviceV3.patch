@@ -1,7 +1,7 @@
-From e0f612dcae95df15c60e4b4684f6dbcd8095152c Mon Sep 17 00:00:00 2001
+From 268356a075c27394c6314eba7aa676f7198ff7e4 Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Tue, 16 Feb 2021 09:51:47 +0000
-Subject: [PATCH 14/59] Client: Implement DataDeviceV3
+Subject: [PATCH 14/55] Client: Implement DataDeviceV3
 
 DataDeviceV2 fixes a leak of DataDevice resources.
 
@@ -36,7 +36,7 @@ Reviewed-by: Eskil Abrahamsen Blomfeldt <eskil.abrahamsen-blomfeldt@qt.io>
  12 files changed, 153 insertions(+), 46 deletions(-)
 
 diff --git a/src/client/qwaylanddatadevice.cpp b/src/client/qwaylanddatadevice.cpp
-index 0124b890..d154c695 100644
+index 375f13fb3..89e4e3724 100644
 --- a/src/client/qwaylanddatadevice.cpp
 +++ b/src/client/qwaylanddatadevice.cpp
 @@ -72,6 +72,8 @@ QWaylandDataDevice::QWaylandDataDevice(QWaylandDataDeviceManager *manager, QWayl
@@ -57,8 +57,8 @@ index 0124b890..d154c695 100644
  {
      auto *seat = m_display->currentInputDevice();
      auto *origin = seat->pointerFocus();
-@@ -123,8 +125,28 @@ bool QWaylandDataDevice::startDrag(QMimeData *mimeData, QWaylandWindow *icon)
-     }
+@@ -129,8 +131,28 @@ bool QWaylandDataDevice::startDrag(QMimeData *mimeData, QWaylandWindow *icon)
+         mimeData->setData("application/x-qt-avoid-empty-placeholder", QByteArray("1"));
  
      m_dragSource.reset(new QWaylandDataSource(m_display->dndSelectionHandler(), mimeData));
 +
@@ -87,7 +87,7 @@ index 0124b890..d154c695 100644
  
      start_drag(m_dragSource->object(), origin->wlSurface(), icon->wlSurface(), m_display->currentInputDevice()->serial());
      return true;
-@@ -153,7 +175,7 @@ void QWaylandDataDevice::data_device_drop()
+@@ -159,7 +181,7 @@ void QWaylandDataDevice::data_device_drop()
          supportedActions = drag->supportedActions();
      } else if (m_dragOffer) {
          dragData = m_dragOffer->mimeData();
@@ -96,7 +96,7 @@ index 0124b890..d154c695 100644
      } else {
          return;
      }
-@@ -163,7 +185,11 @@ void QWaylandDataDevice::data_device_drop()
+@@ -169,7 +191,11 @@ void QWaylandDataDevice::data_device_drop()
                                                                            QGuiApplication::keyboardModifiers());
  
      if (drag) {
@@ -109,7 +109,7 @@ index 0124b890..d154c695 100644
      }
  }
  
-@@ -187,7 +213,7 @@ void QWaylandDataDevice::data_device_enter(uint32_t serial, wl_surface *surface,
+@@ -193,7 +219,7 @@ void QWaylandDataDevice::data_device_enter(uint32_t serial, wl_surface *surface,
          supportedActions = drag->supportedActions();
      } else if (m_dragOffer) {
          dragData = m_dragOffer->mimeData();
@@ -118,7 +118,7 @@ index 0124b890..d154c695 100644
      }
  
      const QPlatformDragQtResponse &response = QWindowSystemInterface::handleDrag(m_dragWindow, dragData, m_dragPoint, supportedActions,
-@@ -198,11 +224,7 @@ void QWaylandDataDevice::data_device_enter(uint32_t serial, wl_surface *surface,
+@@ -204,11 +230,7 @@ void QWaylandDataDevice::data_device_enter(uint32_t serial, wl_surface *surface,
          static_cast<QWaylandDrag *>(QGuiApplicationPrivate::platformIntegration()->drag())->setResponse(response);
      }
  
@@ -131,7 +131,7 @@ index 0124b890..d154c695 100644
  }
  
  void QWaylandDataDevice::data_device_leave()
-@@ -236,10 +258,10 @@ void QWaylandDataDevice::data_device_motion(uint32_t time, wl_fixed_t x, wl_fixe
+@@ -242,10 +264,10 @@ void QWaylandDataDevice::data_device_motion(uint32_t time, wl_fixed_t x, wl_fixe
          supportedActions = drag->supportedActions();
      } else {
          dragData = m_dragOffer->mimeData();
@@ -144,7 +144,7 @@ index 0124b890..d154c695 100644
                                                                            QGuiApplication::mouseButtons(),
                                                                            QGuiApplication::keyboardModifiers());
  
-@@ -247,11 +269,7 @@ void QWaylandDataDevice::data_device_motion(uint32_t time, wl_fixed_t x, wl_fixe
+@@ -253,11 +275,7 @@ void QWaylandDataDevice::data_device_motion(uint32_t time, wl_fixed_t x, wl_fixe
          static_cast<QWaylandDrag *>(QGuiApplicationPrivate::platformIntegration()->drag())->setResponse(response);
      }
  
@@ -157,7 +157,7 @@ index 0124b890..d154c695 100644
  }
  #endif // QT_CONFIG(draganddrop)
  
-@@ -281,11 +299,6 @@ void QWaylandDataDevice::dragSourceCancelled()
+@@ -287,11 +305,6 @@ void QWaylandDataDevice::dragSourceCancelled()
      m_dragSource.reset();
  }
  
@@ -169,7 +169,7 @@ index 0124b890..d154c695 100644
  QPoint QWaylandDataDevice::calculateDragPosition(int x, int y, QWindow *wnd) const
  {
      QPoint pnt(wl_fixed_to_int(x), wl_fixed_to_int(y));
-@@ -298,6 +311,33 @@ QPoint QWaylandDataDevice::calculateDragPosition(int x, int y, QWindow *wnd) con
+@@ -304,6 +317,33 @@ QPoint QWaylandDataDevice::calculateDragPosition(int x, int y, QWindow *wnd) con
      }
      return pnt;
  }
@@ -204,7 +204,7 @@ index 0124b890..d154c695 100644
  
  }
 diff --git a/src/client/qwaylanddatadevice_p.h b/src/client/qwaylanddatadevice_p.h
-index 16c3ad28..801dcc2c 100644
+index 16c3ad28e..801dcc2c1 100644
 --- a/src/client/qwaylanddatadevice_p.h
 +++ b/src/client/qwaylanddatadevice_p.h
 @@ -64,6 +64,7 @@ QT_REQUIRE_CONFIG(wayland_datadevice);
@@ -243,7 +243,7 @@ index 16c3ad28..801dcc2c 100644
      QWaylandDisplay *m_display = nullptr;
      QWaylandInputDevice *m_inputDevice = nullptr;
 diff --git a/src/client/qwaylanddatadevicemanager.cpp b/src/client/qwaylanddatadevicemanager.cpp
-index 35d67307..6dc4f77f 100644
+index 35d67307f..6dc4f77f5 100644
 --- a/src/client/qwaylanddatadevicemanager.cpp
 +++ b/src/client/qwaylanddatadevicemanager.cpp
 @@ -50,8 +50,8 @@ QT_BEGIN_NAMESPACE
@@ -258,7 +258,7 @@ index 35d67307..6dc4f77f 100644
  {
      // Create transfer devices for all input devices.
 diff --git a/src/client/qwaylanddatadevicemanager_p.h b/src/client/qwaylanddatadevicemanager_p.h
-index bd05c0fb..510d9be4 100644
+index bd05c0fbb..510d9be48 100644
 --- a/src/client/qwaylanddatadevicemanager_p.h
 +++ b/src/client/qwaylanddatadevicemanager_p.h
 @@ -68,7 +68,7 @@ class QWaylandInputDevice;
@@ -271,10 +271,10 @@ index bd05c0fb..510d9be4 100644
  
      QWaylandDataDevice *getDataDevice(QWaylandInputDevice *inputDevice);
 diff --git a/src/client/qwaylanddataoffer.cpp b/src/client/qwaylanddataoffer.cpp
-index 2297e8a1..c9e158cc 100644
+index 6046a9b57..09e299730 100644
 --- a/src/client/qwaylanddataoffer.cpp
 +++ b/src/client/qwaylanddataoffer.cpp
-@@ -82,6 +82,15 @@ QMimeData *QWaylandDataOffer::mimeData()
+@@ -87,6 +87,15 @@ QMimeData *QWaylandDataOffer::mimeData()
      return m_mimeData.data();
  }
  
@@ -290,7 +290,7 @@ index 2297e8a1..c9e158cc 100644
  void QWaylandDataOffer::startReceiving(const QString &mimeType, int fd)
  {
      receive(mimeType, fd);
-@@ -93,6 +102,22 @@ void QWaylandDataOffer::data_offer_offer(const QString &mime_type)
+@@ -98,6 +107,22 @@ void QWaylandDataOffer::data_offer_offer(const QString &mime_type)
      m_mimeData->appendFormat(mime_type);
  }
  
@@ -314,7 +314,7 @@ index 2297e8a1..c9e158cc 100644
      : m_dataOffer(dataOffer)
  {
 diff --git a/src/client/qwaylanddataoffer_p.h b/src/client/qwaylanddataoffer_p.h
-index 9cf1483c..6f667398 100644
+index 9cf1483ca..6f6673984 100644
 --- a/src/client/qwaylanddataoffer_p.h
 +++ b/src/client/qwaylanddataoffer_p.h
 @@ -82,6 +82,7 @@ public:
@@ -340,7 +340,7 @@ index 9cf1483c..6f667398 100644
  
  
 diff --git a/src/client/qwaylanddatasource.cpp b/src/client/qwaylanddatasource.cpp
-index c86c1416..321170a6 100644
+index c86c14162..321170a66 100644
 --- a/src/client/qwaylanddatasource.cpp
 +++ b/src/client/qwaylanddatasource.cpp
 @@ -105,7 +105,32 @@ void QWaylandDataSource::data_source_send(const QString &mime_type, int32_t fd)
@@ -378,7 +378,7 @@ index c86c1416..321170a6 100644
  
  }
 diff --git a/src/client/qwaylanddatasource_p.h b/src/client/qwaylanddatasource_p.h
-index 520b3165..089c5485 100644
+index 520b31656..089c54853 100644
 --- a/src/client/qwaylanddatasource_p.h
 +++ b/src/client/qwaylanddatasource_p.h
 @@ -75,16 +75,24 @@ public:
@@ -408,7 +408,7 @@ index 520b3165..089c5485 100644
  
  }
 diff --git a/src/client/qwaylanddisplay.cpp b/src/client/qwaylanddisplay.cpp
-index 7560bf41..7f28d01c 100644
+index 7560bf41a..7f28d01cc 100644
 --- a/src/client/qwaylanddisplay.cpp
 +++ b/src/client/qwaylanddisplay.cpp
 @@ -356,7 +356,7 @@ void QWaylandDisplay::registry_global(uint32_t id, const QString &interface, uin
@@ -421,7 +421,7 @@ index 7560bf41..7f28d01c 100644
      } else if (interface == QStringLiteral("qt_surface_extension")) {
          mWindowExtension.reset(new QtWayland::qt_surface_extension(registry, id, 1));
 diff --git a/src/client/qwaylanddnd.cpp b/src/client/qwaylanddnd.cpp
-index 6535aa16..97ee5b2e 100644
+index 6535aa16b..97ee5b2ed 100644
 --- a/src/client/qwaylanddnd.cpp
 +++ b/src/client/qwaylanddnd.cpp
 @@ -66,7 +66,7 @@ void QWaylandDrag::startDrag()
@@ -477,7 +477,7 @@ index 6535aa16..97ee5b2e 100644
      eventFilter(shapedPixmapWindow(), &event);
  }
 diff --git a/src/client/qwaylanddnd_p.h b/src/client/qwaylanddnd_p.h
-index 474fe2ab..747f0190 100644
+index 474fe2ab1..747f0190b 100644
 --- a/src/client/qwaylanddnd_p.h
 +++ b/src/client/qwaylanddnd_p.h
 @@ -71,9 +71,10 @@ public:
@@ -495,7 +495,7 @@ index 474fe2ab..747f0190 100644
  protected:
      void startDrag() override;
 diff --git a/tests/auto/client/datadevicev1/tst_datadevicev1.cpp b/tests/auto/client/datadevicev1/tst_datadevicev1.cpp
-index 1568b3b9..067410d0 100644
+index 1568b3b96..067410d08 100644
 --- a/tests/auto/client/datadevicev1/tst_datadevicev1.cpp
 +++ b/tests/auto/client/datadevicev1/tst_datadevicev1.cpp
 @@ -35,7 +35,7 @@
@@ -508,5 +508,5 @@ index 1568b3b9..067410d0 100644
  class DataDeviceCompositor : public DefaultCompositor {
  public:
 -- 
-2.46.0
+2.51.2
 

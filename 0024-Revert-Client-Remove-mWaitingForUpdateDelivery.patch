@@ -1,7 +1,7 @@
-From 6c5560860a7df5195a305469592a961b0037cfba Mon Sep 17 00:00:00 2001
+From 96770cfb15c418548ec88a57927e57eef72e1bd1 Mon Sep 17 00:00:00 2001
 From: Paul Olav Tvete <paul.tvete@qt.io>
 Date: Tue, 15 Mar 2022 15:59:15 +0100
-Subject: [PATCH 24/59] Revert "Client: Remove mWaitingForUpdateDelivery"
+Subject: [PATCH 24/55] Revert "Client: Remove mWaitingForUpdateDelivery"
 
 The reverted commit introduces a severe performance regression
 when a client window is resized while a QtQuick renderthread
@@ -18,7 +18,7 @@ Reviewed-by: Eskil Abrahamsen Blomfeldt <eskil.abrahamsen-blomfeldt@qt.io>
  2 files changed, 10 insertions(+), 3 deletions(-)
 
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index 9cc8cb12..3d1be31c 100644
+index 9cc8cb120..3d1be31cc 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -658,11 +658,17 @@ void QWaylandWindow::handleFrameCallback()
@@ -43,7 +43,7 @@ index 9cc8cb12..3d1be31c 100644
      mFrameSyncWait.notify_all();
  }
 diff --git a/src/client/qwaylandwindow_p.h b/src/client/qwaylandwindow_p.h
-index cf7ce879..54ac67a9 100644
+index cf7ce879a..54ac67a91 100644
 --- a/src/client/qwaylandwindow_p.h
 +++ b/src/client/qwaylandwindow_p.h
 @@ -228,6 +228,7 @@ protected:
@@ -55,5 +55,5 @@ index cf7ce879..54ac67a9 100644
      QElapsedTimer mFrameCallbackElapsedTimer;
      struct ::wl_callback *mFrameCallback = nullptr;
 -- 
-2.46.0
+2.51.2
 

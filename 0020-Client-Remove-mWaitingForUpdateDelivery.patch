@@ -1,7 +1,7 @@
-From 6f85585ae2850bfbe8c995e22dee42d02b619b81 Mon Sep 17 00:00:00 2001
+From 81221b4a75f9ca6f6c02fd83256c4a3c9879fd63 Mon Sep 17 00:00:00 2001
 From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 Date: Tue, 1 Feb 2022 13:05:36 +0200
-Subject: [PATCH 20/59] Client: Remove mWaitingForUpdateDelivery
+Subject: [PATCH 20/55] Client: Remove mWaitingForUpdateDelivery
 
 Currently, mWaitingForUpdateDelivery is shared between the main thread
 (doHandleFrameCallback()) and the frame callback event thread
@@ -23,7 +23,7 @@ Reviewed-by: David Edmundson <davidedmundson@kde.org>
  2 files changed, 12 insertions(+), 18 deletions(-)
 
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index a38f7d55..6bf0fc4b 100644
+index a38f7d551..6bf0fc4b6 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -651,23 +651,18 @@ void QWaylandWindow::handleFrameCallback()
@@ -63,7 +63,7 @@ index a38f7d55..6bf0fc4b 100644
      mFrameSyncWait.notify_all();
  }
 diff --git a/src/client/qwaylandwindow_p.h b/src/client/qwaylandwindow_p.h
-index 54ac67a9..cf7ce879 100644
+index 54ac67a91..cf7ce879a 100644
 --- a/src/client/qwaylandwindow_p.h
 +++ b/src/client/qwaylandwindow_p.h
 @@ -228,7 +228,6 @@ protected:
@@ -75,5 +75,5 @@ index 54ac67a9..cf7ce879 100644
      QElapsedTimer mFrameCallbackElapsedTimer;
      struct ::wl_callback *mFrameCallback = nullptr;
 -- 
-2.46.0
+2.51.2
 

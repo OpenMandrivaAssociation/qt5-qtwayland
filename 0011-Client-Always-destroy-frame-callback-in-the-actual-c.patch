@@ -1,7 +1,7 @@
-From 32a53f406df6b324516b3244ba9966559c9f10ac Mon Sep 17 00:00:00 2001
+From 803f1163d44846fc1d919e30b8cc83d9885d75c8 Mon Sep 17 00:00:00 2001
 From: Georges Basile Stavracas Neto <gbsneto@gnome.org>
 Date: Thu, 27 May 2021 20:02:53 -0300
-Subject: [PATCH 11/59] Client: Always destroy frame callback in the actual
+Subject: [PATCH 11/55] Client: Always destroy frame callback in the actual
  callback
 
 It's good hygiene to destroy all frame callbacks. Destroy the
@@ -23,7 +23,7 @@ Reviewed-by: Eskil Abrahamsen Blomfeldt <eskil.abrahamsen-blomfeldt@qt.io>
  1 file changed, 5 insertions(+), 6 deletions(-)
 
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index 9de284de..e0093013 100644
+index 9de284de6..e00930134 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -635,9 +635,13 @@ void QWaylandWindow::commit()
@@ -54,5 +54,5 @@ index 9de284de..e0093013 100644
      struct ::wl_surface *wrappedSurface = reinterpret_cast<struct ::wl_surface *>(wl_proxy_create_wrapper(mSurface->object()));
      wl_proxy_set_queue(reinterpret_cast<wl_proxy *>(wrappedSurface), mFrameQueue.queue);
 -- 
-2.46.0
+2.51.2
 

@@ -1,7 +1,7 @@
-From ce279afce294af1d175c7e500be0a77cfbba7f34 Mon Sep 17 00:00:00 2001
+From e24c25db2f1ce824965d0460c692e6ad46e29363 Mon Sep 17 00:00:00 2001
 From: Marco Martin <notmart@gmail.com>
 Date: Fri, 24 Feb 2023 17:40:48 +0100
-Subject: [PATCH 45/59] client: Force a roundtrip when an XdgOutput is not
+Subject: [PATCH 45/55] client: Force a roundtrip when an XdgOutput is not
  ready yet
 
 Is possible that the server sends a surface_enter before
@@ -21,7 +21,7 @@ Reviewed-by: David Edmundson <davidedmundson@kde.org>
  4 files changed, 42 insertions(+)
 
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index 96de798b..5280a9f7 100644
+index 96de798b3..5280a9f76 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -1042,6 +1042,8 @@ void QWaylandWindow::handleScreensChanged()
@@ -34,7 +34,7 @@ index 96de798b..5280a9f7 100644
      mLastReportedScreen = newScreen;
      if (fixedToplevelPositions && !QPlatformWindow::parent() && window()->type() != Qt::Popup
 diff --git a/tests/auto/client/shared/coreprotocol.cpp b/tests/auto/client/shared/coreprotocol.cpp
-index d1a2e7cb..53e12291 100644
+index d1a2e7cb6..53e122910 100644
 --- a/tests/auto/client/shared/coreprotocol.cpp
 +++ b/tests/auto/client/shared/coreprotocol.cpp
 @@ -185,6 +185,8 @@ void Output::output_bind_resource(QtWaylandServer::wl_output::Resource *resource
@@ -47,7 +47,7 @@ index d1a2e7cb..53e12291 100644
  
  // Seat stuff
 diff --git a/tests/auto/client/shared/coreprotocol.h b/tests/auto/client/shared/coreprotocol.h
-index 210d8ddb..00c439e1 100644
+index 210d8ddbf..00c439e18 100644
 --- a/tests/auto/client/shared/coreprotocol.h
 +++ b/tests/auto/client/shared/coreprotocol.h
 @@ -273,6 +273,9 @@ public:
@@ -61,7 +61,7 @@ index 210d8ddb..00c439e1 100644
      void output_bind_resource(Resource *resource) override;
  };
 diff --git a/tests/auto/client/xdgoutput/tst_xdgoutput.cpp b/tests/auto/client/xdgoutput/tst_xdgoutput.cpp
-index 20f762e0..2a0cad1d 100644
+index 20f762e06..2a0cad1de 100644
 --- a/tests/auto/client/xdgoutput/tst_xdgoutput.cpp
 +++ b/tests/auto/client/xdgoutput/tst_xdgoutput.cpp
 @@ -55,6 +55,7 @@ private slots:
@@ -113,5 +113,5 @@ index 20f762e0..2a0cad1d 100644
  QCOMPOSITOR_TEST_MAIN(tst_xdgoutput)
  #include "tst_xdgoutput.moc"
 -- 
-2.46.0
+2.51.2
 

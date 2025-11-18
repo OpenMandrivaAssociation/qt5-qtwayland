@@ -1,7 +1,7 @@
-From 0c93e66a04306e8029302aa9d1e9ca453ef6f184 Mon Sep 17 00:00:00 2001
+From 40e4f8818ecc78d0109a0b73d86ecf27ce067f2f Mon Sep 17 00:00:00 2001
 From: Fabian Vogt <fabian@ritter-vogt.de>
 Date: Fri, 4 Feb 2022 11:07:36 +0100
-Subject: [PATCH 23/59] Use proper dependencies in compile tests
+Subject: [PATCH 23/55] Use proper dependencies in compile tests
 
 Use the dependencies as found by the "libraries" section instead of relying
 on them being available in the default location (e.g. "-ldrm").
@@ -23,7 +23,7 @@ Fixes: QTBUG-100475
  2 files changed, 30 insertions(+), 3 deletions(-)
 
 diff --git a/src/client/configure.json b/src/client/configure.json
-index 73f23362..6247f85e 100644
+index 73f233622..6247f85e6 100644
 --- a/src/client/configure.json
 +++ b/src/client/configure.json
 @@ -167,7 +167,8 @@
@@ -46,7 +46,7 @@ index 73f23362..6247f85e 100644
      },
  
 diff --git a/src/compositor/configure.json b/src/compositor/configure.json
-index c5b0f03e..031e4cc3 100644
+index c5b0f03ed..031e4cc3a 100644
 --- a/src/compositor/configure.json
 +++ b/src/compositor/configure.json
 @@ -7,6 +7,31 @@
@@ -92,5 +92,5 @@ index c5b0f03e..031e4cc3 100644
      },
  
 -- 
-2.46.0
+2.51.2
 

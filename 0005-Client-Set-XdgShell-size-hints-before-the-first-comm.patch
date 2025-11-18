@@ -1,7 +1,7 @@
-From 16074a6a5da33b12bd16d3630b6cd98ea3d6df6d Mon Sep 17 00:00:00 2001
+From c335d953adcfb14bc274026cbb6a91dc43d16309 Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Mon, 3 May 2021 23:01:53 +0100
-Subject: [PATCH 05/59] Client: Set XdgShell size hints before the first commit
+Subject: [PATCH 05/55] Client: Set XdgShell size hints before the first commit
 
 propagateSizeHints is only called in QWindow we have platform window and
 minimumSizeHint is then sent. We also need to send existing hints when
@@ -20,10 +20,10 @@ Reviewed-by: Aleix Pol Gonzalez <aleixpol@kde.org>
  2 files changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
-index 49e9d953..a4811b08 100644
+index 77ae62d68..45519ae5e 100644
 --- a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
 +++ b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
-@@ -105,8 +105,6 @@ void QWaylandXdgSurface::Toplevel::applyConfigure()
+@@ -106,8 +106,6 @@ void QWaylandXdgSurface::Toplevel::applyConfigure()
          m_xdgSurface->m_window->resizeFromApplyConfigure(m_pending.size);
      }
  
@@ -32,7 +32,7 @@ index 49e9d953..a4811b08 100644
      m_applied = m_pending;
      qCDebug(lcQpaWayland) << "Applied pending xdg_toplevel configure event:" << m_applied.size << m_applied.states;
  }
-@@ -267,6 +265,7 @@ QWaylandXdgSurface::QWaylandXdgSurface(QWaylandXdgShell *shell, ::xdg_surface *s
+@@ -270,6 +268,7 @@ QWaylandXdgSurface::QWaylandXdgSurface(QWaylandXdgShell *shell, ::xdg_surface *s
                  m_toplevel->set_parent(parentXdgSurface->m_toplevel->object());
          }
      }
@@ -41,7 +41,7 @@ index 49e9d953..a4811b08 100644
  
  QWaylandXdgSurface::~QWaylandXdgSurface()
 diff --git a/tests/auto/client/xdgshell/tst_xdgshell.cpp b/tests/auto/client/xdgshell/tst_xdgshell.cpp
-index 1c23728b..1423d647 100644
+index 1c23728b2..1423d6477 100644
 --- a/tests/auto/client/xdgshell/tst_xdgshell.cpp
 +++ b/tests/auto/client/xdgshell/tst_xdgshell.cpp
 @@ -505,7 +505,7 @@ void tst_xdgshell::minMaxSize()
@@ -54,5 +54,5 @@ index 1c23728b..1423d647 100644
      QCOMPOSITOR_TRY_COMPARE(xdgToplevel()->m_committed.minSize, QSize(100, 100));
      QCOMPOSITOR_TRY_COMPARE(xdgToplevel()->m_committed.maxSize, QSize(1000, 1000));
 -- 
-2.46.0
+2.51.2
 

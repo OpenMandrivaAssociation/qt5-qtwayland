@@ -1,7 +1,7 @@
-From a91e358bcfaa8195dfadd94b5ccd0a5faad9a82b Mon Sep 17 00:00:00 2001
+From 4794f55bf84699574a44aa9811b572ea195c4b9c Mon Sep 17 00:00:00 2001
 From: Weng Xuetian <wengxt@gmail.com>
 Date: Wed, 20 Jul 2022 15:57:40 -0700
-Subject: [PATCH 28/59] Only close popup in the the hierchary
+Subject: [PATCH 28/55] Only close popup in the the hierchary
 
 Imagine following event sequences:
 1. a tooltip is shown. activePopups = {tooltip}
@@ -31,7 +31,7 @@ Reviewed-by: David Edmundson <davidedmundson@kde.org>
  9 files changed, 136 insertions(+), 30 deletions(-)
 
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index 014e2d87..1e916ca1 100644
+index 014e2d875..1e916ca11 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -239,6 +239,7 @@ bool QWaylandWindow::shouldCreateSubSurface() const
@@ -103,7 +103,7 @@ index 014e2d87..1e916ca1 100644
  
  QT_END_NAMESPACE
 diff --git a/src/client/qwaylandwindow_p.h b/src/client/qwaylandwindow_p.h
-index c0a76345..2be87bc0 100644
+index c0a763451..2be87bc0c 100644
 --- a/src/client/qwaylandwindow_p.h
 +++ b/src/client/qwaylandwindow_p.h
 @@ -207,6 +207,10 @@ public:
@@ -127,7 +127,7 @@ index c0a76345..2be87bc0 100644
      void setGeometry_helper(const QRect &rect);
      void initWindow();
 diff --git a/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgpopupv5.cpp b/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgpopupv5.cpp
-index 85d25e3c..60bdd491 100644
+index 85d25e3c0..60bdd4911 100644
 --- a/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgpopupv5.cpp
 +++ b/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgpopupv5.cpp
 @@ -47,18 +47,21 @@ QT_BEGIN_NAMESPACE
@@ -154,7 +154,7 @@ index 85d25e3c..60bdd491 100644
  }
  
 diff --git a/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgpopupv5_p.h b/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgpopupv5_p.h
-index 7494f6a6..d85f130b 100644
+index 7494f6a67..d85f130bc 100644
 --- a/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgpopupv5_p.h
 +++ b/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgpopupv5_p.h
 @@ -70,7 +70,7 @@ class Q_WAYLAND_CLIENT_EXPORT QWaylandXdgPopupV5 : public QWaylandShellSurface
@@ -175,7 +175,7 @@ index 7494f6a6..d85f130b 100644
  };
  
 diff --git a/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgshellv5.cpp b/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgshellv5.cpp
-index 7e242c4a..def8452a 100644
+index 7e242c4a5..def8452a1 100644
 --- a/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgshellv5.cpp
 +++ b/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgshellv5.cpp
 @@ -84,7 +84,7 @@ QWaylandXdgPopupV5 *QWaylandXdgShellV5::createXdgPopup(QWaylandWindow *window, Q
@@ -188,7 +188,7 @@ index 7e242c4a..def8452a 100644
      QObject::connect(popup, &QWaylandXdgPopupV5::destroyed, [this, window](){
          m_popups.removeOne(window);
 diff --git a/src/plugins/shellintegration/xdg-shell-v6/qwaylandxdgshellv6.cpp b/src/plugins/shellintegration/xdg-shell-v6/qwaylandxdgshellv6.cpp
-index 8c371661..151c78e3 100644
+index 8c371661f..151c78e38 100644
 --- a/src/plugins/shellintegration/xdg-shell-v6/qwaylandxdgshellv6.cpp
 +++ b/src/plugins/shellintegration/xdg-shell-v6/qwaylandxdgshellv6.cpp
 @@ -174,6 +174,7 @@ QWaylandXdgSurfaceV6::Popup::Popup(QWaylandXdgSurfaceV6 *xdgSurface, QWaylandXdg
@@ -209,10 +209,10 @@ index 8c371661..151c78e3 100644
          auto *shell = m_xdgSurface->m_shell;
          Q_ASSERT(shell->m_topmostGrabbingPopup == this);
 diff --git a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
-index b57b2c35..bca8ad83 100644
+index e7bd51175..c79b0e490 100644
 --- a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
 +++ b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
-@@ -195,12 +195,17 @@ QtWayland::xdg_toplevel::resize_edge QWaylandXdgSurface::Toplevel::convertToResi
+@@ -196,12 +196,17 @@ QtWayland::xdg_toplevel::resize_edge QWaylandXdgSurface::Toplevel::convertToResi
                  | ((edges & Qt::RightEdge) ? resize_edge_right : 0));
  }
  
@@ -233,7 +233,7 @@ index b57b2c35..bca8ad83 100644
  }
  
  QWaylandXdgSurface::Popup::~Popup()
-@@ -208,10 +213,14 @@ QWaylandXdgSurface::Popup::~Popup()
+@@ -209,10 +214,14 @@ QWaylandXdgSurface::Popup::~Popup()
      if (isInitialized())
          destroy();
  
@@ -249,7 +249,7 @@ index b57b2c35..bca8ad83 100644
          m_grabbing = false;
  
          // Synthesize Qt enter/leave events for popup
-@@ -403,8 +412,6 @@ void QWaylandXdgSurface::setPopup(QWaylandWindow *parent)
+@@ -406,8 +415,6 @@ void QWaylandXdgSurface::setPopup(QWaylandWindow *parent)
  {
      Q_ASSERT(!m_toplevel && !m_popup);
  
@@ -258,7 +258,7 @@ index b57b2c35..bca8ad83 100644
      auto positioner = new QtWayland::xdg_positioner(m_shell->create_positioner());
      // set_popup expects a position relative to the parent
      QPoint transientPos = m_window->geometry().topLeft(); // this is absolute
-@@ -419,8 +426,9 @@ void QWaylandXdgSurface::setPopup(QWaylandWindow *parent)
+@@ -422,8 +429,9 @@ void QWaylandXdgSurface::setPopup(QWaylandWindow *parent)
      positioner->set_size(m_window->geometry().width(), m_window->geometry().height());
      positioner->set_constraint_adjustment(QtWayland::xdg_positioner::constraint_adjustment_slide_x
          | QtWayland::xdg_positioner::constraint_adjustment_slide_y);
@@ -270,7 +270,7 @@ index b57b2c35..bca8ad83 100644
  }
  
 diff --git a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell_p.h b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell_p.h
-index 96785205..4b518f0a 100644
+index 96785205f..4b518f0a1 100644
 --- a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell_p.h
 +++ b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell_p.h
 @@ -131,14 +131,15 @@ private:
@@ -292,7 +292,7 @@ index 96785205..4b518f0a 100644
      };
  
 diff --git a/tests/auto/client/xdgshell/tst_xdgshell.cpp b/tests/auto/client/xdgshell/tst_xdgshell.cpp
-index 1da70ff2..c5271f63 100644
+index 1da70ff2c..c5271f630 100644
 --- a/tests/auto/client/xdgshell/tst_xdgshell.cpp
 +++ b/tests/auto/client/xdgshell/tst_xdgshell.cpp
 @@ -46,6 +46,7 @@ private slots:
@@ -397,5 +397,5 @@ index 1da70ff2..c5271f63 100644
  void tst_xdgshell::switchPopups()
  {
 -- 
-2.46.0
+2.51.2
 

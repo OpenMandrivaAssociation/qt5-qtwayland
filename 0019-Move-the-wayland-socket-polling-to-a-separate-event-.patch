@@ -1,7 +1,7 @@
-From 2e579f2d19d81bcfc01a1f8e9fa90cadec3c67f6 Mon Sep 17 00:00:00 2001
+From 0be79f71ccc5c6a537be0db0103fc688383f41c3 Mon Sep 17 00:00:00 2001
 From: Adrien Faveraux <af@brain-networks.fr>
 Date: Fri, 26 Nov 2021 09:18:58 +0100
-Subject: [PATCH 19/59] Move the wayland socket polling to a separate event
+Subject: [PATCH 19/55] Move the wayland socket polling to a separate event
  thread
 
 New event threads is introduced which calls poll() on the wayland fd,
@@ -32,7 +32,7 @@ Reviewed-by: Eskil Abrahamsen Blomfeldt <eskil.abrahamsen-blomfeldt@qt.io>
  5 files changed, 255 insertions(+), 108 deletions(-)
 
 diff --git a/src/client/qwaylanddisplay.cpp b/src/client/qwaylanddisplay.cpp
-index c2482030..c38f6f82 100644
+index c2482030c..c38f6f82f 100644
 --- a/src/client/qwaylanddisplay.cpp
 +++ b/src/client/qwaylanddisplay.cpp
 @@ -87,10 +87,203 @@
@@ -381,7 +381,7 @@ index c2482030..c38f6f82 100644
  
  #include "moc_qwaylanddisplay_p.cpp"
 diff --git a/src/client/qwaylanddisplay_p.h b/src/client/qwaylanddisplay_p.h
-index 49820255..cf91b924 100644
+index 49820255c..cf91b9245 100644
 --- a/src/client/qwaylanddisplay_p.h
 +++ b/src/client/qwaylanddisplay_p.h
 @@ -111,6 +111,7 @@ class QWaylandSurface;
@@ -445,7 +445,7 @@ index 49820255..cf91b924 100644
      bool mClientSideInputContextRequested = !QPlatformInputContextFactory::requested().isNull();
  
 diff --git a/src/client/qwaylandintegration.cpp b/src/client/qwaylandintegration.cpp
-index 661cea53..fbf00c6b 100644
+index 661cea537..fbf00c6b0 100644
 --- a/src/client/qwaylandintegration.cpp
 +++ b/src/client/qwaylandintegration.cpp
 @@ -192,9 +192,7 @@ QAbstractEventDispatcher *QWaylandIntegration::createEventDispatcher() const
@@ -460,7 +460,7 @@ index 661cea53..fbf00c6b 100644
      // Call after eventDispatcher is fully connected, for QWaylandDisplay::forceRoundTrip()
      mDisplay->initialize();
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index 41e56d24..a38f7d55 100644
+index 41e56d241..a38f7d551 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -76,7 +76,6 @@ QWaylandWindow *QWaylandWindow::mMouseGrab = nullptr;
@@ -559,7 +559,7 @@ index 41e56d24..a38f7d55 100644
                  if (mFrameCallbackCheckIntervalTimerId < 0)
                      mFrameCallbackCheckIntervalTimerId = startTimer(mFrameCallbackTimeout);
 diff --git a/src/client/qwaylandwindow_p.h b/src/client/qwaylandwindow_p.h
-index fb3ed606..54ac67a9 100644
+index fb3ed606c..54ac67a91 100644
 --- a/src/client/qwaylandwindow_p.h
 +++ b/src/client/qwaylandwindow_p.h
 @@ -232,7 +232,7 @@ protected:
@@ -572,5 +572,5 @@ index fb3ed606..54ac67a9 100644
  
      // True when we have called deliverRequestUpdate, but the client has not yet attached a new buffer
 -- 
-2.46.0
+2.51.2
 

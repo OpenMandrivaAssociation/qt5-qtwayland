@@ -1,7 +1,7 @@
-From 274dfaca7697308a1189fb980627bef10701ce72 Mon Sep 17 00:00:00 2001
+From 387dfd57f8c65dc36b30be4259f27b800f42f767 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?M=C3=A9ven=20Car?= <meven.car@enioka.com>
 Date: Wed, 18 Aug 2021 18:28:20 +0200
-Subject: [PATCH 12/59] Wayland client: use wl_keyboard to determine active
+Subject: [PATCH 12/55] Wayland client: use wl_keyboard to determine active
  state
 
 Commit f497a5bb87270174b8e0106b7eca1992d44ff15d made QWaylandDisplay
@@ -46,7 +46,7 @@ Reviewed-by: Eskil Abrahamsen Blomfeldt <eskil.abrahamsen-blomfeldt@qt.io>
  13 files changed, 39 insertions(+), 66 deletions(-)
 
 diff --git a/src/client/qwaylanddisplay.cpp b/src/client/qwaylanddisplay.cpp
-index 16f8ca1a..d1ca0274 100644
+index 16f8ca1aa..d1ca0274c 100644
 --- a/src/client/qwaylanddisplay.cpp
 +++ b/src/client/qwaylanddisplay.cpp
 @@ -579,14 +579,10 @@ void QWaylandDisplay::handleKeyboardFocusChanged(QWaylandInputDevice *inputDevic
@@ -83,7 +83,7 @@ index 16f8ca1a..d1ca0274 100644
  
  QWaylandCursor *QWaylandDisplay::waylandCursor()
 diff --git a/src/client/qwaylanddisplay_p.h b/src/client/qwaylanddisplay_p.h
-index 1bad8b67..15104d65 100644
+index 1bad8b678..15104d657 100644
 --- a/src/client/qwaylanddisplay_p.h
 +++ b/src/client/qwaylanddisplay_p.h
 @@ -219,6 +219,7 @@ public:
@@ -95,7 +95,7 @@ index 1bad8b67..15104d65 100644
      void blockingReadEvents();
      void flushRequests();
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index e0093013..bba43a54 100644
+index e00930134..bba43a548 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -96,7 +96,6 @@ QWaylandWindow::QWaylandWindow(QWindow *window, QWaylandDisplay *display)
@@ -136,7 +136,7 @@ index e0093013..bba43a54 100644
  }
  
 diff --git a/src/client/qwaylandwindow_p.h b/src/client/qwaylandwindow_p.h
-index 01337cff..fb3ed606 100644
+index 01337cff1..fb3ed606c 100644
 --- a/src/client/qwaylandwindow_p.h
 +++ b/src/client/qwaylandwindow_p.h
 @@ -148,6 +148,7 @@ public:
@@ -148,7 +148,7 @@ index 01337cff..fb3ed606 100644
      void raise() override;
      void lower() override;
 diff --git a/src/client/shellintegration/qwaylandshellintegration_p.h b/src/client/shellintegration/qwaylandshellintegration_p.h
-index ccad0048..4cc9b3b8 100644
+index ccad00481..4cc9b3b84 100644
 --- a/src/client/shellintegration/qwaylandshellintegration_p.h
 +++ b/src/client/shellintegration/qwaylandshellintegration_p.h
 @@ -73,11 +73,10 @@ public:
@@ -167,7 +167,7 @@ index ccad0048..4cc9b3b8 100644
      virtual void *nativeResourceForWindow(const QByteArray &resource, QWindow *window) {
          Q_UNUSED(resource);
 diff --git a/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgshellv5integration.cpp b/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgshellv5integration.cpp
-index 4e25949f..cfc60939 100644
+index 4e25949fa..cfc609394 100644
 --- a/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgshellv5integration.cpp
 +++ b/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgshellv5integration.cpp
 @@ -85,13 +85,6 @@ QWaylandShellSurface *QWaylandXdgShellV5Integration::createShellSurface(QWayland
@@ -185,7 +185,7 @@ index 4e25949f..cfc60939 100644
  
  QT_END_NAMESPACE
 diff --git a/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgshellv5integration_p.h b/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgshellv5integration_p.h
-index ce6bdb9e..aed88670 100644
+index ce6bdb9ee..aed886707 100644
 --- a/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgshellv5integration_p.h
 +++ b/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgshellv5integration_p.h
 @@ -67,7 +67,6 @@ public:
@@ -197,7 +197,7 @@ index ce6bdb9e..aed88670 100644
  private:
      QScopedPointer<QWaylandXdgShellV5> m_xdgShell;
 diff --git a/src/plugins/shellintegration/xdg-shell-v6/qwaylandxdgshellv6integration.cpp b/src/plugins/shellintegration/xdg-shell-v6/qwaylandxdgshellv6integration.cpp
-index 03164316..e8da8ba1 100644
+index 031643165..e8da8ba12 100644
 --- a/src/plugins/shellintegration/xdg-shell-v6/qwaylandxdgshellv6integration.cpp
 +++ b/src/plugins/shellintegration/xdg-shell-v6/qwaylandxdgshellv6integration.cpp
 @@ -68,20 +68,6 @@ QWaylandShellSurface *QWaylandXdgShellV6Integration::createShellSurface(QWayland
@@ -222,7 +222,7 @@ index 03164316..e8da8ba1 100644
  
  QT_END_NAMESPACE
 diff --git a/src/plugins/shellintegration/xdg-shell-v6/qwaylandxdgshellv6integration_p.h b/src/plugins/shellintegration/xdg-shell-v6/qwaylandxdgshellv6integration_p.h
-index 261f8cbb..c1bcd5c6 100644
+index 261f8cbb4..c1bcd5c68 100644
 --- a/src/plugins/shellintegration/xdg-shell-v6/qwaylandxdgshellv6integration_p.h
 +++ b/src/plugins/shellintegration/xdg-shell-v6/qwaylandxdgshellv6integration_p.h
 @@ -65,7 +65,6 @@ public:
@@ -234,10 +234,10 @@ index 261f8cbb..c1bcd5c6 100644
  private:
      QScopedPointer<QWaylandXdgShellV6> m_xdgShell;
 diff --git a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
-index a4811b08..b57b2c35 100644
+index 45519ae5e..e7bd51175 100644
 --- a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
 +++ b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
-@@ -67,11 +67,6 @@ QWaylandXdgSurface::Toplevel::Toplevel(QWaylandXdgSurface *xdgSurface)
+@@ -68,11 +68,6 @@ QWaylandXdgSurface::Toplevel::Toplevel(QWaylandXdgSurface *xdgSurface)
  
  QWaylandXdgSurface::Toplevel::~Toplevel()
  {
@@ -249,7 +249,7 @@ index a4811b08..b57b2c35 100644
      // The protocol spec requires that the decoration object is deleted before xdg_toplevel.
      delete m_decoration;
      m_decoration = nullptr;
-@@ -85,16 +80,15 @@ void QWaylandXdgSurface::Toplevel::applyConfigure()
+@@ -86,16 +81,15 @@ void QWaylandXdgSurface::Toplevel::applyConfigure()
      if (!(m_applied.states & (Qt::WindowMaximized|Qt::WindowFullScreen)))
          m_normalSize = m_xdgSurface->m_window->windowFrameGeometry().size();
  
@@ -272,7 +272,7 @@ index a4811b08..b57b2c35 100644
      if (m_pending.size.isEmpty()) {
          // An empty size in the configure means it's up to the client to choose the size
 diff --git a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshellintegration.cpp b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshellintegration.cpp
-index 8769d971..da0dd6a7 100644
+index 8769d9716..da0dd6a72 100644
 --- a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshellintegration.cpp
 +++ b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshellintegration.cpp
 @@ -69,20 +69,6 @@ QWaylandShellSurface *QWaylandXdgShellIntegration::createShellSurface(QWaylandWi
@@ -297,7 +297,7 @@ index 8769d971..da0dd6a7 100644
  
  QT_END_NAMESPACE
 diff --git a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshellintegration_p.h b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshellintegration_p.h
-index b6caa6c9..2f929f98 100644
+index b6caa6c95..2f929f98a 100644
 --- a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshellintegration_p.h
 +++ b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshellintegration_p.h
 @@ -65,7 +65,6 @@ public:
@@ -309,7 +309,7 @@ index b6caa6c9..2f929f98 100644
  private:
      QScopedPointer<QWaylandXdgShell> m_xdgShell;
 diff --git a/tests/auto/client/xdgshell/tst_xdgshell.cpp b/tests/auto/client/xdgshell/tst_xdgshell.cpp
-index 46f07c0a..1da70ff2 100644
+index 46f07c0a0..1da70ff2c 100644
 --- a/tests/auto/client/xdgshell/tst_xdgshell.cpp
 +++ b/tests/auto/client/xdgshell/tst_xdgshell.cpp
 @@ -31,6 +31,7 @@
@@ -337,5 +337,5 @@ index 46f07c0a..1da70ff2 100644
      const QSize screenSize(640, 480);
      const uint maximizedSerial = exec([&] {
 -- 
-2.46.0
+2.51.2
 

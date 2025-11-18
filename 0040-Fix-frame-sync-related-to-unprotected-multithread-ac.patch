@@ -1,7 +1,7 @@
-From 085ca8ffe2e74ba8ba217ab32d1b84024cdd2802 Mon Sep 17 00:00:00 2001
+From fff98508b264a4bd770bd2115b0f73ef34361579 Mon Sep 17 00:00:00 2001
 From: Weng Xuetian <wengxt@gmail.com>
 Date: Sun, 27 Nov 2022 12:44:40 -0800
-Subject: [PATCH 40/59] Fix frame sync related to unprotected multithread
+Subject: [PATCH 40/55] Fix frame sync related to unprotected multithread
  access
 
 There is a few crashes happens in real life that frame callback is
@@ -21,7 +21,7 @@ Change-Id: Ie01d08d07a2f10f70606ed1935caac09cb4f0382
  2 files changed, 43 insertions(+), 32 deletions(-)
 
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index 464441b1..96de798b 100644
+index 464441b1e..96de798b3 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -252,13 +252,16 @@ void QWaylandWindow::reset()
@@ -131,7 +131,7 @@ index 464441b1..96de798b 100644
      struct ::wl_surface *wrappedSurface = reinterpret_cast<struct ::wl_surface *>(wl_proxy_create_wrapper(mSurface->object()));
      wl_proxy_set_queue(reinterpret_cast<wl_proxy *>(wrappedSurface), mDisplay->frameEventQueue());
 diff --git a/src/client/qwaylandwindow_p.h b/src/client/qwaylandwindow_p.h
-index 487a91a6..2f219d8c 100644
+index 487a91a63..2f219d8c1 100644
 --- a/src/client/qwaylandwindow_p.h
 +++ b/src/client/qwaylandwindow_p.h
 @@ -237,12 +237,13 @@ protected:
@@ -162,5 +162,5 @@ index 487a91a6..2f219d8c 100644
      static QWaylandWindow *mMouseGrab;
  
 -- 
-2.46.0
+2.51.2
 

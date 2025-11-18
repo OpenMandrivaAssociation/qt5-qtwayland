@@ -1,7 +1,7 @@
-From 2e2a8d2b20c36134db66e50f66b518e75f5a5f7f Mon Sep 17 00:00:00 2001
+From 3a97e6d3a9a44662ac6c4a86878c833d19e0ca30 Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Tue, 9 Feb 2021 16:09:21 +0000
-Subject: [PATCH 03/59] Client: Connect drags being accepted to updating the
+Subject: [PATCH 03/55] Client: Connect drags being accepted to updating the
  source drag icon
 
 Currently in a multi-process drag and drop when the other client accepts
@@ -23,10 +23,10 @@ Reviewed-by: Eskil Abrahamsen Blomfeldt <eskil.abrahamsen-blomfeldt@qt.io>
  1 file changed, 1 insertion(+)
 
 diff --git a/src/client/qwaylanddatadevice.cpp b/src/client/qwaylanddatadevice.cpp
-index 1e2db786..0124b890 100644
+index 4d2459d1c..375f13fb3 100644
 --- a/src/client/qwaylanddatadevice.cpp
 +++ b/src/client/qwaylanddatadevice.cpp
-@@ -124,6 +124,7 @@ bool QWaylandDataDevice::startDrag(QMimeData *mimeData, QWaylandWindow *icon)
+@@ -130,6 +130,7 @@ bool QWaylandDataDevice::startDrag(QMimeData *mimeData, QWaylandWindow *icon)
  
      m_dragSource.reset(new QWaylandDataSource(m_display->dndSelectionHandler(), mimeData));
      connect(m_dragSource.data(), &QWaylandDataSource::cancelled, this, &QWaylandDataDevice::dragSourceCancelled);
@@ -35,5 +35,5 @@ index 1e2db786..0124b890 100644
      start_drag(m_dragSource->object(), origin->wlSurface(), icon->wlSurface(), m_display->currentInputDevice()->serial());
      return true;
 -- 
-2.46.0
+2.51.2
 

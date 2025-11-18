@@ -1,7 +1,7 @@
-From 49ab2a01df27d1941f9654da5c7643a149d26854 Mon Sep 17 00:00:00 2001
+From c822f22ef67e4c6d9b61412d4154db1321fea566 Mon Sep 17 00:00:00 2001
 From: Kenneth Topp <ken@bllue.org>
 Date: Mon, 4 Apr 2022 09:36:21 -0400
-Subject: [PATCH 26/59] use poll(2) when reading from clipboard
+Subject: [PATCH 26/55] use poll(2) when reading from clipboard
 
 change clipboard read away from select(2) call which can fail when
 an application has large number of open files
@@ -14,10 +14,10 @@ Reviewed-by: Thiago Macieira <thiago.macieira@intel.com>
  1 file changed, 8 insertions(+), 7 deletions(-)
 
 diff --git a/src/client/qwaylanddataoffer.cpp b/src/client/qwaylanddataoffer.cpp
-index c9e158cc..fe0ea8c9 100644
+index 09e299730..0241a1dfc 100644
 --- a/src/client/qwaylanddataoffer.cpp
 +++ b/src/client/qwaylanddataoffer.cpp
-@@ -188,17 +188,18 @@ QVariant QWaylandMimeData::retrieveData_sys(const QString &mimeType, QVariant::T
+@@ -195,17 +195,18 @@ QVariant QWaylandMimeData::retrieveData_sys(const QString &mimeType, QVariant::T
  
  int QWaylandMimeData::readData(int fd, QByteArray &data) const
  {
@@ -44,5 +44,5 @@ index c9e158cc..fe0ea8c9 100644
          } else if (ready == 0) {
              qWarning("QWaylandDataOffer: timeout reading from pipe");
 -- 
-2.46.0
+2.51.2
 

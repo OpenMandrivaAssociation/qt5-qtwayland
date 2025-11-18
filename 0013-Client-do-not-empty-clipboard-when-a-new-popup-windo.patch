@@ -1,7 +1,7 @@
-From 21104e57db0aece854f59da13579186e6b52711a Mon Sep 17 00:00:00 2001
+From 09dcdcc82665a4995cb3625211891c2ef2808f94 Mon Sep 17 00:00:00 2001
 From: Jan Grulich <jgrulich@redhat.com>
 Date: Fri, 16 Jul 2021 13:00:03 +0200
-Subject: [PATCH 13/59] Client: do not empty clipboard when a new popup/window
+Subject: [PATCH 13/55] Client: do not empty clipboard when a new popup/window
  is opened
 
 If we open a new popup or a window within the same app we have to avoid
@@ -21,7 +21,7 @@ Cherry-pick: 1e57ebd501cfc2255300392cd4565cd034efeed8
  2 files changed, 13 insertions(+), 8 deletions(-)
 
 diff --git a/src/client/qwaylanddisplay.cpp b/src/client/qwaylanddisplay.cpp
-index d1ca0274..7560bf41 100644
+index d1ca0274c..7560bf41a 100644
 --- a/src/client/qwaylanddisplay.cpp
 +++ b/src/client/qwaylanddisplay.cpp
 @@ -601,6 +601,19 @@ void QWaylandDisplay::handleWaylandSync()
@@ -45,10 +45,10 @@ index d1ca0274..7560bf41 100644
  
  const wl_callback_listener QWaylandDisplay::syncCallbackListener = {
 diff --git a/src/client/qwaylandinputdevice.cpp b/src/client/qwaylandinputdevice.cpp
-index 5bd51385..988d51af 100644
+index f3865ddb7..2c396f35b 100644
 --- a/src/client/qwaylandinputdevice.cpp
 +++ b/src/client/qwaylandinputdevice.cpp
-@@ -1309,14 +1309,6 @@ void QWaylandInputDevice::Keyboard::handleFocusDestroyed()
+@@ -1305,14 +1305,6 @@ void QWaylandInputDevice::Keyboard::handleFocusDestroyed()
  void QWaylandInputDevice::Keyboard::handleFocusLost()
  {
      mFocus = nullptr;
@@ -64,5 +64,5 @@ index 5bd51385..988d51af 100644
      mRepeatTimer.stop();
  }
 -- 
-2.46.0
+2.51.2
 

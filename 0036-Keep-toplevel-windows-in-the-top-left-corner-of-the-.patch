@@ -1,7 +1,7 @@
-From 0c7dc84573f85d464ddfe13f3352b284f445ba4e Mon Sep 17 00:00:00 2001
+From fbe5448167e97624b8c4a096729cf988f69d2cd8 Mon Sep 17 00:00:00 2001
 From: David Redondo <qt@david-redondo.de>
 Date: Wed, 8 Jun 2022 11:25:59 +0200
-Subject: [PATCH 36/59] Keep toplevel windows in the top left corner of the
+Subject: [PATCH 36/55] Keep toplevel windows in the top left corner of the
  screen
 
 We can't know the actual position of a window on the screen. This causes
@@ -25,7 +25,7 @@ Reviewed-by: Aleix Pol Gonzalez <aleixpol@kde.org>
  3 files changed, 19 insertions(+), 1 deletion(-)
 
 diff --git a/src/client/qwaylandintegration.cpp b/src/client/qwaylandintegration.cpp
-index fbf00c6b..54861600 100644
+index fbf00c6b0..548616005 100644
 --- a/src/client/qwaylandintegration.cpp
 +++ b/src/client/qwaylandintegration.cpp
 @@ -125,6 +125,9 @@ QWaylandIntegration::QWaylandIntegration()
@@ -39,7 +39,7 @@ index fbf00c6b..54861600 100644
  
  QWaylandIntegration::~QWaylandIntegration()
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index e5d1a97d..464441b1 100644
+index e5d1a97de..464441b1e 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -350,8 +350,13 @@ void QWaylandWindow::setGeometry_helper(const QRect &rect)
@@ -72,7 +72,7 @@ index e5d1a97d..464441b1 100644
      int scale = newScreen->isPlaceholder() ? 1 : static_cast<QWaylandScreen *>(newScreen)->scale();
      if (scale != mScale) {
 diff --git a/src/client/qwaylandwindow_p.h b/src/client/qwaylandwindow_p.h
-index ea3d1995..487a91a6 100644
+index ea3d1995b..487a91a63 100644
 --- a/src/client/qwaylandwindow_p.h
 +++ b/src/client/qwaylandwindow_p.h
 @@ -98,6 +98,9 @@ public:
@@ -86,5 +86,5 @@ index ea3d1995..487a91a6 100644
      virtual void ensureSize();
      WId winId() const override;
 -- 
-2.46.0
+2.51.2
 

@@ -1,7 +1,7 @@
-From 6fde7db552af605bfe5884c3525bbc1da951791f Mon Sep 17 00:00:00 2001
+From e3ae6906a4145560d846e89e782f28c2372557dc Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Fri, 5 Aug 2022 15:00:31 +0100
-Subject: [PATCH 31/59] Client: clear focus on touch cancel
+Subject: [PATCH 31/55] Client: clear focus on touch cancel
 
 When we get a touch_cancel event all touches should be treated as
 lifted.
@@ -23,10 +23,10 @@ Reviewed-by: Eskil Abrahamsen Blomfeldt <eskil.abrahamsen-blomfeldt@qt.io>
  4 files changed, 39 insertions(+)
 
 diff --git a/src/client/qwaylandinputdevice.cpp b/src/client/qwaylandinputdevice.cpp
-index 988d51af..3b30b853 100644
+index 2c396f35b..9c764d80a 100644
 --- a/src/client/qwaylandinputdevice.cpp
 +++ b/src/client/qwaylandinputdevice.cpp
-@@ -1397,6 +1397,7 @@ void QWaylandInputDevice::Touch::touch_cancel()
+@@ -1393,6 +1393,7 @@ void QWaylandInputDevice::Touch::touch_cancel()
      if (touchExt)
          touchExt->touchCanceled();
  
@@ -35,7 +35,7 @@ index 988d51af..3b30b853 100644
  }
  
 diff --git a/tests/auto/client/seatv5/tst_seatv5.cpp b/tests/auto/client/seatv5/tst_seatv5.cpp
-index 9312c2e5..b063e0d9 100644
+index 9312c2e5d..b063e0d93 100644
 --- a/tests/auto/client/seatv5/tst_seatv5.cpp
 +++ b/tests/auto/client/seatv5/tst_seatv5.cpp
 @@ -73,6 +73,7 @@ private slots:
@@ -82,7 +82,7 @@ index 9312c2e5..b063e0d9 100644
  QCOMPOSITOR_TEST_MAIN(tst_seatv5)
  #include "tst_seatv5.moc"
 diff --git a/tests/auto/client/shared/coreprotocol.cpp b/tests/auto/client/shared/coreprotocol.cpp
-index 0d988521..d1a2e7cb 100644
+index 0d9885216..d1a2e7cb6 100644
 --- a/tests/auto/client/shared/coreprotocol.cpp
 +++ b/tests/auto/client/shared/coreprotocol.cpp
 @@ -451,6 +451,13 @@ void Touch::sendFrame(wl_client *client)
@@ -100,7 +100,7 @@ index 0d988521..d1a2e7cb 100644
  {
      auto serial = m_seat->m_compositor->nextSerial();
 diff --git a/tests/auto/client/shared/coreprotocol.h b/tests/auto/client/shared/coreprotocol.h
-index 296dbf47..210d8ddb 100644
+index 296dbf474..210d8ddbf 100644
 --- a/tests/auto/client/shared/coreprotocol.h
 +++ b/tests/auto/client/shared/coreprotocol.h
 @@ -364,6 +364,7 @@ public:
@@ -112,5 +112,5 @@ index 296dbf47..210d8ddb 100644
      Seat *m_seat = nullptr;
  };
 -- 
-2.46.0
+2.51.2
 

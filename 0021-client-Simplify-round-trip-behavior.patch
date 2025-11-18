@@ -1,7 +1,7 @@
-From 8e83212c000dfa139da3fb0fa97cb639eee4a4ae Mon Sep 17 00:00:00 2001
+From 41e2ce08dda92bb6ad79dc567c708f2d435f3467 Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Wed, 9 Feb 2022 17:20:48 +0000
-Subject: [PATCH 21/59] client: Simplify round trip behavior
+Subject: [PATCH 21/55] client: Simplify round trip behavior
 
 The custom event queue was removed in
 302d4ffb8549214eb4028dc3e47ec4ee4e12ffbd (2015) so the comment about not
@@ -22,7 +22,7 @@ Reviewed-by: Eskil Abrahamsen Blomfeldt <eskil.abrahamsen-blomfeldt@qt.io>
  1 file changed, 1 insertion(+), 42 deletions(-)
 
 diff --git a/src/client/qwaylanddisplay.cpp b/src/client/qwaylanddisplay.cpp
-index c38f6f82..b8da02b3 100644
+index c38f6f82f..b8da02b32 100644
 --- a/src/client/qwaylanddisplay.cpp
 +++ b/src/client/qwaylanddisplay.cpp
 @@ -615,50 +615,9 @@ uint32_t QWaylandDisplay::currentTimeMillisec()
@@ -78,5 +78,5 @@ index c38f6f82..b8da02b3 100644
  
  bool QWaylandDisplay::supportsWindowDecoration() const
 -- 
-2.46.0
+2.51.2
 

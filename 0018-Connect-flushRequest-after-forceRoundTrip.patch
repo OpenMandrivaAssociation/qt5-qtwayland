@@ -1,7 +1,7 @@
-From 74b2f90d79ba98efc8d7f5d83c8ec3460c90817d Mon Sep 17 00:00:00 2001
+From 35afca663128b33b44c1ae4d3bad715cae8d8bba Mon Sep 17 00:00:00 2001
 From: Elvis Lee <kwangwoong.lee@lge.com>
 Date: Wed, 17 Mar 2021 16:31:10 +0900
-Subject: [PATCH 18/59] Connect flushRequest after forceRoundTrip
+Subject: [PATCH 18/55] Connect flushRequest after forceRoundTrip
 
 If flushRequest is connected with aboutToBlock, the flushRequest
 may consumes all events so that processEvents might be blocked in forceRoundTrip.
@@ -14,7 +14,7 @@ Reviewed-by: Eskil Abrahamsen Blomfeldt <eskil.abrahamsen-blomfeldt@qt.io>
  1 file changed, 7 insertions(+), 4 deletions(-)
 
 diff --git a/src/client/qwaylandintegration.cpp b/src/client/qwaylandintegration.cpp
-index 8afecb31..661cea53 100644
+index 8afecb31c..661cea537 100644
 --- a/src/client/qwaylandintegration.cpp
 +++ b/src/client/qwaylandintegration.cpp
 @@ -192,10 +192,6 @@ QAbstractEventDispatcher *QWaylandIntegration::createEventDispatcher() const
@@ -43,5 +43,5 @@ index 8afecb31..661cea53 100644
      mDisplay->ensureScreen();
  }
 -- 
-2.46.0
+2.51.2
 
