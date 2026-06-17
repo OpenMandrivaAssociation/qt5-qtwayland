@@ -1,4 +1,4 @@
-From 62aff865a1965aac2c6e501d930c0e0308b1c4c3 Mon Sep 17 00:00:00 2001
+From 3e3de70cd31e3fed1ec08ed7bd7b227028b1a0f6 Mon Sep 17 00:00:00 2001
 From: Jan Blackquill <uhhadd@gmail.com>
 Date: Tue, 24 Aug 2021 14:36:34 -0400
 Subject: [PATCH 09/55] Correctly detect if image format is supported by
@@ -64,5 +64,5 @@ index c5266ab3e..e2fe19282 100644
                      fmt = imgFmt;
              }
 -- 
-2.51.2
+2.53.0
 

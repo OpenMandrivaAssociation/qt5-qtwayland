@@ -1,4 +1,4 @@
-From 10594f38bcccdb4bd3ea8478e84f264a06153077 Mon Sep 17 00:00:00 2001
+From ca44ae4892b0bf182a6f7eceff7a9709ed7c0339 Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Wed, 7 Jun 2023 22:12:15 +0100
 Subject: [PATCH 47/55] client: Fix crash on dnd updates after client facing
@@ -38,5 +38,5 @@ index 5c5b84852..c57f1a499 100644
              if (wl_data_source_get_version(m_dragSource->object()) < 3) {
                  drag->setResponse(accepted);
 -- 
-2.51.2
+2.53.0
 

@@ -1,4 +1,4 @@
-From c335d953adcfb14bc274026cbb6a91dc43d16309 Mon Sep 17 00:00:00 2001
+From de1e59b9ca2c46ead8a6e649723d5f8d2d75cd0e Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Mon, 3 May 2021 23:01:53 +0100
 Subject: [PATCH 05/55] Client: Set XdgShell size hints before the first commit
@@ -54,5 +54,5 @@ index 1c23728b2..1423d6477 100644
      QCOMPOSITOR_TRY_COMPARE(xdgToplevel()->m_committed.minSize, QSize(100, 100));
      QCOMPOSITOR_TRY_COMPARE(xdgToplevel()->m_committed.maxSize, QSize(1000, 1000));
 -- 
-2.51.2
+2.53.0
 

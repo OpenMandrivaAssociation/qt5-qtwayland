@@ -1,4 +1,4 @@
-From 268356a075c27394c6314eba7aa676f7198ff7e4 Mon Sep 17 00:00:00 2001
+From b3f8b7c3289e8a00d9d5c26bcd5b4cd4ba56c1d7 Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Tue, 16 Feb 2021 09:51:47 +0000
 Subject: [PATCH 14/55] Client: Implement DataDeviceV3
@@ -508,5 +508,5 @@ index 1568b3b96..067410d08 100644
  class DataDeviceCompositor : public DefaultCompositor {
  public:
 -- 
-2.51.2
+2.53.0
 

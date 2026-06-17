@@ -1,4 +1,4 @@
-From e3ae6906a4145560d846e89e782f28c2372557dc Mon Sep 17 00:00:00 2001
+From 8820a985730beba4f2b34cef6fc114917229a20d Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Fri, 5 Aug 2022 15:00:31 +0100
 Subject: [PATCH 31/55] Client: clear focus on touch cancel
@@ -112,5 +112,5 @@ index 296dbf474..210d8ddbf 100644
      Seat *m_seat = nullptr;
  };
 -- 
-2.51.2
+2.53.0
 

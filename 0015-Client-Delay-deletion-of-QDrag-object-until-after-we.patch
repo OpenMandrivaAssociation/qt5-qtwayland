@@ -1,4 +1,4 @@
-From e02da7d1a729ed168b135baf74ce8f9a501e8414 Mon Sep 17 00:00:00 2001
+From f0e8418e3318ef0ad3c9c9a10e9d9353efa0837d Mon Sep 17 00:00:00 2001
 From: Arjen Hiemstra <ahiemstra@heimr.nl>
 Date: Thu, 18 Nov 2021 13:05:30 +0100
 Subject: [PATCH 15/55] Client: Delay deletion of QDrag object until after
@@ -63,5 +63,5 @@ index 747f0190b..46f629ace 100644
  private:
      QWaylandDisplay *m_display = nullptr;
 -- 
-2.51.2
+2.53.0
 

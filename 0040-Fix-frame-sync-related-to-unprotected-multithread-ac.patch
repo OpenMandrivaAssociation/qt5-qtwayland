@@ -1,4 +1,4 @@
-From fff98508b264a4bd770bd2115b0f73ef34361579 Mon Sep 17 00:00:00 2001
+From f1a1588c8126067ec9c3313b2a94e7ac19439037 Mon Sep 17 00:00:00 2001
 From: Weng Xuetian <wengxt@gmail.com>
 Date: Sun, 27 Nov 2022 12:44:40 -0800
 Subject: [PATCH 40/55] Fix frame sync related to unprotected multithread
@@ -162,5 +162,5 @@ index 487a91a63..2f219d8c1 100644
      static QWaylandWindow *mMouseGrab;
  
 -- 
-2.51.2
+2.53.0
 

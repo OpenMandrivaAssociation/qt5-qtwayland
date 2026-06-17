@@ -1,4 +1,4 @@
-From f5110358be64646c992fac2d01e2c6a2af14fd9d Mon Sep 17 00:00:00 2001
+From af37577ab03e8c08426872c48441f8d235d86127 Mon Sep 17 00:00:00 2001
 From: Michael Weghorn <m.weghorn@posteo.de>
 Date: Mon, 20 Feb 2023 14:02:23 +0100
 Subject: [PATCH 48/55] Convert cursor bitmap to supported format
@@ -62,5 +62,5 @@ index e4eca9d4e..ba76ba2d0 100644
      memcpy(buffer->image()->bits(), img.bits(), size_t(img.sizeInBytes()));
      return buffer;
 -- 
-2.51.2
+2.53.0
 

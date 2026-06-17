@@ -1,4 +1,4 @@
-From 710d316d8a979b9991f4e7cb99388715bd04b628 Mon Sep 17 00:00:00 2001
+From e3f6beafb678df7cc6232bf1114ca96bc9287c8e Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Thu, 3 Feb 2022 19:42:33 +0000
 Subject: [PATCH 32/55] Guard mResizeDirty by the correctMutex
@@ -35,5 +35,5 @@ index 606653945..e5d1a97de 100644
      }
      QRect exposeGeometry(QPoint(), geometry().size());
 -- 
-2.51.2
+2.53.0
 

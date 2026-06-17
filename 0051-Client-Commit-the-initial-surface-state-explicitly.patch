@@ -1,4 +1,4 @@
-From c0aa61347bc0edb51909253774c7efcbae9e8352 Mon Sep 17 00:00:00 2001
+From 20635618147867f74aff6b98352b7448fd0cd0b2 Mon Sep 17 00:00:00 2001
 From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 Date: Fri, 25 Aug 2023 10:19:07 +0300
 Subject: [PATCH 51/55] Client: Commit the initial surface state explicitly
@@ -33,5 +33,5 @@ index 5d01507dc..5eee0414c 100644
  
  void QWaylandWindow::initializeWlSurface()
 -- 
-2.51.2
+2.53.0
 

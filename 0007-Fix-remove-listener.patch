@@ -1,4 +1,4 @@
-From b7d726abae2921b4411988db49765a248bd040b8 Mon Sep 17 00:00:00 2001
+From 4e1fc90c3dccd57a223cb03a8df33528b9d06350 Mon Sep 17 00:00:00 2001
 From: Zhang Liang <zhanglianga@uniontech.com>
 Date: Mon, 1 Feb 2021 19:29:43 +0800
 Subject: [PATCH 07/55] Fix: remove listener
@@ -29,5 +29,5 @@ index 8a6d5db1d..16f8ca1aa 100644
  
  uint32_t QWaylandDisplay::currentTimeMillisec()
 -- 
-2.51.2
+2.53.0
 

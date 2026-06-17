@@ -1,4 +1,4 @@
-From 81221b4a75f9ca6f6c02fd83256c4a3c9879fd63 Mon Sep 17 00:00:00 2001
+From 6171744ff1a987aa27fd8c19b6e19ce5f3ebabba Mon Sep 17 00:00:00 2001
 From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 Date: Tue, 1 Feb 2022 13:05:36 +0200
 Subject: [PATCH 20/55] Client: Remove mWaitingForUpdateDelivery
@@ -75,5 +75,5 @@ index 54ac67a91..cf7ce879a 100644
      QElapsedTimer mFrameCallbackElapsedTimer;
      struct ::wl_callback *mFrameCallback = nullptr;
 -- 
-2.51.2
+2.53.0
 

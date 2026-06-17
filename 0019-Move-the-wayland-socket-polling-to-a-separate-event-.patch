@@ -1,4 +1,4 @@
-From 0be79f71ccc5c6a537be0db0103fc688383f41c3 Mon Sep 17 00:00:00 2001
+From 1b6c86677ec0e1b64d8250e8425f066479c2e877 Mon Sep 17 00:00:00 2001
 From: Adrien Faveraux <af@brain-networks.fr>
 Date: Fri, 26 Nov 2021 09:18:58 +0100
 Subject: [PATCH 19/55] Move the wayland socket polling to a separate event
@@ -572,5 +572,5 @@ index fb3ed606c..54ac67a91 100644
  
      // True when we have called deliverRequestUpdate, but the client has not yet attached a new buffer
 -- 
-2.51.2
+2.53.0
 

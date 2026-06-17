@@ -1,4 +1,4 @@
-From df49b9f3badce793a0a9ea850cf1a02cc5bafef6 Mon Sep 17 00:00:00 2001
+From 605b8bc942ab263b9d1892af33a81b408f522ccc Mon Sep 17 00:00:00 2001
 From: Kai Uwe Broulik <kde@privat.broulik.de>
 Date: Thu, 4 Jan 2024 20:30:33 +0100
 Subject: [PATCH 55/55] bradient: Use QWaylandWindow actual window title
@@ -107,5 +107,5 @@ index fa8851436..fbdbe284a 100644
          if (m_windowTitle.text() != windowTitleText) {
              m_windowTitle.setText(windowTitleText);
 -- 
-2.51.2
+2.53.0
 

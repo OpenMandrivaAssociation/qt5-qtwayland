@@ -1,4 +1,4 @@
-From 41e2ce08dda92bb6ad79dc567c708f2d435f3467 Mon Sep 17 00:00:00 2001
+From 5b91077e5b8896de82e87f86d9835dd7f7bba5ad Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Wed, 9 Feb 2022 17:20:48 +0000
 Subject: [PATCH 21/55] client: Simplify round trip behavior
@@ -78,5 +78,5 @@ index c38f6f82f..b8da02b32 100644
  
  bool QWaylandDisplay::supportsWindowDecoration() const
 -- 
-2.51.2
+2.53.0
 

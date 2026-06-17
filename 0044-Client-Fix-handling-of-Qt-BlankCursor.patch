@@ -1,4 +1,4 @@
-From 4ae771826e431596b94e556ee0e056363898c17c Mon Sep 17 00:00:00 2001
+From d1954c8520772c56469b1b374bf719d496706db7 Mon Sep 17 00:00:00 2001
 From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 Date: Tue, 22 Nov 2022 23:27:34 +0200
 Subject: [PATCH 44/55] Client: Fix handling of Qt::BlankCursor
@@ -34,5 +34,5 @@ index 9c764d80a..447c40fe2 100644
      }
  
 -- 
-2.51.2
+2.53.0
 

@@ -1,4 +1,4 @@
-From e24c25db2f1ce824965d0460c692e6ad46e29363 Mon Sep 17 00:00:00 2001
+From 8cdd76bbb00995438e01a19724e7c27996152cb2 Mon Sep 17 00:00:00 2001
 From: Marco Martin <notmart@gmail.com>
 Date: Fri, 24 Feb 2023 17:40:48 +0100
 Subject: [PATCH 45/55] client: Force a roundtrip when an XdgOutput is not
@@ -113,5 +113,5 @@ index 20f762e06..2a0cad1de 100644
  QCOMPOSITOR_TEST_MAIN(tst_xdgoutput)
  #include "tst_xdgoutput.moc"
 -- 
-2.51.2
+2.53.0
 

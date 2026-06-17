@@ -1,4 +1,4 @@
-From b7585617d7099b2afe7bc39c461c741b4c575cfb Mon Sep 17 00:00:00 2001
+From 94d5f4e85568e13c6ab91c1874564a1626914990 Mon Sep 17 00:00:00 2001
 From: Fushan Wen <qydwhotmail@gmail.com>
 Date: Sun, 18 Sep 2022 18:17:18 +0800
 Subject: [PATCH 34/55] Call `finishDrag()` in
@@ -34,5 +34,5 @@ index 89e4e3724..5c5b84852 100644
  }
  
 -- 
-2.51.2
+2.53.0
 

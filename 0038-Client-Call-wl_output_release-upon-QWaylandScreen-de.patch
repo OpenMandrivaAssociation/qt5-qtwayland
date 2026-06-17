@@ -1,4 +1,4 @@
-From 2bf52ebd6b683003d1f0c28a622a5c7a88b4a159 Mon Sep 17 00:00:00 2001
+From c363a9f5740c19553c76cf1315b50343461a1533 Mon Sep 17 00:00:00 2001
 From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 Date: Mon, 21 Nov 2022 18:39:40 +0200
 Subject: [PATCH 38/55] Client: Call wl_output_release() upon QWaylandScreen
@@ -27,5 +27,5 @@ index 7c2d9be30..64ae4fe7c 100644
  
  uint QWaylandScreen::requiredEvents() const
 -- 
-2.51.2
+2.53.0
 

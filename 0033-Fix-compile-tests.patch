@@ -1,4 +1,4 @@
-From 3cb9853020789c7f4d573ee9bcef3424245fbf40 Mon Sep 17 00:00:00 2001
+From 355c1acd952535b9e6a5cc010679bfff63ab5a6b Mon Sep 17 00:00:00 2001
 From: Albert Astals Cid <aacid@kde.org>
 Date: Fri, 9 Sep 2022 15:37:49 +0200
 Subject: [PATCH 33/55] Fix compile tests
@@ -25,5 +25,5 @@ index b063e0d93..2ea382f1c 100644
      {
          auto e = window.m_events.takeFirst();
 -- 
-2.51.2
+2.53.0
 

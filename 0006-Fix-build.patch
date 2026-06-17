@@ -1,4 +1,4 @@
-From b1fe07d8f8039ca241738a75462dee02cef5abec Mon Sep 17 00:00:00 2001
+From 116377e95977b1fdcff7aeaf67737d23e1c2a19c Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Mon, 14 Jun 2021 12:45:37 +0100
 Subject: [PATCH 06/55] Fix build
@@ -42,5 +42,5 @@ index 69cc46a0a..9091efbe5 100644
  
  class Q_WAYLAND_CLIENT_EXPORT QWaylandClientExtensionTemplatePrivate : public QWaylandClientExtensionPrivate
 -- 
-2.51.2
+2.53.0
 

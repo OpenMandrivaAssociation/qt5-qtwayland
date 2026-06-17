@@ -1,4 +1,4 @@
-From c2b4de718762a3c1bb9971353a583001fceeec7a Mon Sep 17 00:00:00 2001
+From e813a2fe4b533562b275e030c99cc0ac4274ce66 Mon Sep 17 00:00:00 2001
 From: Georges Basile Stavracas Neto <gbsneto@gnome.org>
 Date: Thu, 27 May 2021 19:55:04 -0300
 Subject: [PATCH 10/55] Client: Don't always recreate frame callbacks
@@ -73,5 +73,5 @@ index 1423d6477..46f07c0a0 100644
  
  void tst_xdgshell::popup()
 -- 
-2.51.2
+2.53.0
 

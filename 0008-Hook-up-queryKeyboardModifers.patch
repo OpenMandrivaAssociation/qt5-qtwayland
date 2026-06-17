@@ -1,4 +1,4 @@
-From b52ceb0fe1d17ecbe8fb3c6f092e40dbf4b54305 Mon Sep 17 00:00:00 2001
+From dfec2103d8db659716fd169a6c94bd76914fe5fe Mon Sep 17 00:00:00 2001
 From: David Redondo <qt@david-redondo.de>
 Date: Wed, 26 May 2021 14:49:40 +0200
 Subject: [PATCH 08/55] Hook up queryKeyboardModifers
@@ -51,5 +51,5 @@ index ff70ae25d..73b806588 100644
  
      QStringList themeNames() const override;
 -- 
-2.51.2
+2.53.0
 

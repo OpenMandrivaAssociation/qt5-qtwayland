@@ -1,4 +1,4 @@
-From aa6386768a90fb089a7a302c38cd7230d268b76b Mon Sep 17 00:00:00 2001
+From 5ffd549b0de1d2740df3af9d95bd430896ae49d6 Mon Sep 17 00:00:00 2001
 From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 Date: Tue, 27 Sep 2022 22:05:07 +0300
 Subject: [PATCH 41/55] Client: Handle zwp_primary_selection_device_manager_v1
@@ -62,5 +62,5 @@ index 7805dd734..dac532b20 100644
  
  QWaylandPrimarySelectionDeviceV1 *QWaylandPrimarySelectionDeviceManagerV1::createDevice(QWaylandInputDevice *seat)
 -- 
-2.51.2
+2.53.0
 

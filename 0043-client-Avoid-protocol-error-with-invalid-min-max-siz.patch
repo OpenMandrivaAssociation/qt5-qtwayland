@@ -1,4 +1,4 @@
-From fd4f81d136ba44e041442dbcbae7908901d17633 Mon Sep 17 00:00:00 2001
+From 79fd0d1668bf8d54dfd775d9a6e219b36caf215c Mon Sep 17 00:00:00 2001
 From: Eskil Abrahamsen Blomfeldt <eskil.abrahamsen-blomfeldt@qt.io>
 Date: Mon, 23 May 2022 09:47:24 +0200
 Subject: [PATCH 43/55] client: Avoid protocol error with invalid min/max size
@@ -52,5 +52,5 @@ index c79b0e490..6ddcc4108 100644
              maxHeight = 0;
          m_toplevel->set_max_size(maxWidth, maxHeight);
 -- 
-2.51.2
+2.53.0
 

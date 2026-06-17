@@ -1,4 +1,4 @@
-From 1ba45e04b989ef9b22742ccd3a4a5fc3c6a4018b Mon Sep 17 00:00:00 2001
+From 5a71daa5a57b4280e3d0533352308222c7880793 Mon Sep 17 00:00:00 2001
 From: Jungi Byun <jungi.byun@lge.com>
 Date: Wed, 27 Jan 2021 08:24:23 +0900
 Subject: [PATCH 49/55] Replace scale with devicePixelRatio for non-integer
@@ -165,5 +165,5 @@ index c1f45fa69..bbc634445 100644
  
          //Draw Decoration
 -- 
-2.51.2
+2.53.0
 

@@ -1,4 +1,4 @@
-From 493301b042be31a1528cff66aa57d1870305b582 Mon Sep 17 00:00:00 2001
+From c4f5b9ab9beafc9e3120b32351f0337ddfffb56b Mon Sep 17 00:00:00 2001
 From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 Date: Sat, 19 Feb 2022 17:01:04 +0200
 Subject: [PATCH 22/55] Client: Fix opaque region setter
@@ -27,5 +27,5 @@ index 6bf0fc4b6..9cc8cb120 100644
  
  void QWaylandWindow::resizeFromApplyConfigure(const QSize &sizeWithMargins, const QPoint &offset)
 -- 
-2.51.2
+2.53.0
 

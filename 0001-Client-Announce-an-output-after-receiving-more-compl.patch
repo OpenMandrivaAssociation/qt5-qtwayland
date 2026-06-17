@@ -1,4 +1,4 @@
-From 8455b8894ea77076656ee90ded863e14bcb288f4 Mon Sep 17 00:00:00 2001
+From ea0ff6ec258e0ada7629cf615527aaacaed796fb Mon Sep 17 00:00:00 2001
 From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 Date: Wed, 5 May 2021 20:49:26 +0300
 Subject: [PATCH 01/55] Client: Announce an output after receiving more
@@ -142,5 +142,5 @@ index df1c94f24..050cfdc06 100644
  
  #if QT_CONFIG(cursor)
 -- 
-2.51.2
+2.53.0
 

@@ -1,4 +1,4 @@
-From 9e9c9e8aa7a490960e65067e21587df95d9a690f Mon Sep 17 00:00:00 2001
+From 17d93fd0d32134b9bfed0ef4ff30fe416d37a577 Mon Sep 17 00:00:00 2001
 From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 Date: Tue, 22 Nov 2022 12:33:41 +0200
 Subject: [PATCH 39/55] Client: Bump wl_output version
@@ -26,5 +26,5 @@ index 64ae4fe7c..5537dafd0 100644
      , mWaylandDisplay(waylandDisplay)
      , mOutputName(QStringLiteral("Screen%1").arg(id))
 -- 
-2.51.2
+2.53.0
 
